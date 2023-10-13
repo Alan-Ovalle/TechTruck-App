@@ -4,10 +4,27 @@ class SQLHelper {
   static Future<void> createTables(sql.Database database) async {
     await database.execute("""CREATE TABLE data(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-        cliente TEXT, 
-        unidad TEXT, 
-        conductor TEXT, 
+        clienteNombre TEXT,
+        clienteContacto TEXT, 
+        unidadNumEco TEXT,
+        unidadKilometros TEXT,
+        unidadMarca TEXT, 
+        unidadModelo TEXT,
+        unidadHorasMotor TEXT,
+        unidadTipo TEXT,
+        unidadMotor TEXT,
+        unidadSerie TEXT,
+        unidadPlacas TEXT,
+        unidadAno TEXT,
+        unidadVin TEXT,
+        fechaLlegada TEXT,
+        fechaSalida TEXT,
+        tecnicoAsignado TEXT,
+        numeroCaso TEXT,
+        clienteComentario TEXT,
         diagnostico TEXT,
+        trabajoRealizado TEXT,
+        costo TEXT,
         createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)""");
   }
 
@@ -18,14 +35,52 @@ class SQLHelper {
     });
   }
 
-  static Future<int> createData(String? cliente, String? unidad,
-      String? conductor, String? diagnostico) async {
+  static Future<int> createData(
+    String? clienteNombre,
+    String? clienteContacto,
+    String? unidadNumEco,
+    String? unidadKilometros,
+    String? unidadMarca,
+    String? unidadModelo,
+    String? unidadHorasMotor,
+    String? unidadTipo,
+    String? unidadMotor,
+    String? unidadSerie,
+    String? unidadPlacas,
+    String? unidadAno,
+    String? unidadVin,
+    String? fechaLlegada,
+    String? fechaSalida,
+    String? tecnicoAsignado,
+    String? numeroCaso,
+    String? clienteComentario,
+    String? diagnostico,
+    String? trabajoRealizado,
+    String? costo,
+  ) async {
     final db = await SQLHelper.db();
     final data = {
-      'cliente': cliente,
-      'unidad': unidad,
-      'conductor': conductor,
-      'diagnostico': diagnostico
+      'clienteNombre': clienteNombre,
+      'clienteContacto': clienteContacto,
+      'unidadNumEco': unidadNumEco,
+      'unidadKilometros': unidadKilometros,
+      'unidadMarca ': unidadMarca,
+      'unidadModelo': unidadModelo,
+      'unidadHorasMotor': unidadHorasMotor,
+      'unidadTipo': unidadTipo,
+      'unidadMotor': unidadMotor,
+      'unidadSerie': unidadSerie,
+      'unidadPlacas': unidadPlacas,
+      'unidadAno': unidadAno,
+      'unidadVin': unidadVin,
+      'fechaLlegada': fechaLlegada,
+      'fechaSalida': fechaSalida,
+      'tecnicoAsignado': tecnicoAsignado,
+      'numeroCaso': numeroCaso,
+      'clienteComentario': clienteComentario,
+      'diagnostico': diagnostico,
+      'trabajoRealizado': trabajoRealizado,
+      'costo': costo,
     };
     final id = await db.insert('data', data,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
@@ -43,14 +98,53 @@ class SQLHelper {
     return db.query('data', where: 'id = ?', whereArgs: [id], limit: 1);
   }
 
-  static Future<int> updateData(int id, String? cliente, String? unidad,
-      String? conductor, String? diagnostico) async {
+  static Future<int> updateData(
+    int id,
+    String? clienteNombre,
+    String? clienteContacto,
+    String? unidadNumEco,
+    String? unidadKilometros,
+    String? unidadMarca,
+    String? unidadModelo,
+    String? unidadHorasMotor,
+    String? unidadTipo,
+    String? unidadMotor,
+    String? unidadSerie,
+    String? unidadPlacas,
+    String? unidadAno,
+    String? unidadVin,
+    String? fechaLlegada,
+    String? fechaSalida,
+    String? tecnicoAsignado,
+    String? numeroCaso,
+    String? clienteComentario,
+    String? diagnostico,
+    String? trabajoRealizado,
+    String? costo,
+  ) async {
     final db = await SQLHelper.db();
     final data = {
-      'cliente': cliente,
-      'unidad': unidad,
-      'conductor': conductor,
+      'clienteNombre': clienteNombre,
+      'clienteContacto': clienteContacto,
+      'unidadNumEco': unidadNumEco,
+      'unidadKilometros': unidadKilometros,
+      'unidadMarca ': unidadMarca,
+      'unidadModelo': unidadModelo,
+      'unidadHorasMotor': unidadHorasMotor,
+      'unidadTipo': unidadTipo,
+      'unidadMotor': unidadMotor,
+      'unidadSerie': unidadSerie,
+      'unidadPlacas': unidadPlacas,
+      'unidadAno': unidadAno,
+      'unidadVin': unidadVin,
+      'fechaLlegada': fechaLlegada,
+      'fechaSalida': fechaSalida,
+      'tecnicoAsignado': tecnicoAsignado,
+      'numeroCaso': numeroCaso,
+      'clienteComentario': clienteComentario,
       'diagnostico': diagnostico,
+      'trabajoRealizado': trabajoRealizado,
+      'costo': costo,
       'createdAt': DateTime.now().toString()
     };
     final result =

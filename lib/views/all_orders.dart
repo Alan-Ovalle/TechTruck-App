@@ -30,10 +30,27 @@ class _AllOrdersState extends State<AllOrders> {
 
   Future<void> _addData() async {
     await SQLHelper.createData(
-      _name.text,
-      _unit.text,
-      _driver.text,
-      _diagnostic.text,
+      _clienteNombreController.text,
+      _clienteContactoController.text,
+      _unidadNumEco.text,
+      _unidadKilometros.text,
+      _unidadMarca.text,
+      _unidadModelo.text,
+      _unidadHorasMotor.text,
+      _unidadTipo.text,
+      _unidadMotor.text,
+      _unidadSerie.text,
+      _unidadPlacas.text,
+      _unidadAno.text,
+      _unidadVin.text,
+      _fechaLlegada.text,
+      _fechaSalida.text,
+      _tecnicoAsignado.text,
+      _numeroCaso.text,
+      _clienteComentario.text,
+      _diagnosticoController.text,
+      _trabajoRealizado.text,
+      _costosController.text,
     );
     _refreshData();
   }
@@ -41,10 +58,31 @@ class _AllOrdersState extends State<AllOrders> {
   Future<void> _updateData(int id) async {
     await SQLHelper.updateData(
       id,
-      _name.text,
-      _unit.text,
-      _driver.text,
-      _diagnostic.text,
+      // _name.text,
+      // _unit.text,
+      // _driver.text,
+      // _diagnostic.text,
+      _clienteNombreController.text,
+      _clienteContactoController.text,
+      _unidadNumEco.text,
+      _unidadKilometros.text,
+      _unidadMarca.text,
+      _unidadModelo.text,
+      _unidadHorasMotor.text,
+      _unidadTipo.text,
+      _unidadMotor.text,
+      _unidadSerie.text,
+      _unidadPlacas.text,
+      _unidadAno.text,
+      _unidadVin.text,
+      _fechaLlegada.text,
+      _fechaSalida.text,
+      _tecnicoAsignado.text,
+      _numeroCaso.text,
+      _clienteComentario.text,
+      _diagnosticoController.text,
+      _trabajoRealizado.text,
+      _costosController.text,
     );
     _refreshData();
   }
@@ -62,20 +100,60 @@ class _AllOrdersState extends State<AllOrders> {
     _refreshData();
   }
 
-  final TextEditingController _name = TextEditingController();
-  final TextEditingController _unit = TextEditingController();
-  final TextEditingController _driver = TextEditingController();
-  final TextEditingController _diagnostic = TextEditingController();
+  final TextEditingController _clienteNombreController =
+      TextEditingController();
+  final TextEditingController _clienteContactoController =
+      TextEditingController();
+  final TextEditingController _unidadNumEco = TextEditingController();
+  final TextEditingController _unidadKilometros = TextEditingController();
+  final TextEditingController _unidadMarca = TextEditingController();
+  final TextEditingController _unidadModelo = TextEditingController();
+  final TextEditingController _unidadHorasMotor = TextEditingController();
+  final TextEditingController _unidadTipo = TextEditingController();
+  final TextEditingController _unidadMotor = TextEditingController();
+  final TextEditingController _unidadSerie = TextEditingController();
+  final TextEditingController _unidadPlacas = TextEditingController();
+  final TextEditingController _unidadAno = TextEditingController();
+  final TextEditingController _unidadVin = TextEditingController();
+  final TextEditingController _fechaLlegada = TextEditingController();
+  final TextEditingController _fechaSalida = TextEditingController();
+  final TextEditingController _tecnicoAsignado = TextEditingController();
+  final TextEditingController _numeroCaso = TextEditingController();
+  final TextEditingController _clienteComentario = TextEditingController();
+  final TextEditingController _diagnosticoController = TextEditingController();
+  final TextEditingController _trabajoRealizado = TextEditingController();
+  final TextEditingController _costosController = TextEditingController();
 
   void showBottomSheet(int? id) async {
     if (id != null) {
       print("ID $id");
       final existingData =
           _allData.firstWhere((element) => element["id"] == id);
-      _name.text = existingData["cliente"];
-      _unit.text = existingData["unidad"];
-      _driver.text = existingData["conductor"];
-      _diagnostic.text = existingData["diagnostico"];
+      // _name.text = existingData["cliente"];
+      // _unit.text = existingData["unidad"];
+      // _driver.text = existingData["conductor"];
+      // _diagnostic.text = existingData["diagnostico"];
+      _clienteNombreController.text = existingData["clienteNombre"];
+      _clienteContactoController.text = existingData["clienteContacto"];
+      _unidadNumEco.text = existingData["unidadNumEco"];
+      _unidadKilometros.text = existingData["unidadKilometros"];
+      _unidadMarca.text = existingData["unidadMarca"];
+      _unidadModelo.text = existingData["unidadModelo"];
+      _unidadHorasMotor.text = existingData["unidadHorasMotor"];
+      _unidadTipo.text = existingData["unidadTipo"];
+      _unidadMotor.text = existingData["unidadMotor"];
+      _unidadSerie.text = existingData["unidadSerie"];
+      _unidadPlacas.text = existingData["unidadPlacas"];
+      _unidadAno.text = existingData["unidadAno"];
+      _unidadVin.text = existingData["unidadVin"];
+      _fechaLlegada.text = existingData["fechaLlegada"];
+      _fechaSalida.text = existingData["fechaSalida"];
+      _tecnicoAsignado.text = existingData["tecnicoAsignado"];
+      _numeroCaso.text = existingData["numeroCaso"];
+      _clienteComentario.text = existingData["clienteComentario"];
+      _diagnosticoController.text = existingData["diagnostico"];
+      _trabajoRealizado.text = existingData["trabajoRealizado"];
+      _costosController.text = existingData["costo"];
     }
 
     showModalBottomSheet(
@@ -94,7 +172,7 @@ class _AllOrdersState extends State<AllOrders> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   TextField(
-                    controller: _name,
+                    controller: _clienteNombreController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Nombre del cliente",
@@ -102,7 +180,7 @@ class _AllOrdersState extends State<AllOrders> {
                   ),
                   addVerticalSpace(10),
                   TextField(
-                    controller: _unit,
+                    controller: _unidadNumEco,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "No. Economico",
@@ -110,7 +188,7 @@ class _AllOrdersState extends State<AllOrders> {
                   ),
                   addVerticalSpace(10),
                   TextField(
-                    controller: _driver,
+                    controller: _clienteContactoController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Nombre del conductor",
@@ -118,7 +196,7 @@ class _AllOrdersState extends State<AllOrders> {
                   ),
                   addVerticalSpace(10),
                   TextField(
-                    controller: _diagnostic,
+                    controller: _diagnosticoController,
                     maxLines: 4,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -135,10 +213,31 @@ class _AllOrdersState extends State<AllOrders> {
                         if (id != null) {
                           await _updateData(id);
                         }
-                        _name.clear();
-                        _unit.clear();
-                        _driver.clear();
-                        _diagnostic.clear();
+                        // _name.clear();
+                        // _unit.clear();
+                        // _driver.clear();
+                        // _diagnostic.clear();
+                        _clienteNombreController.clear();
+                        _clienteContactoController.clear();
+                        _unidadNumEco.clear();
+                        _unidadKilometros.clear();
+                        _unidadMarca.clear();
+                        _unidadModelo.clear();
+                        _unidadHorasMotor.clear();
+                        _unidadTipo.clear();
+                        _unidadMotor.clear();
+                        _unidadSerie.clear();
+                        _unidadPlacas.clear();
+                        _unidadAno.clear();
+                        _unidadVin.clear();
+                        _fechaLlegada.clear();
+                        _fechaSalida.clear();
+                        _tecnicoAsignado.clear();
+                        _numeroCaso.clear();
+                        _clienteComentario.clear();
+                        _diagnosticoController.clear();
+                        _trabajoRealizado.clear();
+                        _costosController.clear();
 
                         Navigator.pop(context);
                         print("Data Added.");
@@ -179,8 +278,9 @@ class _AllOrdersState extends State<AllOrders> {
                   minLeadingWidth: 20,
                   title: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: Text(parseString(_allData[index]["cliente"]))),
-                  subtitle: Text(parseString(_allData[index]["unidad"])),
+                      child:
+                          Text(parseString(_allData[index]["clienteNombre"]))),
+                  subtitle: Text(parseString(_allData[index]["unidadNumEco"])),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

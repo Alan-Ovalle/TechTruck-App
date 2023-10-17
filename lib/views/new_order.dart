@@ -1,29 +1,49 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:techtruck_v11/views/all_orders.dart';
+import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
 import 'package:techtruck_v11/design/palette.dart';
 
-class NewOrder extends StatelessWidget {
-  const NewOrder({Key? key}) : super(key: key);
+class NewOrder extends StatefulWidget {
+  final Map<String, dynamic> singleData;
+  final int? idOrder;
 
+  const NewOrder({
+    Key? key,
+    required this.singleData,
+    required this.idOrder,
+  }) : super(key: key);
+
+  @override
+  State<NewOrder> createState() => _NewOrderState();
+}
+
+class _NewOrderState extends State<NewOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Nueva orden")),
-        body: const Center(
-          child: FomularioOrden(),
+      appBar: AppBar(title: const Text("Nueva orden")),
+      body: Center(
+        child: FomularioOrden(
+          dataLocal: widget.singleData,
+          id: widget.idOrder,
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        ));
+      ),
+    );
   }
 }
 
 class FomularioOrden extends StatefulWidget {
-  const FomularioOrden({super.key});
+  final Map<String, dynamic> dataLocal;
+  final int? id;
+  const FomularioOrden({
+    super.key,
+    required this.dataLocal,
+    required this.id,
+  });
   @override
   FomularioOrdenState createState() {
     return FomularioOrdenState();
@@ -31,8 +51,9 @@ class FomularioOrden extends StatefulWidget {
 }
 
 class FomularioOrdenState extends State<FomularioOrden> {
-  final _formularioKey = GlobalKey<FormState>();
+  List<Map<String, dynamic>> _allData = [];
 
+  final _formularioKey = GlobalKey<FormState>();
   final clienteNombreController = TextEditingController();
   final clienteContactoController = TextEditingController();
   final unidadNumEco = TextEditingController();
@@ -82,13 +103,183 @@ class FomularioOrdenState extends State<FomularioOrden> {
     super.dispose();
   }
 
+  void fillData() {
+    clienteNombreController.text = widget.dataLocal["clienteNombre"];
+    clienteContactoController.text = widget.dataLocal["clienteContacto"];
+    unidadNumEco.text = widget.dataLocal["unidadNumEco"];
+    unidadKilometros.text = widget.dataLocal["unidadKilometros"];
+    unidadMarca.text = widget.dataLocal["unidadMarca"];
+    unidadModelo.text = widget.dataLocal["unidadModelo"];
+    unidadHorasMotor.text = widget.dataLocal["unidadHorasMotor"];
+    unidadTipo.text = widget.dataLocal["unidadTipo"];
+    unidadMotor.text = widget.dataLocal["unidadMotor"];
+    unidadSerie.text = widget.dataLocal["unidadSerie"];
+    unidadPlacas.text = widget.dataLocal["unidadPlacas"];
+    unidadAno.text = widget.dataLocal["unidadAno"];
+    unidadVin.text = widget.dataLocal["unidadVin"];
+    fechaLlegada.text = widget.dataLocal["fechaLlegada"];
+    fechaSalida.text = widget.dataLocal["fechaSalida"];
+    tecnicoAsignado.text = widget.dataLocal["tecnicoAsignado"];
+    numeroCaso.text = widget.dataLocal["numeroCaso"];
+    clienteComentario.text = widget.dataLocal["clienteComentario"];
+    diagnosticoController.text = widget.dataLocal["diagnostico"];
+    trabajoRealizado.text = widget.dataLocal["trabajoRealizado"];
+    costosController.text = widget.dataLocal["costo"];
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkData();
+    // _refreshData();
+  }
+
+  void _checkData() {
+    if (widget.id != null) {
+      fillData();
+    } else {
+      _refreshData();
+    }
+  }
+
+  void _refreshData() async {
+    final data = await SQLHelper.getAllData();
+    setState(() {
+      _allData = data;
+    });
+    cleanControllers();
+  }
+
+  void cleanControllers() {
+    clienteNombreController.clear();
+    clienteContactoController.clear();
+    unidadNumEco.clear();
+    unidadKilometros.clear();
+    unidadMarca.clear();
+    unidadModelo.clear();
+    unidadHorasMotor.clear();
+    unidadTipo.clear();
+    unidadMotor.clear();
+    unidadSerie.clear();
+    unidadPlacas.clear();
+    unidadAno.clear();
+    unidadVin.clear();
+    fechaLlegada.clear();
+    fechaSalida.clear();
+    tecnicoAsignado.clear();
+    numeroCaso.clear();
+    clienteComentario.clear();
+    diagnosticoController.clear();
+    trabajoRealizado.clear();
+    costosController.clear();
+  }
+
+  Future<void> _addData() async {
+    bool areAllFieldsFilled = clienteNombreController.text.isNotEmpty ||
+        clienteContactoController.text.isNotEmpty ||
+        unidadNumEco.text.isNotEmpty ||
+        unidadKilometros.text.isNotEmpty ||
+        unidadMarca.text.isNotEmpty ||
+        unidadModelo.text.isNotEmpty ||
+        unidadHorasMotor.text.isNotEmpty ||
+        unidadTipo.text.isNotEmpty ||
+        unidadMotor.text.isNotEmpty ||
+        unidadSerie.text.isNotEmpty ||
+        unidadPlacas.text.isNotEmpty ||
+        unidadAno.text.isNotEmpty ||
+        unidadVin.text.isNotEmpty ||
+        fechaLlegada.text.isNotEmpty ||
+        fechaSalida.text.isNotEmpty ||
+        tecnicoAsignado.text.isNotEmpty ||
+        numeroCaso.text.isNotEmpty ||
+        clienteComentario.text.isNotEmpty ||
+        diagnosticoController.text.isNotEmpty ||
+        trabajoRealizado.text.isNotEmpty ||
+        costosController.text.isNotEmpty;
+    if (!areAllFieldsFilled) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text("Favor de llenar todos los campos"),
+        ),
+      );
+      return;
+    } else {
+      await SQLHelper.createData(
+        clienteNombreController.text,
+        clienteContactoController.text,
+        unidadNumEco.text,
+        unidadKilometros.text,
+        unidadMarca.text,
+        unidadModelo.text,
+        unidadHorasMotor.text,
+        unidadTipo.text,
+        unidadMotor.text,
+        unidadSerie.text,
+        unidadPlacas.text,
+        unidadAno.text,
+        unidadVin.text,
+        fechaLlegada.text,
+        fechaSalida.text,
+        tecnicoAsignado.text,
+        numeroCaso.text,
+        clienteComentario.text,
+        diagnosticoController.text,
+        trabajoRealizado.text,
+        costosController.text,
+      );
+    }
+    _refreshData();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AllOrders(),
+      ),
+    );
+  }
+
+  Future<void> _updateData(int id) async {
+    await SQLHelper.updateData(
+      id,
+      clienteNombreController.text,
+      clienteContactoController.text,
+      unidadNumEco.text,
+      unidadKilometros.text,
+      unidadMarca.text,
+      unidadModelo.text,
+      unidadHorasMotor.text,
+      unidadTipo.text,
+      unidadMotor.text,
+      unidadSerie.text,
+      unidadPlacas.text,
+      unidadAno.text,
+      unidadVin.text,
+      fechaLlegada.text,
+      fechaSalida.text,
+      tecnicoAsignado.text,
+      numeroCaso.text,
+      clienteComentario.text,
+      diagnosticoController.text,
+      trabajoRealizado.text,
+      costosController.text,
+    );
+    _refreshData();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AllOrders(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView(
         children: [
           Form(
-            // key: _formularioKey,
+            key: _formularioKey,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: StaggeredGrid.count(
@@ -115,7 +306,6 @@ class FomularioOrdenState extends State<FomularioOrden> {
                       },
                     ),
                   ),
-                  // child: Tile(index: 1)),
                   StaggeredGridTile.count(
                     crossAxisCellCount: 3,
                     mainAxisCellCount: .5,
@@ -161,7 +351,6 @@ class FomularioOrdenState extends State<FomularioOrden> {
                       },
                     ),
                   ),
-
                   StaggeredGridTile.count(
                     crossAxisCellCount: 3,
                     mainAxisCellCount: .5,
@@ -180,7 +369,6 @@ class FomularioOrdenState extends State<FomularioOrden> {
                       },
                     ),
                   ),
-
                   StaggeredGridTile.count(
                     crossAxisCellCount: 3,
                     mainAxisCellCount: .5,
@@ -190,7 +378,6 @@ class FomularioOrdenState extends State<FomularioOrden> {
                       },
                     ),
                   ),
-
                   StaggeredGridTile.count(
                     crossAxisCellCount: 3,
                     mainAxisCellCount: .5,
@@ -225,7 +412,6 @@ class FomularioOrdenState extends State<FomularioOrden> {
                       },
                     ),
                   ),
-
                   StaggeredGridTile.count(
                     crossAxisCellCount: 3,
                     mainAxisCellCount: .5,
@@ -254,7 +440,6 @@ class FomularioOrdenState extends State<FomularioOrden> {
                       },
                     ),
                   ),
-
                   StaggeredGridTile.count(
                     crossAxisCellCount: 6,
                     mainAxisCellCount: .5,
@@ -292,7 +477,6 @@ class FomularioOrdenState extends State<FomularioOrden> {
                       },
                     ),
                   ),
-
                   StaggeredGridTile.count(
                     crossAxisCellCount: 7,
                     mainAxisCellCount: .5,
@@ -327,18 +511,14 @@ class FomularioOrdenState extends State<FomularioOrden> {
                     crossAxisCellCount: 12,
                     mainAxisCellCount: .5,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (context) {
-                        //     return AlertDialog(
-                        //         // content: Text(primerController.text),
-                        //         );
-                        //   },
-                        // );
-                        // dispose();
+                      onPressed: () async {
+                        if (widget.id == null) {
+                          await _addData();
+                        } else if (widget.id != null) {
+                          await _updateData(widget.id!);
+                        }
                       },
-                      child: const Text('Crear orden'),
+                      child: Text(widget.id == null ? "Agregar" : "Actualizar"),
                     ),
                   ),
                 ],

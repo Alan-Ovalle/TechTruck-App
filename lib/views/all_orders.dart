@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:techtruck_v11/views/orden_details.dart';
+import 'package:techtruck_v11/views/new_order.dart';
 import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
 
@@ -14,13 +17,29 @@ class _AllOrdersState extends State<AllOrders> {
   List<Map<String, dynamic>> _allData = [];
   bool _isLoading = true;
 
-  void _refreshData() async {
-    final data = await SQLHelper.getAllData();
-    setState(() {
-      _allData = data;
-      _isLoading = false;
-    });
-  }
+  final TextEditingController _clienteNombreController =
+      TextEditingController();
+  final TextEditingController _clienteContactoController =
+      TextEditingController();
+  final TextEditingController _unidadNumEco = TextEditingController();
+  final TextEditingController _unidadKilometros = TextEditingController();
+  final TextEditingController _unidadMarca = TextEditingController();
+  final TextEditingController _unidadModelo = TextEditingController();
+  final TextEditingController _unidadHorasMotor = TextEditingController();
+  final TextEditingController _unidadTipo = TextEditingController();
+  final TextEditingController _unidadMotor = TextEditingController();
+  final TextEditingController _unidadSerie = TextEditingController();
+  final TextEditingController _unidadPlacas = TextEditingController();
+  final TextEditingController _unidadAno = TextEditingController();
+  final TextEditingController _unidadVin = TextEditingController();
+  final TextEditingController _fechaLlegada = TextEditingController();
+  final TextEditingController _fechaSalida = TextEditingController();
+  final TextEditingController _tecnicoAsignado = TextEditingController();
+  final TextEditingController _numeroCaso = TextEditingController();
+  final TextEditingController _clienteComentario = TextEditingController();
+  final TextEditingController _diagnosticoController = TextEditingController();
+  final TextEditingController _trabajoRealizado = TextEditingController();
+  final TextEditingController _costosController = TextEditingController();
 
   @override
   void initState() {
@@ -28,40 +47,102 @@ class _AllOrdersState extends State<AllOrders> {
     _refreshData();
   }
 
+  void _refreshData() async {
+    final data = await SQLHelper.getAllData();
+    setState(() {
+      _allData = data;
+      _isLoading = false;
+    });
+    cleanControllers();
+  }
+
+  void cleanControllers() {
+    _clienteNombreController.clear();
+    _clienteContactoController.clear();
+    _unidadNumEco.clear();
+    _unidadKilometros.clear();
+    _unidadMarca.clear();
+    _unidadModelo.clear();
+    _unidadHorasMotor.clear();
+    _unidadTipo.clear();
+    _unidadMotor.clear();
+    _unidadSerie.clear();
+    _unidadPlacas.clear();
+    _unidadAno.clear();
+    _unidadVin.clear();
+    _fechaLlegada.clear();
+    _fechaSalida.clear();
+    _tecnicoAsignado.clear();
+    _numeroCaso.clear();
+    _clienteComentario.clear();
+    _diagnosticoController.clear();
+    _trabajoRealizado.clear();
+    _costosController.clear();
+  }
+
   Future<void> _addData() async {
-    await SQLHelper.createData(
-      _clienteNombreController.text,
-      _clienteContactoController.text,
-      _unidadNumEco.text,
-      _unidadKilometros.text,
-      _unidadMarca.text,
-      _unidadModelo.text,
-      _unidadHorasMotor.text,
-      _unidadTipo.text,
-      _unidadMotor.text,
-      _unidadSerie.text,
-      _unidadPlacas.text,
-      _unidadAno.text,
-      _unidadVin.text,
-      _fechaLlegada.text,
-      _fechaSalida.text,
-      _tecnicoAsignado.text,
-      _numeroCaso.text,
-      _clienteComentario.text,
-      _diagnosticoController.text,
-      _trabajoRealizado.text,
-      _costosController.text,
-    );
+    bool areAllFieldsFilled = _clienteNombreController.text.isNotEmpty ||
+        _clienteContactoController.text.isNotEmpty ||
+        _unidadNumEco.text.isNotEmpty ||
+        _unidadKilometros.text.isNotEmpty ||
+        _unidadMarca.text.isNotEmpty ||
+        _unidadModelo.text.isNotEmpty ||
+        _unidadHorasMotor.text.isNotEmpty ||
+        _unidadTipo.text.isNotEmpty ||
+        _unidadMotor.text.isNotEmpty ||
+        _unidadSerie.text.isNotEmpty ||
+        _unidadPlacas.text.isNotEmpty ||
+        _unidadAno.text.isNotEmpty ||
+        _unidadVin.text.isNotEmpty ||
+        _fechaLlegada.text.isNotEmpty ||
+        _fechaSalida.text.isNotEmpty ||
+        _tecnicoAsignado.text.isNotEmpty ||
+        _numeroCaso.text.isNotEmpty ||
+        _clienteComentario.text.isNotEmpty ||
+        _diagnosticoController.text.isNotEmpty ||
+        _trabajoRealizado.text.isNotEmpty ||
+        _costosController.text.isNotEmpty;
+    if (!areAllFieldsFilled) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text("Favor de llenar todos los campos"),
+        ),
+      );
+      return;
+    } else {
+      await SQLHelper.createData(
+        _clienteNombreController.text,
+        _clienteContactoController.text,
+        _unidadNumEco.text,
+        _unidadKilometros.text,
+        _unidadMarca.text,
+        _unidadModelo.text,
+        _unidadHorasMotor.text,
+        _unidadTipo.text,
+        _unidadMotor.text,
+        _unidadSerie.text,
+        _unidadPlacas.text,
+        _unidadAno.text,
+        _unidadVin.text,
+        _fechaLlegada.text,
+        _fechaSalida.text,
+        _tecnicoAsignado.text,
+        _numeroCaso.text,
+        _clienteComentario.text,
+        _diagnosticoController.text,
+        _trabajoRealizado.text,
+        _costosController.text,
+      );
+    }
+
     _refreshData();
   }
 
   Future<void> _updateData(int id) async {
     await SQLHelper.updateData(
       id,
-      // _name.text,
-      // _unit.text,
-      // _driver.text,
-      // _diagnostic.text,
       _clienteNombreController.text,
       _clienteContactoController.text,
       _unidadNumEco.text,
@@ -88,8 +169,8 @@ class _AllOrdersState extends State<AllOrders> {
   }
 
   void _deleteData(int id) async {
-    await SQLHelper.deleteData(id);
-
+    await SQLHelper.deleteData(id, context);
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: Colors.redAccent,
@@ -100,39 +181,29 @@ class _AllOrdersState extends State<AllOrders> {
     _refreshData();
   }
 
-  final TextEditingController _clienteNombreController =
-      TextEditingController();
-  final TextEditingController _clienteContactoController =
-      TextEditingController();
-  final TextEditingController _unidadNumEco = TextEditingController();
-  final TextEditingController _unidadKilometros = TextEditingController();
-  final TextEditingController _unidadMarca = TextEditingController();
-  final TextEditingController _unidadModelo = TextEditingController();
-  final TextEditingController _unidadHorasMotor = TextEditingController();
-  final TextEditingController _unidadTipo = TextEditingController();
-  final TextEditingController _unidadMotor = TextEditingController();
-  final TextEditingController _unidadSerie = TextEditingController();
-  final TextEditingController _unidadPlacas = TextEditingController();
-  final TextEditingController _unidadAno = TextEditingController();
-  final TextEditingController _unidadVin = TextEditingController();
-  final TextEditingController _fechaLlegada = TextEditingController();
-  final TextEditingController _fechaSalida = TextEditingController();
-  final TextEditingController _tecnicoAsignado = TextEditingController();
-  final TextEditingController _numeroCaso = TextEditingController();
-  final TextEditingController _clienteComentario = TextEditingController();
-  final TextEditingController _diagnosticoController = TextEditingController();
-  final TextEditingController _trabajoRealizado = TextEditingController();
-  final TextEditingController _costosController = TextEditingController();
+  void showNewOrder(int? id) {
+    Map<String, dynamic> existingData = {};
+    if (id != null) {
+      existingData = _allData.firstWhere((element) => element["id"] == id);
+    } else {
+      cleanControllers();
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => NewOrder(
+                singleData: existingData,
+                idOrder: id,
+              )),
+    );
+
+    _refreshData();
+  }
 
   void showBottomSheet(int? id) async {
+    Map<String, dynamic> existingData = {};
     if (id != null) {
-      print("ID $id");
-      final existingData =
-          _allData.firstWhere((element) => element["id"] == id);
-      // _name.text = existingData["cliente"];
-      // _unit.text = existingData["unidad"];
-      // _driver.text = existingData["conductor"];
-      // _diagnostic.text = existingData["diagnostico"];
+      existingData = _allData.firstWhere((element) => element["id"] == id);
       _clienteNombreController.text = existingData["clienteNombre"];
       _clienteContactoController.text = existingData["clienteContacto"];
       _unidadNumEco.text = existingData["unidadNumEco"];
@@ -154,6 +225,8 @@ class _AllOrdersState extends State<AllOrders> {
       _diagnosticoController.text = existingData["diagnostico"];
       _trabajoRealizado.text = existingData["trabajoRealizado"];
       _costosController.text = existingData["costo"];
+    } else {
+      cleanControllers();
     }
 
     showModalBottomSheet(
@@ -213,41 +286,15 @@ class _AllOrdersState extends State<AllOrders> {
                         if (id != null) {
                           await _updateData(id);
                         }
-                        // _name.clear();
-                        // _unit.clear();
-                        // _driver.clear();
-                        // _diagnostic.clear();
-                        _clienteNombreController.clear();
-                        _clienteContactoController.clear();
-                        _unidadNumEco.clear();
-                        _unidadKilometros.clear();
-                        _unidadMarca.clear();
-                        _unidadModelo.clear();
-                        _unidadHorasMotor.clear();
-                        _unidadTipo.clear();
-                        _unidadMotor.clear();
-                        _unidadSerie.clear();
-                        _unidadPlacas.clear();
-                        _unidadAno.clear();
-                        _unidadVin.clear();
-                        _fechaLlegada.clear();
-                        _fechaSalida.clear();
-                        _tecnicoAsignado.clear();
-                        _numeroCaso.clear();
-                        _clienteComentario.clear();
-                        _diagnosticoController.clear();
-                        _trabajoRealizado.clear();
-                        _costosController.clear();
-
                         Navigator.pop(context);
-                        print("Data Added.");
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(18),
-                        child: Text(
-                          id == null ? "Agregar" : "Actualizar",
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
+                        child: Text(id == null ? "Agregar" : "Actualizar",
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            )),
                       ),
                     ),
                   )
@@ -260,7 +307,25 @@ class _AllOrdersState extends State<AllOrders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Todas las ordenes"),
+        title: const Text("Ordenes de servicio"),
+        centerTitle: true,
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              showNewOrder(null);
+            },
+            child: const Text("Nueva orden"),
+          ),
+          addHorizontalSpace(15),
+          // IconButton(
+          //   onPressed: () {},
+          //   icon: const Icon(Icons.search),
+          // ),
+          // IconButton(
+          //   onPressed: () {},
+          //   icon: const Icon(Icons.filter_alt),
+          // ),
+        ],
       ),
       body: _isLoading
           ? const Center(
@@ -271,7 +336,6 @@ class _AllOrdersState extends State<AllOrders> {
               itemBuilder: (context, index) => Card(
                 child: ListTile(
                   leading: Text(
-                    // "${index + 1}",
                     "${_allData[index]["id"]}",
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
@@ -288,21 +352,21 @@ class _AllOrdersState extends State<AllOrders> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        icon: Icon(Icons.print),
+                        icon: const Icon(Icons.print),
                         color: Colors.blueGrey,
                       ),
                       IconButton(
                         onPressed: () {
-                          showBottomSheet(_allData[index]["id"]);
+                          showNewOrder(_allData[index]["id"]);
                         },
-                        icon: Icon(Icons.edit),
+                        icon: const Icon(Icons.edit),
                         color: Colors.blue,
                       ),
                       IconButton(
                         onPressed: () {
                           _deleteData(_allData[index]["id"]);
                         },
-                        icon: Icon(Icons.delete_forever),
+                        icon: const Icon(Icons.delete_forever),
                         color: Colors.redAccent,
                       ),
                     ],

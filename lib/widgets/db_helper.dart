@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 class SQLHelper {
@@ -152,10 +153,19 @@ class SQLHelper {
     return result;
   }
 
-  static Future<void> deleteData(int id) async {
+  static Future<void> deleteData(int id, BuildContext context) async {
     final db = await SQLHelper.db();
     try {
       await db.delete('data', where: 'id = ?', whereArgs: [id]);
-    } catch (e) {}
+    } catch (e) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text(e.toString()),
+        ),
+      );
+    }
   }
 }

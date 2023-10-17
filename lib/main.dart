@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:techtruck_v11/views/inicio.dart';
+import 'package:techtruck_v11/views/all_orders.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 Future main() async {
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           // fontFamily: 'Hamlin',
           visualDensity: VisualDensity.adaptivePlatformDensity),
       debugShowCheckedModeBanner: false,
-      home: const Inicio(),
+      home: const AllOrders(),
     );
   }
 }

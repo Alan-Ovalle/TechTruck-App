@@ -231,12 +231,8 @@ class FomularioOrdenState extends State<FomularioOrden> {
       );
     }
     _refreshData();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AllOrders(),
-      ),
-    );
+
+    Navigator.pop(context);
   }
 
   Future<void> _updateData(int id) async {
@@ -265,12 +261,8 @@ class FomularioOrdenState extends State<FomularioOrden> {
       costosController.text,
     );
     _refreshData();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AllOrders(),
-      ),
-    );
+
+    Navigator.pop(context);
   }
 
   @override

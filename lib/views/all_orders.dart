@@ -188,6 +188,7 @@ class _AllOrdersState extends State<AllOrders> {
     } else {
       cleanControllers();
     }
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -195,9 +196,7 @@ class _AllOrdersState extends State<AllOrders> {
                 singleData: existingData,
                 idOrder: id,
               )),
-    );
-
-    _refreshData();
+    ).then((res) => _refreshData());
   }
 
   void showBottomSheet(int? id) async {

@@ -1,8 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:techtruck_v11/views/new_order.dart';
+import 'package:techtruck_v11/views/pdf_order.dart';
 import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
 import 'package:techtruck_v11/api/pdf_api.dart';
@@ -428,9 +430,16 @@ class _AllOrdersState extends State<AllOrders> {
                             ],
                           );
 
-                          final pdfFile = await PdfInvoiceApi.generate(invoice);
+                          // final pdfFile = await PdfInvoiceApi.generate(invoice);
 
-                          PdfApi.openFile(pdfFile);
+                          // PdfApi.openFile(pdfFile as File);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PdfOrder(
+                                      invoice: invoice,
+                                    )),
+                          ).then((res) => _refreshData());
                         },
                         icon: const Icon(Icons.print),
                         color: Colors.blueGrey,

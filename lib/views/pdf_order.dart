@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:printing/printing.dart';
+import 'package:techtruck_v11/api/pdf_invoice_api.dart';
+import 'package:techtruck_v11/model/invoice.dart';
+import 'package:techtruck_v11/api/pdf_api.dart';
 
 class PdfOrder extends StatelessWidget {
-  const PdfOrder({Key? key}) : super(key: key);
+  final Invoice invoice;
+  const PdfOrder({Key? key, required this.invoice}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("PDF Order"),
+      ),
+      body: PdfPreview(
+        build: (format) => PdfInvoiceApi.generate(invoice),
+      ),
+    );
   }
 }

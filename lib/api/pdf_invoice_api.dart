@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:techtruck_v11/api/pdf_api.dart';
 import 'package:techtruck_v11/model/customer.dart';
 import 'package:techtruck_v11/model/invoice.dart';
@@ -9,7 +10,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 
 class PdfInvoiceApi {
-  static Future<File> generate(Invoice invoice) async {
+  static Future<Uint8List> generate(Invoice invoice) async {
     final pdf = Document();
 
     pdf.addPage(MultiPage(
@@ -24,7 +25,8 @@ class PdfInvoiceApi {
       footer: (context) => buildFooter(invoice),
     ));
 
-    return PdfApi.saveDocument(name: 'my_invoice.pdf', pdf: pdf);
+    // return PdfApi.saveDocument(name: 'my_invoice.pdf', pdf: pdf);
+    return pdf.save();
   }
 
   static Widget buildHeader(Invoice invoice) => Column(

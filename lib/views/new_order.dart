@@ -1,11 +1,9 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:techtruck_v11/views/all_orders.dart';
+// import 'package:techtruck_v11/views/all_orders.dart';
 import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
-import 'package:techtruck_v11/design/palette.dart';
+// import 'package:techtruck_v11/design/palette.dart';
 
 class NewOrder extends StatefulWidget {
   final Map<String, dynamic> singleData;

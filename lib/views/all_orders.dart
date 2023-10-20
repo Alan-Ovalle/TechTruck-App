@@ -1,19 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:techtruck_v11/views/new_order.dart';
 import 'package:techtruck_v11/views/pdf_order.dart';
 import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
-import 'package:techtruck_v11/api/pdf_api.dart';
-import 'package:techtruck_v11/api/pdf_invoice_api.dart';
-import 'package:techtruck_v11/model/customer.dart';
-import 'package:techtruck_v11/model/invoice.dart';
-import 'package:techtruck_v11/model/supplier.dart';
-import 'package:techtruck_v11/widgets/button_widget.dart';
-import 'package:techtruck_v11/widgets/title_widget.dart';
 
 class AllOrders extends StatefulWidget {
   const AllOrders({Key? key}) : super(key: key);
@@ -190,7 +181,7 @@ class _AllOrdersState extends State<AllOrders> {
     _refreshData();
   }
 
-  void showNewOrder(int? id) {
+  void showFullOrder(int? id) {
     Map<String, dynamic> existingData = {};
     if (id != null) {
       existingData = _allData.firstWhere((element) => element["id"] == id);
@@ -204,6 +195,22 @@ class _AllOrdersState extends State<AllOrders> {
           builder: (context) => NewOrder(
                 singleData: existingData,
                 idOrder: id,
+              )),
+    ).then((res) => _refreshData());
+  }
+
+  void convertOrderPdf(int? id) {
+    Map<String, dynamic> existingData = {};
+    if (id != null) {
+      existingData = _allData.firstWhere((element) => element["id"] == id);
+    } else {
+      cleanControllers();
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => PdfOrder(
+                orderToPrint: existingData,
               )),
     ).then((res) => _refreshData());
   }
@@ -320,7 +327,7 @@ class _AllOrdersState extends State<AllOrders> {
         actions: [
           ElevatedButton(
             onPressed: () {
-              showNewOrder(null);
+              showFullOrder(null);
             },
             child: const Text("Nueva orden"),
           ),
@@ -358,86 +365,11 @@ class _AllOrdersState extends State<AllOrders> {
                     children: [
                       IconButton(
                         onPressed: () async {
-                          final date = DateTime.now();
-                          final dueDate = date.add(Duration(days: 7));
-
-                          final invoice = Invoice(
-                            supplier: Supplier(
-                              name: 'Sarah Field',
-                              address: 'Sarah Street 9, Beijing, China',
-                              paymentInfo: 'https://paypal.me/sarahfieldzz',
-                            ),
-                            customer: Customer(
-                              name: 'Apple Inc.',
-                              address: 'Apple Street, Cupertino, CA 95014',
-                            ),
-                            info: InvoiceInfo(
-                              date: date,
-                              dueDate: dueDate,
-                              description: 'My description...',
-                              number: '${DateTime.now().year}-9999',
-                            ),
-                            items: [
-                              InvoiceItem(
-                                description: 'Coffee',
-                                date: DateTime.now(),
-                                quantity: 3,
-                                vat: 0.19,
-                                unitPrice: 5.99,
-                              ),
-                              InvoiceItem(
-                                description: 'Water',
-                                date: DateTime.now(),
-                                quantity: 8,
-                                vat: 0.19,
-                                unitPrice: 0.99,
-                              ),
-                              InvoiceItem(
-                                description: 'Orange',
-                                date: DateTime.now(),
-                                quantity: 3,
-                                vat: 0.19,
-                                unitPrice: 2.99,
-                              ),
-                              InvoiceItem(
-                                description: 'Apple',
-                                date: DateTime.now(),
-                                quantity: 8,
-                                vat: 0.19,
-                                unitPrice: 3.99,
-                              ),
-                              InvoiceItem(
-                                description: 'Mango',
-                                date: DateTime.now(),
-                                quantity: 1,
-                                vat: 0.19,
-                                unitPrice: 1.59,
-                              ),
-                              InvoiceItem(
-                                description: 'Blue Berries',
-                                date: DateTime.now(),
-                                quantity: 5,
-                                vat: 0.19,
-                                unitPrice: 0.99,
-                              ),
-                              InvoiceItem(
-                                description: 'Lemon',
-                                date: DateTime.now(),
-                                quantity: 4,
-                                vat: 0.19,
-                                unitPrice: 1.29,
-                              ),
-                            ],
-                          );
-
-                          // final pdfFile = await PdfInvoiceApi.generate(invoice);
-
-                          // PdfApi.openFile(pdfFile as File);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => PdfOrder(
-                                      invoice: invoice,
+                                      orderToPrint: _allData[index],
                                     )),
                           ).then((res) => _refreshData());
                         },
@@ -446,7 +378,7 @@ class _AllOrdersState extends State<AllOrders> {
                       ),
                       IconButton(
                         onPressed: () {
-                          showNewOrder(_allData[index]["id"]);
+                          showFullOrder(_allData[index]["id"]);
                         },
                         icon: const Icon(Icons.edit),
                         color: Colors.blue,

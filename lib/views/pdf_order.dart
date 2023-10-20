@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:printing/printing.dart';
 import 'package:techtruck_v11/api/pdf_invoice_api.dart';
-import 'package:techtruck_v11/model/invoice.dart';
-import 'package:techtruck_v11/api/pdf_api.dart';
+// import 'package:techtruck_v11/model/orden_servicio.dart';
 
 class PdfOrder extends StatelessWidget {
-  final Invoice invoice;
-  const PdfOrder({Key? key, required this.invoice}) : super(key: key);
+  final Map<String, dynamic> orderToPrint;
+  const PdfOrder({
+    Key? key,
+    required this.orderToPrint,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,12 @@ class PdfOrder extends StatelessWidget {
         title: const Text("PDF Order"),
       ),
       body: PdfPreview(
-        build: (format) => PdfInvoiceApi.generate(invoice),
+        canChangeOrientation: false,
+        canChangePageFormat: false,
+        pdfFileName:
+            "${orderToPrint["id"]}_${orderToPrint["clienteNombre"]}.pdf",
+        maxPageWidth: 700,
+        build: (format) => PdfInvoiceApi.generate(orderToPrint),
       ),
     );
   }

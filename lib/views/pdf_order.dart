@@ -6,9 +6,9 @@ import 'package:techtruck_v11/api/pdf_orden_api.dart';
 class PdfOrder extends StatelessWidget {
   final Map<String, dynamic> orderToPrint;
   const PdfOrder({
-    Key? key,
+    super.key,
     required this.orderToPrint,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

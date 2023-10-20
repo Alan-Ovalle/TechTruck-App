@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'TechTruck App',
       theme: ThemeData(
           primarySwatch: Colors.blue,
-          // fontFamily: 'Hamlin',
+          fontFamily: 'Hamlin',
           visualDensity: VisualDensity.adaptivePlatformDensity),
       debugShowCheckedModeBanner: false,
       home: const AllOrders(),

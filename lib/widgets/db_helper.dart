@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
@@ -16,7 +18,7 @@ class SQLHelper {
         unidadMotor TEXT,
         unidadSerie TEXT,
         unidadPlacas TEXT,
-        unidadAno TEXT,
+        unidadYear TEXT,
         unidadVin TEXT,
         fechaLlegada TEXT,
         fechaSalida TEXT,
@@ -48,7 +50,7 @@ class SQLHelper {
     String? unidadMotor,
     String? unidadSerie,
     String? unidadPlacas,
-    String? unidadAno,
+    String? unidadYear,
     String? unidadVin,
     String? fechaLlegada,
     String? fechaSalida,
@@ -72,7 +74,7 @@ class SQLHelper {
       'unidadMotor': unidadMotor,
       'unidadSerie': unidadSerie,
       'unidadPlacas': unidadPlacas,
-      'unidadAno': unidadAno,
+      'unidadYear': unidadYear,
       'unidadVin': unidadVin,
       'fechaLlegada': fechaLlegada,
       'fechaSalida': fechaSalida,
@@ -112,7 +114,7 @@ class SQLHelper {
     String? unidadMotor,
     String? unidadSerie,
     String? unidadPlacas,
-    String? unidadAno,
+    String? unidadYear,
     String? unidadVin,
     String? fechaLlegada,
     String? fechaSalida,
@@ -136,7 +138,7 @@ class SQLHelper {
       'unidadMotor': unidadMotor,
       'unidadSerie': unidadSerie,
       'unidadPlacas': unidadPlacas,
-      'unidadAno': unidadAno,
+      'unidadYear': unidadYear,
       'unidadVin': unidadVin,
       'fechaLlegada': fechaLlegada,
       'fechaSalida': fechaSalida,
@@ -158,7 +160,6 @@ class SQLHelper {
     try {
       await db.delete('data', where: 'id = ?', whereArgs: [id]);
     } catch (e) {
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

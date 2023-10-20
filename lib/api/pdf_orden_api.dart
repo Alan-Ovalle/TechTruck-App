@@ -2,17 +2,13 @@ import 'dart:typed_data';
 import 'package:techtruck_v11/model/datos_cliente.dart';
 import 'package:techtruck_v11/model/orden_servicio.dart';
 import 'package:techtruck_v11/model/datos_unidad.dart';
-import 'package:techtruck_v11/utils.dart';
 import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
+// import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 
-class PdfInvoiceApi {
+class PdfOrdenApi {
   static Future<Uint8List> generate(Map<String, dynamic> orderData) async {
     final pdf = Document();
-    var texto1 = orderData["clienteNombre"];
-    var texto2 = orderData["clienteContacto"];
-
     pdf.addPage(MultiPage(
       build: (context) => [
         // buildHeader(invoice),
@@ -28,17 +24,13 @@ class PdfInvoiceApi {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                buildSupplierAddress(
-                  texto1,
-                  texto2,
+                buildExampleText(
+                  orderData["clienteNombre"],
+                  orderData["clienteContacto"],
                 ),
-                Container(
-                  height: 50,
-                  width: 50,
-                  child: BarcodeWidget(
-                    barcode: Barcode.qrCode(),
-                    data: orderData["id"].toString(),
-                  ),
+                buildExampleText(
+                  orderData["id"].toString(),
+                  orderData["clienteComentarios"],
                 ),
               ],
             ),
@@ -60,7 +52,7 @@ class PdfInvoiceApi {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // buildSupplierAddress(invoice.supplier),
+              // buildExampleText(invoice.supplier),
               Container(
                 height: 50,
                 width: 50,
@@ -74,7 +66,7 @@ class PdfInvoiceApi {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               buildDatosCliente(ordenLocal.cliente!),
-              buildDatosCliente(ordenLocal.cliente!),
+              buildDatosUnidad(ordenLocal.unidad!),
               // buildDatosUnidad(ordenLocal.unidad!),
             ],
           ),
@@ -109,7 +101,7 @@ class PdfInvoiceApi {
         ],
       );
 
-  static Widget buildSupplierAddress(
+  static Widget buildExampleText(
     String? text1,
     String? text2,
   ) =>
@@ -244,7 +236,7 @@ class PdfInvoiceApi {
 
     return Row(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: pw.CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(title, style: style),
         SizedBox(width: 2 * PdfPageFormat.mm),

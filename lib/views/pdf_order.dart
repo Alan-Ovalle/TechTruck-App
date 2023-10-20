@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
-import 'package:techtruck_v11/api/pdf_invoice_api.dart';
+import 'package:techtruck_v11/api/pdf_orden_api.dart';
 // import 'package:techtruck_v11/model/orden_servicio.dart';
 
 class PdfOrder extends StatelessWidget {
@@ -20,9 +20,10 @@ class PdfOrder extends StatelessWidget {
         canChangeOrientation: false,
         canChangePageFormat: false,
         pdfFileName:
-            "${orderToPrint["id"]}_${orderToPrint["clienteNombre"]}.pdf",
+            // "${orderToPrint["id"]}_${orderToPrint["clienteNombre"]}.pdf",
+            "Orden xxx1.pdf",
         maxPageWidth: 700,
-        build: (format) => PdfInvoiceApi.generate(orderToPrint),
+        build: (format) => PdfOrdenApi.generate(orderToPrint),
       ),
     );
   }

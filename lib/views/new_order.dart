@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 // import 'package:techtruck_v11/views/all_orders.dart';
@@ -49,8 +51,6 @@ class FomularioOrden extends StatefulWidget {
 }
 
 class FomularioOrdenState extends State<FomularioOrden> {
-  List<Map<String, dynamic>> _allData = [];
-
   final _formularioKey = GlobalKey<FormState>();
   final clienteNombreController = TextEditingController();
   final clienteContactoController = TextEditingController();
@@ -63,7 +63,7 @@ class FomularioOrdenState extends State<FomularioOrden> {
   final unidadMotor = TextEditingController();
   final unidadSerie = TextEditingController();
   final unidadPlacas = TextEditingController();
-  final unidadAno = TextEditingController();
+  final unidadYear = TextEditingController();
   final unidadVin = TextEditingController();
   final fechaLlegada = TextEditingController();
   final fechaSalida = TextEditingController();
@@ -87,7 +87,7 @@ class FomularioOrdenState extends State<FomularioOrden> {
     unidadMotor.dispose();
     unidadSerie.dispose();
     unidadPlacas.dispose();
-    unidadAno.dispose();
+    unidadYear.dispose();
     unidadVin.dispose();
     fechaLlegada.dispose();
     fechaSalida.dispose();
@@ -113,7 +113,7 @@ class FomularioOrdenState extends State<FomularioOrden> {
     unidadMotor.text = widget.dataLocal["unidadMotor"];
     unidadSerie.text = widget.dataLocal["unidadSerie"];
     unidadPlacas.text = widget.dataLocal["unidadPlacas"];
-    unidadAno.text = widget.dataLocal["unidadAno"];
+    unidadYear.text = widget.dataLocal["unidadYear"];
     unidadVin.text = widget.dataLocal["unidadVin"];
     fechaLlegada.text = widget.dataLocal["fechaLlegada"];
     fechaSalida.text = widget.dataLocal["fechaSalida"];
@@ -129,23 +129,14 @@ class FomularioOrdenState extends State<FomularioOrden> {
   void initState() {
     super.initState();
     _checkData();
-    // _refreshData();
   }
 
   void _checkData() {
     if (widget.id != null) {
       fillData();
     } else {
-      _refreshData();
+      cleanControllers();
     }
-  }
-
-  void _refreshData() async {
-    final data = await SQLHelper.getAllData();
-    setState(() {
-      _allData = data;
-    });
-    cleanControllers();
   }
 
   void cleanControllers() {
@@ -160,7 +151,7 @@ class FomularioOrdenState extends State<FomularioOrden> {
     unidadMotor.clear();
     unidadSerie.clear();
     unidadPlacas.clear();
-    unidadAno.clear();
+    unidadYear.clear();
     unidadVin.clear();
     fechaLlegada.clear();
     fechaSalida.clear();
@@ -184,7 +175,7 @@ class FomularioOrdenState extends State<FomularioOrden> {
         unidadMotor.text.isNotEmpty ||
         unidadSerie.text.isNotEmpty ||
         unidadPlacas.text.isNotEmpty ||
-        unidadAno.text.isNotEmpty ||
+        unidadYear.text.isNotEmpty ||
         unidadVin.text.isNotEmpty ||
         fechaLlegada.text.isNotEmpty ||
         fechaSalida.text.isNotEmpty ||
@@ -216,7 +207,7 @@ class FomularioOrdenState extends State<FomularioOrden> {
         unidadMotor.text,
         unidadSerie.text,
         unidadPlacas.text,
-        unidadAno.text,
+        unidadYear.text,
         unidadVin.text,
         fechaLlegada.text,
         fechaSalida.text,
@@ -228,8 +219,7 @@ class FomularioOrdenState extends State<FomularioOrden> {
         costosController.text,
       );
     }
-    _refreshData();
-
+    cleanControllers();
     Navigator.pop(context);
   }
 
@@ -247,7 +237,7 @@ class FomularioOrdenState extends State<FomularioOrden> {
       unidadMotor.text,
       unidadSerie.text,
       unidadPlacas.text,
-      unidadAno.text,
+      unidadYear.text,
       unidadVin.text,
       fechaLlegada.text,
       fechaSalida.text,
@@ -258,8 +248,7 @@ class FomularioOrdenState extends State<FomularioOrden> {
       trabajoRealizado.text,
       costosController.text,
     );
-    _refreshData();
-
+    cleanControllers();
     Navigator.pop(context);
   }
 
@@ -407,7 +396,7 @@ class FomularioOrdenState extends State<FomularioOrden> {
                     mainAxisCellCount: .5,
                     child: expandFieldTile(
                       {
-                        unidadAno: {"Año": 1},
+                        unidadYear: {"Año": 1},
                       },
                     ),
                   ),

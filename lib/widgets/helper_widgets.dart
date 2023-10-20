@@ -1,35 +1,35 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:techtruck_v11/design/palette.dart';
-import 'package:flutter/src/painting/alignment.dart';
 
 const _defaultColor = Color(0xFF34568B);
 
-class AppScaffold extends StatelessWidget {
-  const AppScaffold({
-    Key? key,
-    required this.title,
-    this.topPadding = 0,
-    required this.child,
-  }) : super(key: key);
+// class AppScaffold extends StatelessWidget {
+//   final String title;
+//   final Widget child;
+//   final double topPadding;
 
-  final String title;
-  final Widget child;
-  final double topPadding;
+//   const AppScaffold({
+//     Key? key,
+//     required this.title,
+//     required this.child,
+//     this.topPadding = 0,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Padding(
-        padding: EdgeInsets.only(top: topPadding),
-        child: child,
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(title),
+//       ),
+//       body: Padding(
+//         padding: EdgeInsets.only(top: topPadding),
+//         child: child,
+//       ),
+//     );
+//   }
+// }
 
 class Tile extends StatelessWidget {
   const Tile({
@@ -113,7 +113,9 @@ class InteractiveTile extends StatefulWidget {
   final double? bottomSpace;
 
   @override
-  _InteractiveTileState createState() => _InteractiveTileState();
+  _InteractiveTileState createState() {
+    return _InteractiveTileState();
+  }
 }
 
 class _InteractiveTileState extends State<InteractiveTile> {

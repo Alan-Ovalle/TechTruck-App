@@ -20,8 +20,8 @@ class PdfOrder extends StatelessWidget {
         canChangeOrientation: false,
         canChangePageFormat: false,
         pdfFileName:
-            // "${orderToPrint["id"]}_${orderToPrint["clienteNombre"]}.pdf",
-            "Orden xxx1.pdf",
+            "Orden_de_trabajo_${orderToPrint["id"].toString().padLeft(6, '0')}_${orderToPrint["clienteNombre"]}.pdf",
+        // "Orden xxx1.pdf",
         maxPageWidth: 700,
         build: (format) => PdfOrdenApi.generate(orderToPrint),
       ),

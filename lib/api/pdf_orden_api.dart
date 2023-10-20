@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:typed_data';
 import 'package:flutter/material.dart' as material;
 import 'package:printing/printing.dart';
@@ -14,53 +16,39 @@ class PdfOrdenApi {
     final fondo = await imageFromAssetBundle('assets/images/ordenOpacidad.png');
     final logoHeader =
         await imageFromAssetBundle('assets/images/logoHeader.png');
+    final inventario =
+        await imageFromAssetBundle('assets/images/inventario.png');
 
     pdf.addPage(MultiPage(
-      pageTheme: PageTheme(
+      pageTheme: const PageTheme(
         pageFormat: PdfPageFormat.letter,
-        buildBackground: fondo == null
-            ? null
-            : (context) => FullPage(
-                ignoreMargins: true,
-                child: Image(
-                  fondo,
-                  fit: BoxFit.cover,
-                )),
-        margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+        // buildBackground: fondo == null
+        //     ? null
+        //     : (context) => FullPage(
+        //         ignoreMargins: true,
+        //         child: Image(
+        //           fondo,
+        //           fit: BoxFit.cover,
+        //         )),
+        margin: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
       ),
-      // margin: const EdgeInsets.all(15),
       build: (context) => [
         buildHeader(orderData["id"].toString(), logoHeader),
         SizedBox(height: 4 * PdfPageFormat.point),
-        // Container(width: double.infinity, height: 10, color: PdfColors.red)
-        buildCienteUnidad(orderData, context),
-
-        // buildTitle(invoice),
-        // buildInvoice(invoice),
-        // Divider(),
-        // buildTotal(invoice),
-        // Column(
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: [
-        //     SizedBox(height: 1 * PdfPageFormat.cm),
-        //     Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //       children: [
-        //         buildExampleText(
-        //           orderData["clienteNombre"],
-        //           orderData["clienteContacto"],
-        //         ),
-        //         buildExampleText(
-        //           orderData["id"].toString(),
-        //           orderData["clienteComentarios"],
-        //         ),
-        //       ],
-        //     ),
-        //     SizedBox(height: 1 * PdfPageFormat.cm),
-        //   ],
-        // )
+        buildClienteUnidad(orderData, context),
+        SizedBox(height: 4 * PdfPageFormat.point),
+        buildFechaTecnico(context),
+        SizedBox(height: 6 * PdfPageFormat.point),
+        buildClienteComentario(context),
+        SizedBox(height: 10 * PdfPageFormat.point),
+        buildDiagnostico(context),
+        SizedBox(height: 10 * PdfPageFormat.point),
+        buildTrabajoRealizado(context),
+        SizedBox(height: 8 * PdfPageFormat.point),
+        buildInventario(context, inventario),
+        SizedBox(height: 6 * PdfPageFormat.point),
+        buildFirmaRecibio(context),
       ],
-      // footer: (context) => buildFooter(invoice),
     ));
 
     // return PdfApi.saveDocument(name: 'my_invoice.pdf', pdf: pdf);
@@ -164,7 +152,7 @@ class PdfOrdenApi {
                       Text(
                         _formatFolio(folioId!),
                         textAlign: TextAlign.right,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           color: PdfColors.red,
                         ),
@@ -178,30 +166,35 @@ class PdfOrdenApi {
     );
   }
 
-  static buildTableTitle(String title, Context context) {
+  static buildCellTable(String title, Context context) {
     return TableHelper.fromTextArray(
       context: context,
       data: <List<String>>[
         <String>[title]
       ],
-      cellPadding: EdgeInsets.all(2),
+      cellPadding: const EdgeInsets.all(1),
     );
   }
 
-  static buildCienteUnidad(Map<String, dynamic> orderData, Context context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          flex: 11,
-          child: buildTableTitle("Datos del Cliente", context),
-        ),
-        Expanded(
-          flex: 9,
-          child: buildTableTitle("Datos de la Unidad", context),
-        ),
+  static buildCellToTheLeft(String title, Context context) {
+    return TableHelper.fromTextArray(
+      context: context,
+      headerAlignment: Alignment.centerLeft,
+      data: <List<String>>[
+        <String>[title]
       ],
+      cellPadding: const EdgeInsets.fromLTRB(4, 1, 1, 1),
+    );
+  }
+
+  static buildCellToTheRight(String title, Context context) {
+    return TableHelper.fromTextArray(
+      context: context,
+      headerAlignment: Alignment.centerRight,
+      data: <List<String>>[
+        <String>[title]
+      ],
+      cellPadding: const EdgeInsets.fromLTRB(1, 1, 4, 1),
     );
   }
 
@@ -233,168 +226,530 @@ class PdfOrdenApi {
         ],
       );
 
-  static Widget buildExampleText(String? text1, String? text2) {
-    text1 ??= 'Texto';
-    text2 ??= 'Comentario';
+  static buildClienteUnidad(Map<String, dynamic> orderData, Context context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          flex: 11,
+          child: Column(
+            children: [
+              buildCellTable("Datos del Cliente", context),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Expanded(flex: 1, child: buildCellTable("Nombre:", context)),
+                Expanded(flex: 5, child: buildCellToTheLeft(".", context))
+              ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Expanded(flex: 1, child: buildCellTable(".", context)),
+                Expanded(flex: 5, child: buildCellToTheLeft(".", context))
+              ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Expanded(flex: 1, child: buildCellTable(".", context)),
+                Expanded(flex: 5, child: buildCellToTheLeft(".", context))
+              ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Expanded(flex: 1, child: buildCellTable(".", context)),
+                Expanded(flex: 5, child: buildCellToTheLeft(".", context))
+              ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Expanded(flex: 1, child: buildCellTable("Contacto:", context)),
+                Expanded(flex: 5, child: buildCellToTheLeft(".", context))
+              ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Expanded(flex: 1, child: buildCellTable(".", context)),
+                Expanded(flex: 5, child: buildCellToTheLeft(".", context))
+              ])
+            ],
+          ),
+        ),
+        Expanded(
+            flex: 9,
+            child: Column(
+              children: [
+                buildCellTable("Datos de la Unidad", context),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  flex: 4,
+                                  child: buildCellTable("No. Econ.", context)),
+                              Expanded(
+                                  flex: 5,
+                                  child: buildCellToTheLeft(".", context))
+                            ]),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  flex: 2,
+                                  child: buildCellTable("Kms.", context)),
+                              Expanded(
+                                  flex: 5,
+                                  child: buildCellToTheLeft(".", context))
+                            ]),
+                      )
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  flex: 4,
+                                  child: buildCellTable("Marca", context)),
+                              Expanded(
+                                  flex: 5,
+                                  child: buildCellToTheLeft(".", context))
+                            ]),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  flex: 2,
+                                  child: buildCellTable("Horas", context)),
+                              Expanded(
+                                  flex: 5,
+                                  child: buildCellToTheLeft(".", context))
+                            ]),
+                      )
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  flex: 4,
+                                  child: buildCellTable("Modelo", context)),
+                              Expanded(
+                                  flex: 5,
+                                  child: buildCellToTheLeft(".", context))
+                            ]),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  flex: 2,
+                                  child: buildCellTable("Tipo", context)),
+                              Expanded(
+                                  flex: 5,
+                                  child: buildCellToTheLeft(".", context))
+                            ]),
+                      )
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  flex: 4,
+                                  child: buildCellTable("Motor", context)),
+                              Expanded(
+                                  flex: 5,
+                                  child: buildCellToTheLeft(".", context))
+                            ]),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  flex: 2,
+                                  child: buildCellTable("Serie", context)),
+                              Expanded(
+                                  flex: 5,
+                                  child: buildCellToTheLeft(".", context))
+                            ]),
+                      )
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  flex: 4,
+                                  child: buildCellTable("Placas", context)),
+                              Expanded(
+                                  flex: 5,
+                                  child: buildCellToTheLeft(".", context))
+                            ]),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  flex: 2,
+                                  child: buildCellTable("Año", context)),
+                              Expanded(
+                                  flex: 5,
+                                  child: buildCellToTheLeft(".", context))
+                            ]),
+                      )
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          flex: 4, child: buildCellTable("V.I.N.", context)),
+                      Expanded(
+                          flex: 14, child: buildCellToTheLeft(".", context))
+                    ]),
+              ],
+            )),
+      ],
+    );
+  }
 
+  static buildFechaTecnico(Context context) {
+    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      Container(
+        width: 40,
+        child: buildCellTable("Fecha", context),
+      ),
+      Container(
+        width: 65,
+        child: buildCellTable(".", context),
+      ),
+      Container(
+        width: 40,
+        child: buildCellTable("Salida", context),
+      ),
+      Container(
+        width: 65,
+        child: buildCellTable(".", context),
+      ),
+      Container(
+        width: 110,
+        child: buildCellTable("Tecnico Asignado", context),
+      ),
+      Container(
+        width: 125,
+        child: buildCellToTheLeft(".", context),
+      ),
+      Container(
+        width: 50,
+        child: buildCellTable("# Caso", context),
+      ),
+      Expanded(
+        child: Container(
+          width: 40,
+          child: buildCellToTheLeft(".", context),
+        ),
+      )
+    ]);
+  }
+
+  static buildClienteComentario(Context context) {
     return Column(
+      children: [
+        buildCellToTheLeft("Comentarios del Cliente", context),
+        buildCellToTheLeft(".", context),
+        buildCellToTheLeft(".", context),
+        buildCellToTheLeft(".", context),
+      ],
+    );
+  }
+
+  static buildDiagnostico(Context context) {
+    return Column(
+      children: [
+        buildCellToTheLeft("Diagnostico", context),
+        buildCellToTheLeft(".", context),
+        buildCellToTheLeft(".", context),
+      ],
+    );
+  }
+
+  static buildTrabajoRealizado(Context context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          flex: 20,
+          child: Column(
+            children: [
+              buildCellToTheLeft("Trabajos Realizados/Refacciones", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(".", context),
+            ],
+          ),
+        ),
+        SizedBox(width: 15),
+        Expanded(
+            flex: 11,
+            child: Column(
+              children: [
+                buildCellToTheRight("Costos", context),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+                Row(children: [
+                  Container(
+                    width: 110,
+                    child: buildCellToTheRight(".", context),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: buildCellToTheLeft(".", context),
+                  )
+                ]),
+              ],
+            )),
+      ],
+    );
+  }
+
+  static buildInventario(Context context, ImageProvider image) {
+    return Column(
+      children: [
+        buildCellToTheLeft("Inventario", context),
+        SizedBox(height: 6 * PdfPageFormat.point),
+        Container(
+          width: double.infinity,
+          height: 160,
+          // color: PdfColors.red,
+          child: Image(
+            image,
+            fit: BoxFit.fitHeight,
+          ),
+        )
+      ],
+    );
+  }
+
+  static buildFirmaRecibio(Context context) {
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(text1.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
-        SizedBox(height: 1 * PdfPageFormat.mm),
-        Text(text2.toString()),
+        Expanded(
+          flex: 1,
+          child: Column(
+            children: [
+              buildCellToTheLeft(
+                  "RECIBIO LA UNIDAD     (Firma, nombre y fecha)", context),
+              TableHelper.fromTextArray(
+                context: context,
+                cellHeight: 30,
+                data: <List<String>>[
+                  <String>["."]
+                ],
+                cellPadding: EdgeInsets.zero,
+              ),
+            ],
+          ),
+        ),
+        SizedBox(width: 5),
+        Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                buildCellToTheLeft(
+                    "CLIENTE     (Firma, nombre y fecha)", context),
+                TableHelper.fromTextArray(
+                  context: context,
+                  cellHeight: 30,
+                  data: <List<String>>[
+                    <String>["."]
+                  ],
+                  cellPadding: EdgeInsets.zero,
+                ),
+              ],
+            )),
       ],
-    );
-  }
-
-  // static Widget buildTitle(Invoice invoice) => Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Text(
-  //           'INVOICE',
-  //           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-  //         ),
-  //         SizedBox(height: 0.8 * PdfPageFormat.cm),
-  //         Text(invoice.info.description),
-  //         SizedBox(height: 0.8 * PdfPageFormat.cm),
-  //       ],
-  //     );
-
-  // static Widget buildInvoice(Invoice invoice) {
-  //   final headers = [
-  //     'Description',
-  //     'Date',
-  //     'Quantity',
-  //     'Unit Price',
-  //     'VAT',
-  //     'Total'
-  //   ];
-  //   final data = invoice.items.map((item) {
-  //     final total = item.unitPrice * item.quantity * (1 + item.vat);
-
-  //     return [
-  //       item.description,
-  //       Utils.formatDate(item.date),
-  //       '${item.quantity}',
-  //       '\$ ${item.unitPrice}',
-  //       '${item.vat} %',
-  //       '\$ ${total.toStringAsFixed(2)}',
-  //     ];
-  //   }).toList();
-
-  //   return Table.fromTextArray(
-  //     headers: headers,
-  //     data: data,
-  //     border: null,
-  //     headerStyle: TextStyle(fontWeight: FontWeight.bold),
-  //     headerDecoration: BoxDecoration(color: PdfColors.grey300),
-  //     cellHeight: 30,
-  //     cellAlignments: {
-  //       0: Alignment.centerLeft,
-  //       1: Alignment.centerRight,
-  //       2: Alignment.centerRight,
-  //       3: Alignment.centerRight,
-  //       4: Alignment.centerRight,
-  //       5: Alignment.centerRight,
-  //     },
-  //   );
-  // }
-
-  // static Widget buildTotal(Invoice invoice) {
-  //   final netTotal = invoice.items
-  //       .map((item) => item.unitPrice * item.quantity)
-  //       .reduce((item1, item2) => item1 + item2);
-  //   final vatPercent = invoice.items.first.vat;
-  //   final vat = netTotal * vatPercent;
-  //   final total = netTotal + vat;
-
-  //   return Container(
-  //     alignment: Alignment.centerRight,
-  //     child: Row(
-  //       children: [
-  //         Spacer(flex: 6),
-  //         Expanded(
-  //           flex: 4,
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               buildText(
-  //                 title: 'Net total',
-  //                 value: Utils.formatPrice(netTotal),
-  //                 unite: true,
-  //               ),
-  //               buildText(
-  //                 title: 'Vat ${vatPercent * 100} %',
-  //                 value: Utils.formatPrice(vat),
-  //                 unite: true,
-  //               ),
-  //               Divider(),
-  //               buildText(
-  //                 title: 'Total amount due',
-  //                 titleStyle: TextStyle(
-  //                   fontSize: 14,
-  //                   fontWeight: FontWeight.bold,
-  //                 ),
-  //                 value: Utils.formatPrice(total),
-  //                 unite: true,
-  //               ),
-  //               SizedBox(height: 2 * PdfPageFormat.mm),
-  //               Container(height: 1, color: PdfColors.grey400),
-  //               SizedBox(height: 0.5 * PdfPageFormat.mm),
-  //               Container(height: 1, color: PdfColors.grey400),
-  //             ],
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // static Widget buildFooter(Invoice invoice) => Column(
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         Divider(),
-  //         SizedBox(height: 2 * PdfPageFormat.mm),
-  //         buildSimpleText(title: 'Address', value: invoice.supplier.address),
-  //         SizedBox(height: 1 * PdfPageFormat.mm),
-  //         buildSimpleText(title: 'Paypal', value: invoice.supplier.paymentInfo),
-  //       ],
-  //     );
-
-  static buildSimpleText({
-    required String title,
-    required String value,
-  }) {
-    final style = TextStyle(fontWeight: FontWeight.bold);
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(title, style: style),
-        SizedBox(width: 2 * PdfPageFormat.mm),
-        Text(value),
-      ],
-    );
-  }
-
-  static buildText({
-    required String title,
-    required String value,
-    double width = double.infinity,
-    TextStyle? titleStyle,
-    bool unite = false,
-  }) {
-    final style = titleStyle ?? TextStyle(fontWeight: FontWeight.bold);
-
-    return Container(
-      width: width,
-      child: Row(
-        children: [
-          Expanded(child: Text(title, style: style)),
-          Text(value, style: unite ? style : null),
-        ],
-      ),
     );
   }
 }

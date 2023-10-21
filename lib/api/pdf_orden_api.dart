@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'dart:typed_data';
 import 'package:flutter/material.dart' as material;
 import 'package:printing/printing.dart';
@@ -22,29 +20,21 @@ class PdfOrdenApi {
     pdf.addPage(MultiPage(
       pageTheme: const PageTheme(
         pageFormat: PdfPageFormat.letter,
-        // buildBackground: fondo == null
-        //     ? null
-        //     : (context) => FullPage(
-        //         ignoreMargins: true,
-        //         child: Image(
-        //           fondo,
-        //           fit: BoxFit.cover,
-        //         )),
         margin: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
       ),
       build: (context) => [
         buildHeader(orderData["id"].toString(), logoHeader),
-        SizedBox(height: 4 * PdfPageFormat.point),
+        SizedBox(height: 2 * PdfPageFormat.point),
         buildClienteUnidad(orderData, context),
-        SizedBox(height: 4 * PdfPageFormat.point),
-        buildFechaTecnico(context),
+        SizedBox(height: 6 * PdfPageFormat.point),
+        buildFechaTecnico(orderData, context),
         SizedBox(height: 6 * PdfPageFormat.point),
         buildClienteComentario(context),
-        SizedBox(height: 10 * PdfPageFormat.point),
+        SizedBox(height: 6 * PdfPageFormat.point),
         buildDiagnostico(context),
-        SizedBox(height: 10 * PdfPageFormat.point),
+        SizedBox(height: 6 * PdfPageFormat.point),
         buildTrabajoRealizado(context),
-        SizedBox(height: 8 * PdfPageFormat.point),
+        SizedBox(height: 6 * PdfPageFormat.point),
         buildInventario(context, inventario),
         SizedBox(height: 6 * PdfPageFormat.point),
         buildFirmaRecibio(context),
@@ -166,28 +156,63 @@ class PdfOrdenApi {
     );
   }
 
-  static buildCellTable(String title, Context context) {
+  static buildCellCenter(String title, bool isBold, Context context) {
+    TextStyle style = const TextStyle(
+      fontSize: 9,
+      color: PdfColors.black,
+    );
+    TextStyle newStyle;
+    if (title == "." || title == " " || title.isEmpty) {
+      title = ".";
+      newStyle = style.copyWith(color: PdfColors.white);
+    } else if (isBold) {
+      newStyle = style.copyWith(fontWeight: FontWeight.bold, fontSize: 8.5);
+    } else {
+      newStyle = style.copyWith(color: PdfColors.black);
+    }
     return TableHelper.fromTextArray(
       context: context,
+      headerAlignment: Alignment.center,
+      headerStyle: newStyle,
+      cellPadding: const EdgeInsets.fromLTRB(1, 1, 1, 1),
       data: <List<String>>[
         <String>[title]
       ],
-      cellPadding: const EdgeInsets.all(1),
     );
   }
 
-  static buildCellToTheLeft(String title, Context context) {
+  static buildCellToTheLeft(String title, bool isBold, Context context) {
+    TextStyle style = const TextStyle(
+      fontSize: 9,
+      color: PdfColors.black,
+    );
+    TextStyle newStyle;
+    if (title == "." || title == " " || title.isEmpty) {
+      title = ".";
+      newStyle = style.copyWith(color: PdfColors.white);
+    } else if (isBold) {
+      newStyle = style.copyWith(fontWeight: FontWeight.bold);
+    } else {
+      newStyle = style.copyWith(color: PdfColors.black);
+    }
     return TableHelper.fromTextArray(
       context: context,
       headerAlignment: Alignment.centerLeft,
+      headerStyle: newStyle,
+      headerCount: 1,
+      headerDirection: TextDirection.ltr,
+      headerPadding: const EdgeInsets.fromLTRB(4, 1, 1, 1),
       data: <List<String>>[
         <String>[title]
       ],
-      cellPadding: const EdgeInsets.fromLTRB(4, 1, 1, 1),
     );
   }
 
   static buildCellToTheRight(String title, Context context) {
+    // TextStyle style = title == "."
+    //     ? const TextStyle(color: PdfColors.red)
+    //     : const TextStyle(color: PdfColors.black);
+
     return TableHelper.fromTextArray(
       context: context,
       headerAlignment: Alignment.centerRight,
@@ -198,286 +223,305 @@ class PdfOrdenApi {
     );
   }
 
-  static Widget buildDatosCliente(DatosCliente cliente) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  static Widget buildDatosCliente(DatosCliente cliente, Context context) {
+    return Expanded(
+      flex: 11,
+      child: Column(
         children: [
-          Text(cliente.nombre!, style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(cliente.contacto!),
+          buildCellCenter("Datos del Cliente", true, context),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Expanded(flex: 1, child: buildCellCenter("Nombre:", true, context)),
+            Expanded(
+                flex: 5,
+                child: buildCellToTheLeft("${cliente.nombre}", false, context))
+          ]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Expanded(flex: 1, child: buildCellCenter(".", true, context)),
+            Expanded(flex: 5, child: buildCellToTheLeft(".", false, context))
+          ]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Expanded(flex: 1, child: buildCellCenter(".", true, context)),
+            Expanded(flex: 5, child: buildCellToTheLeft(".", false, context))
+          ]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Expanded(flex: 1, child: buildCellCenter(".", true, context)),
+            Expanded(flex: 5, child: buildCellToTheLeft(".", false, context))
+          ]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Expanded(
+                flex: 1, child: buildCellCenter("Contacto:", true, context)),
+            Expanded(
+                flex: 5,
+                child:
+                    buildCellToTheLeft("${cliente.contacto}", false, context))
+          ]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Expanded(flex: 1, child: buildCellCenter(".", true, context)),
+            Expanded(flex: 5, child: buildCellToTheLeft(".", false, context))
+          ])
         ],
-      );
+      ),
+    );
+  }
 
-  static Widget buildDatosUnidad(DatosUnidad unidad) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            unidad.numeroEconomico!,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Text(unidad.marca!),
-          Text(unidad.modelo!),
-          Text(unidad.motor!),
-          Text(unidad.placas!),
-          Text(unidad.kilometros!),
-          Text(unidad.horasMotor!),
-          Text(unidad.tipo!),
-          Text(unidad.serieMotor!),
-          Text(unidad.year!),
-          Text(unidad.vin!),
-        ],
-      );
+  static Widget buildDatosUnidad(DatosUnidad unidad, Context context) {
+    return Expanded(
+        flex: 9,
+        child: Column(
+          children: [
+            buildCellCenter("Datos de la Unidad", true, context),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Expanded(
+                flex: 1,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          flex: 4,
+                          child: buildCellCenter("No. Econ.", true, context)),
+                      Expanded(
+                          flex: 5,
+                          child: buildCellToTheLeft(
+                              "${unidad.numeroEconomico}", false, context))
+                    ]),
+              ),
+              Expanded(
+                flex: 1,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: buildCellCenter("Kms.", true, context)),
+                      Expanded(
+                          flex: 5,
+                          child: buildCellToTheLeft(
+                              "${unidad.kilometros}", false, context))
+                    ]),
+              )
+            ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Expanded(
+                flex: 1,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          flex: 4,
+                          child: buildCellCenter("Marca", true, context)),
+                      Expanded(
+                          flex: 5,
+                          child: buildCellToTheLeft(
+                              "${unidad.marca}", false, context))
+                    ]),
+              ),
+              Expanded(
+                flex: 1,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: buildCellCenter("Horas", true, context)),
+                      Expanded(
+                          flex: 5,
+                          child: buildCellToTheLeft(
+                              "${unidad.horasMotor}", false, context))
+                    ]),
+              )
+            ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Expanded(
+                flex: 1,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          flex: 4,
+                          child: buildCellCenter("Modelo", true, context)),
+                      Expanded(
+                          flex: 5,
+                          child: buildCellToTheLeft(
+                              "${unidad.modelo}", false, context))
+                    ]),
+              ),
+              Expanded(
+                flex: 1,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: buildCellCenter("Tipo", true, context)),
+                      Expanded(
+                          flex: 5,
+                          child: buildCellToTheLeft(
+                              "${unidad.tipo}", false, context))
+                    ]),
+              )
+            ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Expanded(
+                flex: 1,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          flex: 4,
+                          child: buildCellCenter("Motor", true, context)),
+                      Expanded(
+                          flex: 5,
+                          child: buildCellToTheLeft(
+                              "${unidad.motor}", false, context))
+                    ]),
+              ),
+              Expanded(
+                flex: 1,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: buildCellCenter("Serie", true, context)),
+                      Expanded(
+                          flex: 5,
+                          child: buildCellToTheLeft(
+                              "${unidad.serieMotor}", false, context))
+                    ]),
+              )
+            ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Expanded(
+                flex: 1,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          flex: 4,
+                          child: buildCellCenter("Placas", true, context)),
+                      Expanded(
+                          flex: 5,
+                          child: buildCellToTheLeft(
+                              "${unidad.placas}", false, context))
+                    ]),
+              ),
+              Expanded(
+                flex: 1,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                          flex: 2,
+                          child: buildCellCenter("Año", true, context)),
+                      Expanded(
+                          flex: 5,
+                          child: buildCellToTheLeft(
+                              "${unidad.year}", false, context))
+                    ]),
+              )
+            ]),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Expanded(
+                  flex: 4, child: buildCellCenter("V.I.N.", true, context)),
+              Expanded(
+                  flex: 14,
+                  child: buildCellToTheLeft("${unidad.vin}", false, context))
+            ]),
+          ],
+        ));
+  }
 
   static buildClienteUnidad(Map<String, dynamic> orderData, Context context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          flex: 11,
-          child: Column(
-            children: [
-              buildCellTable("Datos del Cliente", context),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Expanded(flex: 1, child: buildCellTable("Nombre:", context)),
-                Expanded(flex: 5, child: buildCellToTheLeft(".", context))
-              ]),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Expanded(flex: 1, child: buildCellTable(".", context)),
-                Expanded(flex: 5, child: buildCellToTheLeft(".", context))
-              ]),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Expanded(flex: 1, child: buildCellTable(".", context)),
-                Expanded(flex: 5, child: buildCellToTheLeft(".", context))
-              ]),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Expanded(flex: 1, child: buildCellTable(".", context)),
-                Expanded(flex: 5, child: buildCellToTheLeft(".", context))
-              ]),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Expanded(flex: 1, child: buildCellTable("Contacto:", context)),
-                Expanded(flex: 5, child: buildCellToTheLeft(".", context))
-              ]),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Expanded(flex: 1, child: buildCellTable(".", context)),
-                Expanded(flex: 5, child: buildCellToTheLeft(".", context))
-              ])
-            ],
+        buildDatosCliente(
+          DatosCliente(
+            nombre: orderData["clienteNombre"],
+            contacto: orderData["clienteContacto"],
+            comentario: orderData["clienteComentario"],
           ),
+          context,
         ),
-        Expanded(
-            flex: 9,
-            child: Column(
-              children: [
-                buildCellTable("Datos de la Unidad", context),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  flex: 4,
-                                  child: buildCellTable("No. Econ.", context)),
-                              Expanded(
-                                  flex: 5,
-                                  child: buildCellToTheLeft(".", context))
-                            ]),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  flex: 2,
-                                  child: buildCellTable("Kms.", context)),
-                              Expanded(
-                                  flex: 5,
-                                  child: buildCellToTheLeft(".", context))
-                            ]),
-                      )
-                    ]),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  flex: 4,
-                                  child: buildCellTable("Marca", context)),
-                              Expanded(
-                                  flex: 5,
-                                  child: buildCellToTheLeft(".", context))
-                            ]),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  flex: 2,
-                                  child: buildCellTable("Horas", context)),
-                              Expanded(
-                                  flex: 5,
-                                  child: buildCellToTheLeft(".", context))
-                            ]),
-                      )
-                    ]),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  flex: 4,
-                                  child: buildCellTable("Modelo", context)),
-                              Expanded(
-                                  flex: 5,
-                                  child: buildCellToTheLeft(".", context))
-                            ]),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  flex: 2,
-                                  child: buildCellTable("Tipo", context)),
-                              Expanded(
-                                  flex: 5,
-                                  child: buildCellToTheLeft(".", context))
-                            ]),
-                      )
-                    ]),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  flex: 4,
-                                  child: buildCellTable("Motor", context)),
-                              Expanded(
-                                  flex: 5,
-                                  child: buildCellToTheLeft(".", context))
-                            ]),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  flex: 2,
-                                  child: buildCellTable("Serie", context)),
-                              Expanded(
-                                  flex: 5,
-                                  child: buildCellToTheLeft(".", context))
-                            ]),
-                      )
-                    ]),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  flex: 4,
-                                  child: buildCellTable("Placas", context)),
-                              Expanded(
-                                  flex: 5,
-                                  child: buildCellToTheLeft(".", context))
-                            ]),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  flex: 2,
-                                  child: buildCellTable("Año", context)),
-                              Expanded(
-                                  flex: 5,
-                                  child: buildCellToTheLeft(".", context))
-                            ]),
-                      )
-                    ]),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                          flex: 4, child: buildCellTable("V.I.N.", context)),
-                      Expanded(
-                          flex: 14, child: buildCellToTheLeft(".", context))
-                    ]),
-              ],
-            )),
+        buildDatosUnidad(
+            DatosUnidad(
+              numeroEconomico: orderData["unidadNumEco"],
+              marca: orderData["unidadMarca"],
+              modelo: orderData["unidadModelo"],
+              motor: orderData["unidadMotor"],
+              placas: orderData["unidadPlacas"],
+              kilometros: orderData["unidadKilometros"],
+              horasMotor: orderData["unidadHorasMotor"],
+              tipo: orderData["unidadTipo"],
+              serieMotor: orderData["unidadSerie"],
+              year: orderData["unidadYear"],
+              vin: orderData["unidadVin"],
+            ),
+            context),
       ],
     );
   }
 
-  static buildFechaTecnico(Context context) {
+  static Widget buildDatosFechaTecnico(
+      OrdenServicioInfo ordenServicio, Context context) {
     return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
       Container(
         width: 40,
-        child: buildCellTable("Fecha", context),
+        child: buildCellCenter("Fecha", true, context),
       ),
       Container(
         width: 65,
-        child: buildCellTable(".", context),
+        child: buildCellCenter("${ordenServicio.fechaLlegada}", true, context),
       ),
       Container(
         width: 40,
-        child: buildCellTable("Salida", context),
+        child: buildCellCenter("Salida", true, context),
       ),
       Container(
         width: 65,
-        child: buildCellTable(".", context),
+        child: buildCellCenter(" ", true, context),
       ),
       Container(
-        width: 110,
-        child: buildCellTable("Tecnico Asignado", context),
+        width: 107,
+        child: buildCellCenter("Tecnico Asignado", true, context),
       ),
       Container(
-        width: 125,
-        child: buildCellToTheLeft(".", context),
-      ),
+          width: 125,
+          child: buildCellToTheLeft(
+              "${ordenServicio.tecnicoAsignado}", false, context)),
       Container(
         width: 50,
-        child: buildCellTable("# Caso", context),
+        child: buildCellCenter("# Caso", true, context),
       ),
       Expanded(
         child: Container(
-          width: 40,
-          child: buildCellToTheLeft(".", context),
-        ),
+            child: buildCellToTheLeft(
+                "${ordenServicio.numeroCaso}", false, context)),
       )
     ]);
+  }
+
+  static buildFechaTecnico(Map<String, dynamic> orderData, Context context) {
+    return buildDatosFechaTecnico(
+        OrdenServicioInfo(
+          folio: orderData["id"].toString(),
+          fechaLlegada: orderData["fechaLlegada"],
+          fechaSalida: orderData["fechaSalida"],
+          tecnicoAsignado: orderData["tecnicoAsignado"],
+          numeroCaso: orderData["numeroCaso"],
+          diagnostico: orderData["diagnostico"],
+        ),
+        context);
   }
 
   static buildClienteComentario(Context context) {
     return Column(
       children: [
-        buildCellToTheLeft("Comentarios del Cliente", context),
-        buildCellToTheLeft(".", context),
-        buildCellToTheLeft(".", context),
-        buildCellToTheLeft(".", context),
+        buildCellToTheLeft("Comentarios del Cliente", true, context),
+        buildCellToTheLeft(".", false, context),
+        buildCellToTheLeft(".", false, context),
+        buildCellToTheLeft(".", false, context),
       ],
     );
   }
@@ -485,9 +529,9 @@ class PdfOrdenApi {
   static buildDiagnostico(Context context) {
     return Column(
       children: [
-        buildCellToTheLeft("Diagnostico", context),
-        buildCellToTheLeft(".", context),
-        buildCellToTheLeft(".", context),
+        buildCellToTheLeft("Diagnostico", true, context),
+        buildCellToTheLeft(".", false, context),
+        buildCellToTheLeft(".", false, context),
       ],
     );
   }
@@ -501,23 +545,24 @@ class PdfOrdenApi {
           flex: 20,
           child: Column(
             children: [
-              buildCellToTheLeft("Trabajos Realizados/Refacciones", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
-              buildCellToTheLeft(".", context),
+              buildCellToTheLeft(
+                  "Trabajos Realizados/Refacciones", true, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
+              buildCellToTheLeft(".", false, context),
             ],
           ),
         ),
@@ -534,7 +579,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -544,7 +589,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -554,7 +599,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -564,7 +609,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -574,7 +619,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -584,7 +629,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -594,7 +639,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -604,7 +649,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -614,7 +659,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -624,7 +669,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -634,7 +679,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -644,7 +689,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -654,7 +699,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -664,7 +709,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -674,7 +719,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
                 Row(children: [
@@ -684,7 +729,7 @@ class PdfOrdenApi {
                   ),
                   Expanded(
                     flex: 1,
-                    child: buildCellToTheLeft(".", context),
+                    child: buildCellToTheLeft(".", false, context),
                   )
                 ]),
               ],
@@ -696,7 +741,7 @@ class PdfOrdenApi {
   static buildInventario(Context context, ImageProvider image) {
     return Column(
       children: [
-        buildCellToTheLeft("Inventario", context),
+        buildCellToTheLeft("Inventario", true, context),
         SizedBox(height: 6 * PdfPageFormat.point),
         Container(
           width: double.infinity,
@@ -720,7 +765,9 @@ class PdfOrdenApi {
           child: Column(
             children: [
               buildCellToTheLeft(
-                  "RECIBIO LA UNIDAD     (Firma, nombre y fecha)", context),
+                  "RECIBIO LA UNIDAD     (Firma, nombre y fecha)",
+                  true,
+                  context),
               TableHelper.fromTextArray(
                 context: context,
                 cellHeight: 30,
@@ -738,7 +785,7 @@ class PdfOrdenApi {
             child: Column(
               children: [
                 buildCellToTheLeft(
-                    "CLIENTE     (Firma, nombre y fecha)", context),
+                    "CLIENTE     (Firma, nombre y fecha)", true, context),
                 TableHelper.fromTextArray(
                   context: context,
                   cellHeight: 30,

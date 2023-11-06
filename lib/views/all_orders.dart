@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:techtruck_v11/views/new_order.dart';
+import 'package:techtruck_v11/views/order_details.dart';
 import 'package:techtruck_v11/views/pdf_order.dart';
 import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
@@ -199,6 +200,23 @@ class _AllOrdersState extends State<AllOrders> {
     ).then((res) => _refreshData());
   }
 
+  void tempShowFullOrder(int? id) {
+    Map<String, dynamic> existingData = {};
+    if (id != null) {
+      existingData = _allData.firstWhere((element) => element["id"] == id);
+    } else {
+      cleanControllers();
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => OrderDetails(
+                singleData: existingData,
+              )),
+    ).then((res) => _refreshData());
+  }
+
   void convertOrderPdf(int? id) {
     Map<String, dynamic> existingData = {};
     if (id != null) {
@@ -357,12 +375,21 @@ class _AllOrdersState extends State<AllOrders> {
                   minLeadingWidth: 20,
                   title: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
-                      child:
-                          Text(parseString(_allData[index]["clienteNombre"]))),
+                      child: Text(
+                        parseString(_allData[index]["clienteNombre"]),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )),
                   subtitle: Text(parseString(_allData[index]["unidadNumEco"])),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      IconButton(
+                        onPressed: () {
+                          tempShowFullOrder(_allData[index]["id"]);
+                        },
+                        icon: const Icon(Icons.edit),
+                        color: Colors.green,
+                      ),
                       IconButton(
                         onPressed: () async {
                           Navigator.push(

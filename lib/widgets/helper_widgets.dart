@@ -200,7 +200,7 @@ Widget expandMultiLineFieldTile(
       ),
       decoration: InputDecoration(
         isDense: true,
-        contentPadding: const EdgeInsets.all(16),
+        contentPadding: const EdgeInsets.all(12),
         border: const OutlineInputBorder(),
         labelText: controllerList.values.first.keys.first,
       ),

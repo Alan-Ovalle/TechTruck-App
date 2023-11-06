@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_form_builder: ^9.1.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -81,12 +81,14 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Hamlin
+    - family: Tahoma
       fonts:
-        - asset: assets/fonts/Hamlin-Bold.ttf
-        - asset: assets/fonts/Hamlin-ExtraBold.ttf
-        - asset: assets/fonts/Hamlin-Light.ttf
-        - asset: assets/fonts/Hamlin-Regular.ttf
+        # - asset: assets/fonts/Hamlin-Bold.ttf
+        # - asset: assets/fonts/Hamlin-ExtraBold.ttf
+        # - asset: assets/fonts/Hamlin-Light.ttf
+        # - asset: assets/fonts/Hamlin-Regular.ttf
+        - asset: assets/fonts/tahoma.ttf
+        - asset: assets/fonts/tahomabd.ttf
 
   #
   # For details regarding fonts from package dependencies,

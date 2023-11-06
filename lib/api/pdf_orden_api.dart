@@ -46,7 +46,7 @@ class PdfOrdenApi {
   }
 
   static String _formatFolio(String? s) {
-    if (s != null && s.length < 4) {
+    if (s != null && s.length < 6) {
       return s.padLeft(6, '0');
     } else {
       return s!;

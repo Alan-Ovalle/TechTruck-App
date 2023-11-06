@@ -12,10 +12,10 @@ class NewOrder extends StatefulWidget {
   final int? idOrder;
 
   const NewOrder({
-    Key? key,
+    super.key,
     required this.singleData,
     required this.idOrder,
-  }) : super(key: key);
+  });
 
   @override
   State<NewOrder> createState() => _NewOrderState();
@@ -26,11 +26,9 @@ class _NewOrderState extends State<NewOrder> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Nueva orden")),
-      body: Center(
-        child: FomularioOrden(
-          dataLocal: widget.singleData,
-          id: widget.idOrder,
-        ),
+      body: FomularioOrden(
+        dataLocal: widget.singleData,
+        id: widget.idOrder,
       ),
     );
   }

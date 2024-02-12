@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 const _defaultColor = Color(0xFF34568B);
@@ -33,12 +34,12 @@ const _defaultColor = Color(0xFF34568B);
 
 class Tile extends StatelessWidget {
   const Tile({
-    Key? key,
+    super.key,
     required this.index,
     this.extent,
     this.backgroundColor,
     this.bottomSpace,
-  }) : super(key: key);
+  });
 
   final int index;
   final double? extent;
@@ -79,11 +80,11 @@ class Tile extends StatelessWidget {
 
 class ImageTile extends StatelessWidget {
   const ImageTile({
-    Key? key,
+    super.key,
     required this.index,
     required this.width,
     required this.height,
-  }) : super(key: key);
+  });
 
   final int index;
   final int width;
@@ -102,11 +103,11 @@ class ImageTile extends StatelessWidget {
 
 class InteractiveTile extends StatefulWidget {
   const InteractiveTile({
-    Key? key,
+    super.key,
     required this.index,
     this.extent,
     this.bottomSpace,
-  }) : super(key: key);
+  });
 
   final int index;
   final double? extent;
@@ -161,9 +162,10 @@ TextField expandFieldTile(
     controller: controllerList.keys.first,
     // maxLines: 6,
     // minLines: controllerList.values.last.values.first,
-    maxLines: null,
-    minLines: null,
-    expands: true,
+    maxLines: 1,
+    minLines: 1,
+    // expands: true,
+
     keyboardType: TextInputType.text,
     textInputAction: TextInputAction.next,
     style: const TextStyle(
@@ -172,7 +174,7 @@ TextField expandFieldTile(
     ),
     decoration: InputDecoration(
       isDense: true,
-      contentPadding: const EdgeInsets.all(16),
+      // contentPadding: const EdgeInsets.all(20),
       border: const OutlineInputBorder(),
       labelText: controllerList.values.first.keys.first,
     ),
@@ -180,27 +182,39 @@ TextField expandFieldTile(
 }
 
 Widget expandMultiLineFieldTile(
+    int? renglonBox,
+    int renglonString,
+    int primeraLinea,
+    int spanLinea,
     Map<TextEditingController, Map<String, int>> controllerList) {
   return CustomPaint(
-    foregroundPainter: PagePainter(),
+    foregroundPainter: PagePainter(
+      primeraLinea: primeraLinea,
+      spanLinea: spanLinea,
+    ),
     child: TextField(
       controller: controllerList.keys.first,
-      // maxLines: 6,
-      // minLines: controllerList.values.last.values.first,
       textAlignVertical: TextAlignVertical.top,
-      expands: true,
-      maxLines: null,
-
+      maxLines: renglonBox,
+      minLines: renglonBox,
+      inputFormatters: [
+        TextInputFormatter.withFunction((oldValue, newValue) {
+          int newLines = newValue.text.split('\n').length;
+          if (newLines > renglonString) {
+            return oldValue;
+          } else {
+            return newValue;
+          }
+        }),
+      ],
       textAlign: TextAlign.justify,
-
-      keyboardType: TextInputType.multiline,
       style: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
       ),
       decoration: InputDecoration(
         isDense: true,
-        contentPadding: const EdgeInsets.all(12),
+        contentPadding: const EdgeInsets.all(10),
         border: const OutlineInputBorder(),
         labelText: controllerList.values.first.keys.first,
       ),
@@ -209,13 +223,20 @@ Widget expandMultiLineFieldTile(
 }
 
 class PagePainter extends CustomPainter {
+  const PagePainter({
+    required this.primeraLinea,
+    required this.spanLinea,
+  });
+
+  final int primeraLinea, spanLinea;
+
   @override
   void paint(Canvas canvas, Size size) {
     final paintLine = Paint()
       ..color = Colors.grey.shade400
       ..strokeWidth = 1;
 
-    for (var x = 34; x <= size.height; x += 34) {
+    for (var x = primeraLinea; x <= size.height; x += spanLinea) {
       canvas.drawLine(
           Offset(0, x.toDouble()), Offset(size.width, x.toDouble()), paintLine);
     }
@@ -232,7 +253,7 @@ TextField dateFieldTile(
     BuildContext context) {
   return TextField(
     controller: controllerList.keys.first,
-    maxLines: null,
+    maxLines: 1,
     minLines: null,
     expands: false,
     keyboardType: TextInputType.multiline,

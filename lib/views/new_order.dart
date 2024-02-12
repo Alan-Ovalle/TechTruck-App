@@ -26,7 +26,7 @@ class _NewOrderState extends State<NewOrder> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Nueva orden")),
-      body: FomularioOrden(
+      body: TemporalFomulario(
         dataLocal: widget.singleData,
         id: widget.idOrder,
       ),
@@ -34,21 +34,21 @@ class _NewOrderState extends State<NewOrder> {
   }
 }
 
-class FomularioOrden extends StatefulWidget {
+class TemporalFomulario extends StatefulWidget {
   final Map<String, dynamic> dataLocal;
   final int? id;
-  const FomularioOrden({
+  const TemporalFomulario({
     super.key,
     required this.dataLocal,
     required this.id,
   });
   @override
-  FomularioOrdenState createState() {
-    return FomularioOrdenState();
+  TemporalFomularioState createState() {
+    return TemporalFomularioState();
   }
 }
 
-class FomularioOrdenState extends State<FomularioOrden> {
+class TemporalFomularioState extends State<TemporalFomulario> {
   final _formularioKey = GlobalKey<FormState>();
   final clienteNombreController = TextEditingController();
   final clienteContactoController = TextEditingController();
@@ -278,6 +278,10 @@ class FomularioOrdenState extends State<FomularioOrden> {
                     crossAxisCellCount: 6,
                     mainAxisCellCount: 1,
                     child: expandMultiLineFieldTile(
+                      3,
+                      3,
+                      34,
+                      34,
                       {
                         clienteNombreController: {"Nombre del cliente": 3},
                       },
@@ -323,6 +327,10 @@ class FomularioOrdenState extends State<FomularioOrden> {
                     crossAxisCellCount: 6,
                     mainAxisCellCount: 1,
                     child: expandMultiLineFieldTile(
+                      3,
+                      3,
+                      34,
+                      34,
                       {
                         clienteContactoController: {"Contacto del cliente": 3},
                       },
@@ -427,47 +435,59 @@ class FomularioOrdenState extends State<FomularioOrden> {
                     ),
                   ),
                   StaggeredGridTile.count(
-                    crossAxisCellCount: 12,
+                    crossAxisCellCount: 6,
                     mainAxisCellCount: .5,
                     child: tituloTile("Comentarios del Cliente"),
                   ),
                   StaggeredGridTile.count(
-                    crossAxisCellCount: 12,
+                    crossAxisCellCount: 6,
+                    mainAxisCellCount: .5,
+                    child: tituloTile("Diagnostico"),
+                  ),
+                  StaggeredGridTile.count(
+                    crossAxisCellCount: 6,
                     mainAxisCellCount: 1,
                     child: expandMultiLineFieldTile(
+                      3,
+                      3,
+                      34,
+                      34,
                       {
                         clienteComentario: {"Comentarios del Cliente": 3},
                       },
                     ),
                   ),
                   StaggeredGridTile.count(
-                    crossAxisCellCount: 12,
-                    mainAxisCellCount: .5,
-                    child: tituloTile("Diagnostico"),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 12,
+                    crossAxisCellCount: 6,
                     mainAxisCellCount: 1,
                     child: expandMultiLineFieldTile(
+                      3,
+                      3,
+                      34,
+                      34,
                       {
                         diagnosticoController: {"Diagnostico": 3},
                       },
                     ),
                   ),
                   StaggeredGridTile.count(
-                    crossAxisCellCount: 7,
+                    crossAxisCellCount: 9,
                     mainAxisCellCount: .5,
                     child: tituloTile("Trabajos realizados / Refacciones"),
                   ),
                   StaggeredGridTile.count(
-                    crossAxisCellCount: 5,
+                    crossAxisCellCount: 3,
                     mainAxisCellCount: .5,
                     child: tituloTile("Costos"),
                   ),
                   StaggeredGridTile.count(
-                    crossAxisCellCount: 7,
-                    mainAxisCellCount: 1.7,
+                    crossAxisCellCount: 9,
+                    mainAxisCellCount: 1.49,
                     child: expandMultiLineFieldTile(
+                      5,
+                      16,
+                      35,
+                      30,
                       {
                         trabajoRealizado: {
                           "Trabajos realizados / Refacciones": 3
@@ -476,9 +496,13 @@ class FomularioOrdenState extends State<FomularioOrden> {
                     ),
                   ),
                   StaggeredGridTile.count(
-                    crossAxisCellCount: 5,
-                    mainAxisCellCount: 1.7,
+                    crossAxisCellCount: 3,
+                    mainAxisCellCount: 1.49,
                     child: expandMultiLineFieldTile(
+                      5,
+                      16,
+                      35,
+                      30,
                       {
                         costosController: {"Costos": 3},
                       },

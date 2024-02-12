@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:techtruck_v11/widgets/db_helper.dart';
+import 'package:techtruck_v11/widgets/formulario_orden.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
 // import 'package:techtruck_v11/design/palette.dart';
 
@@ -46,16 +47,16 @@ class _OrderDetailsState extends State<OrderDetails> {
             const TextSpan(
               text: "Folio: ",
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                // fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
             TextSpan(
               text: formatFolio(widget.singleData["id"].toString()),
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                // fontWeight: FontWeight.bold,
                 color: Colors.red,
               ),
             ),
@@ -74,10 +75,12 @@ class _OrderDetailsState extends State<OrderDetails> {
         title: checkDataExist(widget.singleData["id"]),
         actions: [
           checkFolioExist(),
-          addHorizontalSpace(15),
+          addHorizontalSpace(16),
         ],
       ),
-      body: Container(),
+      body: FormularioOrden(
+        dataLocal: widget.singleData,
+      ),
     );
   }
 }

@@ -321,6 +321,9 @@ class _AllOrdersState extends State<AllOrders> {
                         }
                         Navigator.pop(context);
                       },
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(18),
                         child: Text(id == null ? "Agregar" : "Actualizar",
@@ -334,6 +337,14 @@ class _AllOrdersState extends State<AllOrders> {
                 ],
               ),
             ));
+  }
+
+  static String _formatFolio(String? s) {
+    if (s != null && s.length < 6) {
+      return s.padLeft(6, '0');
+    } else {
+      return s!;
+    }
   }
 
   @override
@@ -369,10 +380,12 @@ class _AllOrdersState extends State<AllOrders> {
               itemBuilder: (context, index) => Card(
                 child: ListTile(
                   leading: Text(
-                    "${_allData[index]["id"]}",
+                    _formatFolio("${_allData[index]["id"]}"),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   minLeadingWidth: 20,
+                  hoverColor: Color.fromARGB(255, 226, 229, 245),
+                  mouseCursor: SystemMouseCursors.click,
                   title: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: Text(
@@ -380,16 +393,19 @@ class _AllOrdersState extends State<AllOrders> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       )),
                   subtitle: Text(parseString(_allData[index]["unidadNumEco"])),
+                  onTap: () {
+                    showFullOrder(_allData[index]["id"]);
+                  },
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        onPressed: () {
-                          tempShowFullOrder(_allData[index]["id"]);
-                        },
-                        icon: const Icon(Icons.edit),
-                        color: Colors.green,
-                      ),
+                      // IconButton(
+                      //   onPressed: () {
+                      //     tempShowFullOrder(_allData[index]["id"]);
+                      //   },
+                      //   icon: const Icon(Icons.edit),
+                      //   color: Colors.green,
+                      // ),
                       IconButton(
                         onPressed: () async {
                           Navigator.push(
@@ -403,13 +419,13 @@ class _AllOrdersState extends State<AllOrders> {
                         icon: const Icon(Icons.print),
                         color: Colors.blueGrey,
                       ),
-                      IconButton(
-                        onPressed: () {
-                          showFullOrder(_allData[index]["id"]);
-                        },
-                        icon: const Icon(Icons.edit),
-                        color: Colors.blue,
-                      ),
+                      // IconButton(
+                      //   onPressed: () {
+                      //     showFullOrder(_allData[index]["id"]);
+                      //   },
+                      //   icon: const Icon(Icons.edit),
+                      //   color: Colors.blue,
+                      // ),
                       IconButton(
                         onPressed: () {
                           _deleteData(_allData[index]["id"]);

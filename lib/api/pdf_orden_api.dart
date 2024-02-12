@@ -725,7 +725,7 @@ class PdfOrdenApi {
                 Row(children: [
                   Container(
                     width: 110,
-                    child: buildCellToTheRight(".", context),
+                    child: buildCellToTheRight("Total", context),
                   ),
                   Expanded(
                     flex: 1,

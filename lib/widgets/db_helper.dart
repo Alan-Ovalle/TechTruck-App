@@ -7,6 +7,7 @@ class SQLHelper {
   static Future<void> createTables(sql.Database database) async {
     await database.execute("""CREATE TABLE data(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+        estatus TEXT,
         clienteNombre TEXT,
         clienteContacto TEXT, 
         unidadNumEco TEXT,
@@ -39,6 +40,7 @@ class SQLHelper {
   }
 
   static Future<int> createData(
+    String? estatus,
     String? clienteNombre,
     String? clienteContacto,
     String? unidadNumEco,
@@ -63,6 +65,7 @@ class SQLHelper {
   ) async {
     final db = await SQLHelper.db();
     final data = {
+      'estatus': estatus,
       'clienteNombre': clienteNombre,
       'clienteContacto': clienteContacto,
       'unidadNumEco': unidadNumEco,
@@ -103,6 +106,7 @@ class SQLHelper {
 
   static Future<int> updateData(
     int id,
+    String? estatus,
     String? clienteNombre,
     String? clienteContacto,
     String? unidadNumEco,
@@ -127,6 +131,7 @@ class SQLHelper {
   ) async {
     final db = await SQLHelper.db();
     final data = {
+      'estatus': estatus,
       'clienteNombre': clienteNombre,
       'clienteContacto': clienteContacto,
       'unidadNumEco': unidadNumEco,

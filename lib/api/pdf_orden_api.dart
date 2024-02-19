@@ -687,7 +687,9 @@ class PdfOrdenApi {
       listaTrabajos = ["."];
     }
 
-    if (listaCostos == null || listaCostos.isEmpty) {
+    if (listaCostos == null ||
+        listaCostos.isEmpty ||
+        listaCostos.firstWhere((element) => element == "") == "") {
       listaCostos = ["0"];
     }
     return buildTrabajoRealizado(listaTrabajos, listaCostos, context);

@@ -23,7 +23,7 @@ class FormularioOrden extends StatefulWidget {
 
 class _FormularioOrdenState extends State<FormularioOrden> {
   final _formularioKey = GlobalKey<FormBuilderState>();
-
+  final estatus = "Pendiente";
   final clienteNombreController = TextEditingController();
   final clienteContactoController = TextEditingController();
   final unidadNumEco = TextEditingController();
@@ -168,6 +168,7 @@ class _FormularioOrdenState extends State<FormularioOrden> {
       return;
     } else {
       await SQLHelper.createData(
+        estatus,
         clienteNombreController.text,
         clienteContactoController.text,
         unidadNumEco.text,
@@ -198,6 +199,7 @@ class _FormularioOrdenState extends State<FormularioOrden> {
   Future<void> _updateData(int id) async {
     await SQLHelper.updateData(
       id,
+      estatus,
       clienteNombreController.text,
       clienteContactoController.text,
       unidadNumEco.text,

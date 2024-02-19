@@ -104,6 +104,7 @@ class TemporalFomulario extends StatefulWidget {
 
 class TemporalFomularioState extends State<TemporalFomulario> {
   final _formularioKey = GlobalKey<FormState>();
+  final estatus = "Pendiente";
   final clienteNombreController = TextEditingController();
   final clienteContactoController = TextEditingController();
   final unidadNumEco = TextEditingController();
@@ -248,6 +249,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
       return;
     } else {
       await SQLHelper.createData(
+        estatus,
         clienteNombreController.text,
         clienteContactoController.text,
         unidadNumEco.text,
@@ -278,6 +280,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
   Future<void> _updateData(int id) async {
     await SQLHelper.updateData(
       id,
+      estatus,
       clienteNombreController.text,
       clienteContactoController.text,
       unidadNumEco.text,

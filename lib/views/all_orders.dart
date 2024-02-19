@@ -8,7 +8,7 @@ import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
 
 class AllOrders extends StatefulWidget {
-  const AllOrders({Key? key}) : super(key: key);
+  const AllOrders({super.key});
 
   @override
   State<AllOrders> createState() => _AllOrdersState();
@@ -18,6 +18,13 @@ class _AllOrdersState extends State<AllOrders> {
   List<Map<String, dynamic>> _allData = [];
   bool _isLoading = true;
 
+  List<String> estadosOrden = [
+    "Pendiente",
+    "En proceso",
+    "Finalizado",
+    "Cancelado"
+  ];
+  late String estatus = estadosOrden[0];
   final TextEditingController _clienteNombreController =
       TextEditingController();
   final TextEditingController _clienteContactoController =
@@ -114,6 +121,7 @@ class _AllOrdersState extends State<AllOrders> {
       return;
     } else {
       await SQLHelper.createData(
+        estatus,
         _clienteNombreController.text,
         _clienteContactoController.text,
         _unidadNumEco.text,
@@ -144,6 +152,7 @@ class _AllOrdersState extends State<AllOrders> {
   Future<void> _updateData(int id) async {
     await SQLHelper.updateData(
       id,
+      estatus,
       _clienteNombreController.text,
       _clienteContactoController.text,
       _unidadNumEco.text,
@@ -237,6 +246,7 @@ class _AllOrdersState extends State<AllOrders> {
     Map<String, dynamic> existingData = {};
     if (id != null) {
       existingData = _allData.firstWhere((element) => element["id"] == id);
+      estatus = existingData["estatus"];
       _clienteNombreController.text = existingData["clienteNombre"];
       _clienteContactoController.text = existingData["clienteContacto"];
       _unidadNumEco.text = existingData["unidadNumEco"];
@@ -350,6 +360,7 @@ class _AllOrdersState extends State<AllOrders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const Icon(Icons.menu),
         title: const Text("Ordenes de servicio",
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -392,8 +403,8 @@ class _AllOrdersState extends State<AllOrders> {
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       addVerticalSpace(4),
-                      const Text("Pendiente",
-                          style: TextStyle(
+                      Text("${_allData[index]["estatus"]}",
+                          style: const TextStyle(
                             color: Colors.black45,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
@@ -417,12 +428,94 @@ class _AllOrdersState extends State<AllOrders> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      // IconButton(
+                      //   onPressed: () {
+                      //     tempShowFullOrder(_allData[index]["id"]);
+                      //   },
+                      //   icon: const Icon(Icons.edit),
+                      //   color: Colors.green,
+                      // ),
                       IconButton(
                         onPressed: () async {
                           final result = await showDialog<bool>(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: const Text('Finalizar orden de servicio?'),
+                              title: Text(
+                                  "Orden ${_formatFolio("${_allData[index]["id"]}")}"),
+                              content: const Text(
+                                  'Marcar esta orden como "Pendiente"?'),
+                              actionsAlignment: MainAxisAlignment.spaceEvenly,
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: const Text('Cancelar'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    estatus = estadosOrden[0];
+                                    _updateData(_allData[index]["id"]);
+                                    Navigator.pop(context, true);
+                                  },
+                                  child: const Text('Aceptar'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (result == null || !result) {
+                            return;
+                          }
+
+                          //ACCION PARA MARCAR ORDEN COMO FINALIZADA
+                        },
+                        icon: const Icon(Icons.check_box),
+                        color: Colors.orange,
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          final result = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text(
+                                  "Orden ${_formatFolio("${_allData[index]["id"]}")}"),
+                              content: const Text(
+                                  'Marcar esta orden como "En proceso" ?'),
+                              actionsAlignment: MainAxisAlignment.spaceEvenly,
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: const Text('Cancelar'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    estatus = estadosOrden[1];
+                                    _updateData(_allData[index]["id"]);
+                                    Navigator.pop(context, true);
+                                  },
+                                  child: const Text('Aceptar'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (result == null || !result) {
+                            return;
+                          }
+
+                          //ACCION PARA MARCAR ORDEN COMO FINALIZADA
+                        },
+                        icon: const Icon(Icons.check_box),
+                        color: Colors.indigo,
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          final result = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text(
+                                  'Marcar esta orden como "Finalizada"?'),
                               // content: const Text(
                               //     'This action will permanently delete this data'),
                               actionsAlignment: MainAxisAlignment.spaceEvenly,
@@ -434,7 +527,11 @@ class _AllOrdersState extends State<AllOrders> {
                                   child: const Text('Cancelar'),
                                 ),
                                 TextButton(
-                                  onPressed: () => Navigator.pop(context, true),
+                                  onPressed: () {
+                                    estatus = estadosOrden[2];
+                                    _updateData(_allData[index]["id"]);
+                                    Navigator.pop(context, true);
+                                  },
                                   child: const Text('Finalizar'),
                                 ),
                               ],
@@ -449,6 +546,42 @@ class _AllOrdersState extends State<AllOrders> {
                         },
                         icon: const Icon(Icons.check_box),
                         color: Colors.green,
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          final result = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text(
+                                  "Orden ${_formatFolio("${_allData[index]["id"]}")}"),
+                              content: const Text('Desea cancelar esta orden?'),
+                              actionsAlignment: MainAxisAlignment.spaceEvenly,
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: const Text('Cancelar'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    estatus = estadosOrden[3];
+                                    _updateData(_allData[index]["id"]);
+                                    Navigator.pop(context, true);
+                                  },
+                                  child: const Text('Finalizar'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (result == null || !result) {
+                            return;
+                          }
+
+                          //ACCION PARA MARCAR ORDEN COMO FINALIZADA
+                        },
+                        icon: const Icon(Icons.check_box),
+                        color: Colors.redAccent,
                       ),
                       IconButton(
                         onPressed: () async {
@@ -495,7 +628,6 @@ class _AllOrdersState extends State<AllOrders> {
                           if (result == null || !result) {
                             return;
                           }
-
                           _deleteData(_allData[index]["id"]);
                         },
                         icon: const Icon(Icons.delete_forever),

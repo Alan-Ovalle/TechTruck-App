@@ -22,10 +22,64 @@ class NewOrder extends StatefulWidget {
 }
 
 class _NewOrderState extends State<NewOrder> {
+  bool thisOrderExist = false;
+  Widget checkDataExist(int? id) {
+    if (id == null) {
+      thisOrderExist = false;
+      return const Text("Nueva Orden");
+    } else {
+      thisOrderExist = true;
+      return const Text("Detalles de Orden");
+    }
+  }
+
+  String formatFolio(String? n) {
+    if (n != null && n.length < 4) {
+      return n.padLeft(6, '0');
+    } else {
+      return n!;
+    }
+  }
+
+  Widget checkFolioExist() {
+    if (thisOrderExist) {
+      return RichText(
+        text: TextSpan(
+          children: [
+            const TextSpan(
+              text: "Folio: ",
+              style: TextStyle(
+                fontSize: 22,
+                // fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            TextSpan(
+              text: formatFolio(widget.singleData["id"].toString()),
+              style: const TextStyle(
+                fontSize: 22,
+                // fontWeight: FontWeight.bold,
+                color: Colors.red,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Nueva orden")),
+      appBar: AppBar(
+        title: checkDataExist(widget.idOrder),
+        actions: [
+          checkFolioExist(),
+          addHorizontalSpace(16),
+        ],
+      ),
       body: TemporalFomulario(
         dataLocal: widget.singleData,
         id: widget.idOrder,

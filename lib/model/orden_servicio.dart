@@ -35,7 +35,7 @@ class OrdenServicioInfo {
 
 class OrdenServicioItem {
   final String? descripcion;
-  final double? costo;
+  final String? costo;
 
   const OrdenServicioItem({
     required this.descripcion,
@@ -74,11 +74,11 @@ List<OrdenServicio> listOrderEjemplo = [
     trabajoRealizado: [
       OrdenServicioItem(
         descripcion: "Mantenimiento de motor",
-        costo: 9500,
+        costo: "9500",
       ),
       OrdenServicioItem(
         descripcion: "Cambio de aceite",
-        costo: 4200,
+        costo: "4200",
       ),
     ],
   )

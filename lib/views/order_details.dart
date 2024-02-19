@@ -73,6 +73,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     return Scaffold(
       appBar: AppBar(
         title: checkDataExist(widget.singleData["id"]),
+        backgroundColor: Colors.grey[800],
         actions: [
           checkFolioExist(),
           addHorizontalSpace(16),

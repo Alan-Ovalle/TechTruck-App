@@ -302,11 +302,10 @@ class _AllOrdersState extends State<AllOrders> {
                   ),
                   addVerticalSpace(10),
                   TextField(
-                    controller: _diagnosticoController,
+                    controller: _clienteComentario,
                     maxLines: 4,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: "Diagnostico",
                     ),
                   ),
                   addVerticalSpace(20),
@@ -351,7 +350,13 @@ class _AllOrdersState extends State<AllOrders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Ordenes de servicio"),
+        title: const Text("Ordenes de servicio",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              color: Colors.white,
+            )),
+        backgroundColor: Colors.blue.shade600,
         centerTitle: true,
         actions: [
           ElevatedButton(
@@ -379,33 +384,72 @@ class _AllOrdersState extends State<AllOrders> {
               itemCount: _allData.length,
               itemBuilder: (context, index) => Card(
                 child: ListTile(
-                  leading: Text(
-                    _formatFolio("${_allData[index]["id"]}"),
-                    style: Theme.of(context).textTheme.titleLarge,
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        _formatFolio("${_allData[index]["id"]}"),
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      addVerticalSpace(4),
+                      const Text("Pendiente",
+                          style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ],
                   ),
                   minLeadingWidth: 20,
-                  hoverColor: Color.fromARGB(255, 226, 229, 245),
+                  hoverColor: const Color.fromARGB(255, 226, 229, 245),
                   mouseCursor: SystemMouseCursors.click,
                   title: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: Text(
                         parseString(_allData[index]["clienteNombre"]),
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       )),
-                  subtitle: Text(parseString(_allData[index]["unidadNumEco"])),
+                  subtitle: Text(
+                      "No. Eco: ${parseString(_allData[index]["unidadNumEco"])}"),
                   onTap: () {
                     showFullOrder(_allData[index]["id"]);
                   },
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // IconButton(
-                      //   onPressed: () {
-                      //     tempShowFullOrder(_allData[index]["id"]);
-                      //   },
-                      //   icon: const Icon(Icons.edit),
-                      //   color: Colors.green,
-                      // ),
+                      IconButton(
+                        onPressed: () async {
+                          final result = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Finalizar orden de servicio?'),
+                              // content: const Text(
+                              //     'This action will permanently delete this data'),
+                              actionsAlignment: MainAxisAlignment.spaceEvenly,
+
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: const Text('Cancelar'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text('Finalizar'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (result == null || !result) {
+                            return;
+                          }
+
+                          //ACCION PARA MARCAR ORDEN COMO FINALIZADA
+                        },
+                        icon: const Icon(Icons.check_box),
+                        color: Colors.green,
+                      ),
                       IconButton(
                         onPressed: () async {
                           Navigator.push(
@@ -427,7 +471,31 @@ class _AllOrdersState extends State<AllOrders> {
                       //   color: Colors.blue,
                       // ),
                       IconButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          final result = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Are you sure?'),
+                              content: const Text(
+                                  'This action will permanently delete this data'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text('Delete'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (result == null || !result) {
+                            return;
+                          }
+
                           _deleteData(_allData[index]["id"]);
                         },
                         icon: const Icon(Icons.delete_forever),

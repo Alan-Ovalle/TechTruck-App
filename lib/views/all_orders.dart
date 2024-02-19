@@ -24,6 +24,8 @@ class _AllOrdersState extends State<AllOrders> {
     "Finalizado",
     "Cancelado"
   ];
+
+  List<String> estadosOrdenFiltro = [];
   late String estatus = estadosOrden[0];
   final TextEditingController _clienteNombreController =
       TextEditingController();
@@ -358,9 +360,15 @@ class _AllOrdersState extends State<AllOrders> {
 
   @override
   Widget build(BuildContext context) {
+    final filtroOrdenes = _allData.where((orden) {
+      return estadosOrdenFiltro.isEmpty ||
+          estadosOrdenFiltro.contains(orden["estatus"]);
+    });
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.menu),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         title: const Text("Ordenes de servicio",
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -392,257 +400,337 @@ class _AllOrdersState extends State<AllOrders> {
               child: CircularProgressIndicator(),
             )
           : ListView.builder(
-              itemCount: _allData.length,
-              itemBuilder: (context, index) => Card(
-                child: ListTile(
-                  leading: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        _formatFolio("${_allData[index]["id"]}"),
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      addVerticalSpace(4),
-                      Text("${_allData[index]["estatus"]}",
-                          style: const TextStyle(
-                            color: Colors.black45,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ],
+              itemCount: filtroOrdenes.length,
+              itemBuilder: (context, index) {
+                final orden = filtroOrdenes.elementAt(index);
+                return Card(
+                  child: ListTile(
+                    leading: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          _formatFolio("${orden["id"]}"),
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        addVerticalSpace(4),
+                        Text("${orden["estatus"]}",
+                            style: const TextStyle(
+                              color: Colors.black45,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ],
+                    ),
+                    minLeadingWidth: 20,
+                    hoverColor: const Color.fromARGB(255, 226, 229, 245),
+                    mouseCursor: SystemMouseCursors.click,
+                    title: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Text(
+                          parseString(orden["clienteNombre"]),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        )),
+                    subtitle:
+                        Text("No. Eco: ${parseString(orden["unidadNumEco"])}"),
+                    onTap: () {
+                      showFullOrder(orden["id"]);
+                    },
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // IconButton(
+                        //   onPressed: () {
+                        //     tempShowFullOrder(orden["id"]);
+                        //   },
+                        //   icon: const Icon(Icons.edit),
+                        //   color: Colors.green,
+                        // ),
+                        IconButton(
+                          onPressed: () async {
+                            final result = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text(
+                                    "Orden ${_formatFolio("${orden["id"]}")}"),
+                                content: const Text(
+                                    'Marcar esta orden como "Pendiente"?'),
+                                actionsAlignment: MainAxisAlignment.spaceEvenly,
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, false),
+                                    child: const Text('Cancelar'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      estatus = estadosOrden[0];
+                                      _updateData(orden["id"]);
+                                      Navigator.pop(context, true);
+                                    },
+                                    child: const Text('Aceptar'),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (result == null || !result) {
+                              return;
+                            }
+
+                            //ACCION PARA MARCAR ORDEN COMO FINALIZADA
+                          },
+                          icon: const Icon(Icons.check_box),
+                          color: Colors.orange,
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                            final result = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text(
+                                    "Orden ${_formatFolio("${orden["id"]}")}"),
+                                content: const Text(
+                                    'Marcar esta orden como "En proceso" ?'),
+                                actionsAlignment: MainAxisAlignment.spaceEvenly,
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, false),
+                                    child: const Text('Cancelar'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      estatus = estadosOrden[1];
+                                      _updateData(orden["id"]);
+                                      Navigator.pop(context, true);
+                                    },
+                                    child: const Text('Aceptar'),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (result == null || !result) {
+                              return;
+                            }
+
+                            //ACCION PARA MARCAR ORDEN COMO FINALIZADA
+                          },
+                          icon: const Icon(Icons.check_box),
+                          color: Colors.indigo,
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                            final result = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text(
+                                    'Marcar esta orden como "Finalizada"?'),
+                                // content: const Text(
+                                //     'This action will permanently delete this data'),
+                                actionsAlignment: MainAxisAlignment.spaceEvenly,
+
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, false),
+                                    child: const Text('Cancelar'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      estatus = estadosOrden[2];
+                                      _updateData(orden["id"]);
+                                      Navigator.pop(context, true);
+                                    },
+                                    child: const Text('Finalizar'),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (result == null || !result) {
+                              return;
+                            }
+
+                            //ACCION PARA MARCAR ORDEN COMO FINALIZADA
+                          },
+                          icon: const Icon(Icons.check_box),
+                          color: Colors.green,
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                            final result = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text(
+                                    "Orden ${_formatFolio("${orden["id"]}")}"),
+                                content:
+                                    const Text('Desea cancelar esta orden?'),
+                                actionsAlignment: MainAxisAlignment.spaceEvenly,
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, false),
+                                    child: const Text('Cancelar'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      estatus = estadosOrden[3];
+                                      _updateData(orden["id"]);
+                                      Navigator.pop(context, true);
+                                    },
+                                    child: const Text('Finalizar'),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (result == null || !result) {
+                              return;
+                            }
+
+                            //ACCION PARA MARCAR ORDEN COMO FINALIZADA
+                          },
+                          icon: const Icon(Icons.check_box),
+                          color: Colors.redAccent,
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PdfOrder(
+                                        orderToPrint: orden,
+                                      )),
+                            ).then((res) => _refreshData());
+                          },
+                          icon: const Icon(Icons.print),
+                          color: Colors.blueGrey,
+                        ),
+                        // IconButton(
+                        //   onPressed: () {
+                        //     showFullOrder(orden["id"]);
+                        //   },
+                        //   icon: const Icon(Icons.edit),
+                        //   color: Colors.blue,
+                        // ),
+                        IconButton(
+                          onPressed: () async {
+                            final result = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Are you sure?'),
+                                content: const Text(
+                                    'This action will permanently delete this data'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, true),
+                                    child: const Text('Delete'),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (result == null || !result) {
+                              return;
+                            }
+                            _deleteData(orden["id"]);
+                          },
+                          icon: const Icon(Icons.delete_forever),
+                          color: Colors.redAccent,
+                        ),
+                      ],
+                    ),
                   ),
-                  minLeadingWidth: 20,
-                  hoverColor: const Color.fromARGB(255, 226, 229, 245),
-                  mouseCursor: SystemMouseCursors.click,
-                  title: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: Text(
-                        parseString(_allData[index]["clienteNombre"]),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      )),
-                  subtitle: Text(
-                      "No. Eco: ${parseString(_allData[index]["unidadNumEco"])}"),
-                  onTap: () {
-                    showFullOrder(_allData[index]["id"]);
-                  },
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // IconButton(
-                      //   onPressed: () {
-                      //     tempShowFullOrder(_allData[index]["id"]);
-                      //   },
-                      //   icon: const Icon(Icons.edit),
-                      //   color: Colors.green,
-                      // ),
-                      IconButton(
-                        onPressed: () async {
-                          final result = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(
-                                  "Orden ${_formatFolio("${_allData[index]["id"]}")}"),
-                              content: const Text(
-                                  'Marcar esta orden como "Pendiente"?'),
-                              actionsAlignment: MainAxisAlignment.spaceEvenly,
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
-                                  child: const Text('Cancelar'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    estatus = estadosOrden[0];
-                                    _updateData(_allData[index]["id"]);
-                                    Navigator.pop(context, true);
-                                  },
-                                  child: const Text('Aceptar'),
-                                ),
-                              ],
-                            ),
-                          );
-
-                          if (result == null || !result) {
-                            return;
-                          }
-
-                          //ACCION PARA MARCAR ORDEN COMO FINALIZADA
-                        },
-                        icon: const Icon(Icons.check_box),
-                        color: Colors.orange,
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          final result = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(
-                                  "Orden ${_formatFolio("${_allData[index]["id"]}")}"),
-                              content: const Text(
-                                  'Marcar esta orden como "En proceso" ?'),
-                              actionsAlignment: MainAxisAlignment.spaceEvenly,
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
-                                  child: const Text('Cancelar'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    estatus = estadosOrden[1];
-                                    _updateData(_allData[index]["id"]);
-                                    Navigator.pop(context, true);
-                                  },
-                                  child: const Text('Aceptar'),
-                                ),
-                              ],
-                            ),
-                          );
-
-                          if (result == null || !result) {
-                            return;
-                          }
-
-                          //ACCION PARA MARCAR ORDEN COMO FINALIZADA
-                        },
-                        icon: const Icon(Icons.check_box),
-                        color: Colors.indigo,
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          final result = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text(
-                                  'Marcar esta orden como "Finalizada"?'),
-                              // content: const Text(
-                              //     'This action will permanently delete this data'),
-                              actionsAlignment: MainAxisAlignment.spaceEvenly,
-
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
-                                  child: const Text('Cancelar'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    estatus = estadosOrden[2];
-                                    _updateData(_allData[index]["id"]);
-                                    Navigator.pop(context, true);
-                                  },
-                                  child: const Text('Finalizar'),
-                                ),
-                              ],
-                            ),
-                          );
-
-                          if (result == null || !result) {
-                            return;
-                          }
-
-                          //ACCION PARA MARCAR ORDEN COMO FINALIZADA
-                        },
-                        icon: const Icon(Icons.check_box),
-                        color: Colors.green,
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          final result = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text(
-                                  "Orden ${_formatFolio("${_allData[index]["id"]}")}"),
-                              content: const Text('Desea cancelar esta orden?'),
-                              actionsAlignment: MainAxisAlignment.spaceEvenly,
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
-                                  child: const Text('Cancelar'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    estatus = estadosOrden[3];
-                                    _updateData(_allData[index]["id"]);
-                                    Navigator.pop(context, true);
-                                  },
-                                  child: const Text('Finalizar'),
-                                ),
-                              ],
-                            ),
-                          );
-
-                          if (result == null || !result) {
-                            return;
-                          }
-
-                          //ACCION PARA MARCAR ORDEN COMO FINALIZADA
-                        },
-                        icon: const Icon(Icons.check_box),
-                        color: Colors.redAccent,
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PdfOrder(
-                                      orderToPrint: _allData[index],
-                                    )),
-                          ).then((res) => _refreshData());
-                        },
-                        icon: const Icon(Icons.print),
-                        color: Colors.blueGrey,
-                      ),
-                      // IconButton(
-                      //   onPressed: () {
-                      //     showFullOrder(_allData[index]["id"]);
-                      //   },
-                      //   icon: const Icon(Icons.edit),
-                      //   color: Colors.blue,
-                      // ),
-                      IconButton(
-                        onPressed: () async {
-                          final result = await showDialog<bool>(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Are you sure?'),
-                              content: const Text(
-                                  'This action will permanently delete this data'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  child: const Text('Delete'),
-                                ),
-                              ],
-                            ),
-                          );
-
-                          if (result == null || !result) {
-                            return;
-                          }
-                          _deleteData(_allData[index]["id"]);
-                        },
-                        icon: const Icon(Icons.delete_forever),
-                        color: Colors.redAccent,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                );
+              },
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => showBottomSheet(null),
         child: const Icon(Icons.add),
       ),
+      drawer: Drawer(
+        width: 220,
+        child: Column(
+            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                  child: const Text(
+                    "Filtro de ordenes",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )),
+              const Divider(
+                thickness: 2,
+              ),
+              addVerticalSpace(10),
+              Column(
+                children: buildChipFilter(context),
+              ),
+              const Divider(
+                thickness: 2,
+              ),
+              Visibility(
+                visible: estadosOrdenFiltro.isNotEmpty,
+                child: FilterChip(
+                  label: const Text("Limpiar filtros",
+                      style: TextStyle(
+                        fontSize: 16,
+                      )),
+                  selected: estadosOrdenFiltro.isEmpty,
+                  onSelected: (bool selected) {
+                    setState(
+                      () {
+                        if (selected) {
+                          estadosOrdenFiltro.clear();
+                        }
+                      },
+                    );
+                  },
+                ),
+              )
+            ]),
+      ),
     );
+  }
+
+  List<Widget> buildChipFilter(BuildContext context) {
+    return estadosOrden.map(
+      (estado) {
+        return Column(
+          children: [
+            FilterChip(
+              label: Text(estado,
+                  style: const TextStyle(
+                    fontSize: 16,
+                  )),
+              selected: estadosOrdenFiltro.contains(estado),
+              onSelected: (bool selected) {
+                setState(
+                  () {
+                    if (selected) {
+                      estadosOrdenFiltro.add(estado);
+                    } else {
+                      estadosOrdenFiltro.remove(estado);
+                    }
+                  },
+                );
+              },
+            ),
+            addVerticalSpace(15),
+          ],
+        );
+      },
+    ).toList();
   }
 
   String parseString(String? value) {

@@ -385,14 +385,6 @@ class _AllOrdersState extends State<AllOrders> {
             child: const Text("Nueva orden"),
           ),
           addHorizontalSpace(15),
-          // IconButton(
-          //   onPressed: () {},
-          //   icon: const Icon(Icons.search),
-          // ),
-          // IconButton(
-          //   onPressed: () {},
-          //   icon: const Icon(Icons.filter_alt),
-          // ),
         ],
       ),
       body: _isLoading
@@ -404,6 +396,8 @@ class _AllOrdersState extends State<AllOrders> {
               itemBuilder: (context, index) {
                 final orden = filtroOrdenes.elementAt(index);
                 return Card(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: ListTile(
                     leading: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -413,16 +407,18 @@ class _AllOrdersState extends State<AllOrders> {
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         addVerticalSpace(4),
-                        Text("${orden["estatus"]}",
-                            style: const TextStyle(
-                              color: Colors.black45,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            )),
+                        Text(
+                          "${orden["estatus"]}",
+                          style: TextStyle(
+                            color: colorEstatus(orden["estatus"]),
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                     ),
-                    minLeadingWidth: 20,
-                    hoverColor: const Color.fromARGB(255, 226, 229, 245),
+                    minLeadingWidth: 80,
+                    hoverColor: const Color(0xFFE9EBF7),
                     mouseCursor: SystemMouseCursors.click,
                     title: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
@@ -435,18 +431,43 @@ class _AllOrdersState extends State<AllOrders> {
                     onTap: () {
                       showFullOrder(orden["id"]);
                     },
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // IconButton(
-                        //   onPressed: () {
-                        //     tempShowFullOrder(orden["id"]);
-                        //   },
-                        //   icon: const Icon(Icons.edit),
-                        //   color: Colors.green,
+                    trailing: PopupMenuButton(
+                      tooltip: ("Opciones"),
+                      itemBuilder: (context) => [
+                        // PopupMenuItem(
+                        //   child: ListTile(
+                        //     leading: const Icon(Icons.edit),
+                        //     title: const Text("Editar"),
+                        //     onTap: () {
+                        //       showFullOrder(orden["id"]);
+                        //     },
+                        //   ),
                         // ),
-                        IconButton(
-                          onPressed: () async {
+                        // PopupMenuItem(
+                        //   child: ListTile(
+                        //     leading: const Icon(Icons.remove_red_eye),
+                        //     title: const Text("Ver detalles"),
+                        //     onTap: () {
+                        //       tempShowFullOrder(orden["id"]);
+                        //     },
+                        //   ),
+                        // ),
+                        PopupMenuItem(
+                          child: const Row(
+                            children: [
+                              Icon(
+                                Icons.check_box,
+                                color: Colors.orange,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 12.0),
+                                child: Text(
+                                  "Pendiente",
+                                ),
+                              ),
+                            ],
+                          ),
+                          onTap: () async {
                             final result = await showDialog<bool>(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -476,14 +497,22 @@ class _AllOrdersState extends State<AllOrders> {
                             if (result == null || !result) {
                               return;
                             }
-
-                            //ACCION PARA MARCAR ORDEN COMO FINALIZADA
                           },
-                          icon: const Icon(Icons.check_box),
-                          color: Colors.orange,
                         ),
-                        IconButton(
-                          onPressed: () async {
+                        // ),
+                        PopupMenuItem(
+                          child: const Row(
+                            children: [
+                              Icon(
+                                Icons.check_box,
+                                color: Colors.indigo,
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(left: 12.0),
+                                  child: Text("En proceso")),
+                            ],
+                          ),
+                          onTap: () async {
                             final result = await showDialog<bool>(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -513,14 +542,21 @@ class _AllOrdersState extends State<AllOrders> {
                             if (result == null || !result) {
                               return;
                             }
-
-                            //ACCION PARA MARCAR ORDEN COMO FINALIZADA
                           },
-                          icon: const Icon(Icons.check_box),
-                          color: Colors.indigo,
                         ),
-                        IconButton(
-                          onPressed: () async {
+                        PopupMenuItem(
+                          child: const Row(
+                            children: [
+                              Icon(
+                                Icons.check_box,
+                                color: Colors.green,
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(left: 12.0),
+                                  child: Text("Finalizado")),
+                            ],
+                          ),
+                          onTap: () async {
                             final result = await showDialog<bool>(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -551,14 +587,21 @@ class _AllOrdersState extends State<AllOrders> {
                             if (result == null || !result) {
                               return;
                             }
-
-                            //ACCION PARA MARCAR ORDEN COMO FINALIZADA
                           },
-                          icon: const Icon(Icons.check_box),
-                          color: Colors.green,
                         ),
-                        IconButton(
-                          onPressed: () async {
+                        PopupMenuItem(
+                          child: const Row(
+                            children: [
+                              Icon(
+                                Icons.check_box,
+                                color: Colors.red,
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(left: 12.0),
+                                  child: Text("Cancelar orden")),
+                            ],
+                          ),
+                          onTap: () async {
                             final result = await showDialog<bool>(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -588,62 +631,35 @@ class _AllOrdersState extends State<AllOrders> {
                             if (result == null || !result) {
                               return;
                             }
-
-                            //ACCION PARA MARCAR ORDEN COMO FINALIZADA
                           },
-                          icon: const Icon(Icons.check_box),
-                          color: Colors.redAccent,
                         ),
-                        IconButton(
-                          onPressed: () async {
+
+                        PopupMenuItem(
+                          child: const Row(
+                            children: [
+                              // const Icon(
+                              //   Icons.picture_as_pdf,
+                              //   color: Colors.blueGrey,
+                              // ),
+                              Icon(
+                                Icons.print,
+                                color: Colors.blueGrey,
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(left: 12.0),
+                                  child: Text("Generar PDF")),
+                            ],
+                          ),
+                          onTap: () async {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PdfOrder(
-                                        orderToPrint: orden,
-                                      )),
+                                builder: (context) => PdfOrder(
+                                  orderToPrint: orden,
+                                ),
+                              ),
                             ).then((res) => _refreshData());
                           },
-                          icon: const Icon(Icons.print),
-                          color: Colors.blueGrey,
-                        ),
-                        // IconButton(
-                        //   onPressed: () {
-                        //     showFullOrder(orden["id"]);
-                        //   },
-                        //   icon: const Icon(Icons.edit),
-                        //   color: Colors.blue,
-                        // ),
-                        IconButton(
-                          onPressed: () async {
-                            final result = await showDialog<bool>(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Are you sure?'),
-                                content: const Text(
-                                    'This action will permanently delete this data'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, false),
-                                    child: const Text('Cancel'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, true),
-                                    child: const Text('Delete'),
-                                  ),
-                                ],
-                              ),
-                            );
-
-                            if (result == null || !result) {
-                              return;
-                            }
-                            _deleteData(orden["id"]);
-                          },
-                          icon: const Icon(Icons.delete_forever),
-                          color: Colors.redAccent,
                         ),
                       ],
                     ),
@@ -685,6 +701,7 @@ class _AllOrdersState extends State<AllOrders> {
                   label: const Text("Limpiar filtros",
                       style: TextStyle(
                         fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       )),
                   selected: estadosOrdenFiltro.isEmpty,
                   onSelected: (bool selected) {
@@ -692,6 +709,7 @@ class _AllOrdersState extends State<AllOrders> {
                       () {
                         if (selected) {
                           estadosOrdenFiltro.clear();
+                          Navigator.pop(context);
                         }
                       },
                     );
@@ -710,10 +728,23 @@ class _AllOrdersState extends State<AllOrders> {
           children: [
             FilterChip(
               label: Text(estado,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: estadosOrdenFiltro.contains(estado)
+                        ? Colors.white
+                        : colorEstatus(estado),
                   )),
+              checkmarkColor: Colors.white,
+              selectedColor: colorEstatus(estado),
               selected: estadosOrdenFiltro.contains(estado),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: const BorderSide(
+                  color: Colors.black,
+                  width: 1.5,
+                ),
+              ),
               onSelected: (bool selected) {
                 setState(
                   () {
@@ -738,5 +769,20 @@ class _AllOrdersState extends State<AllOrders> {
       return "Valor Nulo";
     }
     return value.toString();
+  }
+}
+
+colorEstatus(orden) {
+  switch (orden) {
+    case "Pendiente":
+      return Colors.black54;
+    case "En proceso":
+      return Colors.indigoAccent;
+    case "Finalizado":
+      return Colors.green;
+    case "Cancelado":
+      return Colors.redAccent;
+    default:
+      return Colors.black;
   }
 }

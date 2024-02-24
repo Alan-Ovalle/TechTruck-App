@@ -390,14 +390,33 @@ class _AllOrdersState extends State<AllOrders> {
             onPressed: () {
               showFullOrder(null);
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.blue.shade800,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
             child: const Text(
               "Nueva orden",
               style: TextStyle(
-                // fontSize: 20,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
             ),
           ),
+          addHorizontalSpace(10),
+          IconButton(
+              onPressed: () => showBottomSheet(null),
+              icon: const Icon(Icons.post_add_rounded),
+              iconSize: 25,
+              hoverColor: Colors.blue.shade800,
+              tooltip: "Crear orden express",
+              visualDensity: const VisualDensity(
+                horizontal: 1,
+                vertical: 1,
+              )),
           addHorizontalSpace(15),
         ],
       ),
@@ -830,14 +849,6 @@ class _AllOrdersState extends State<AllOrders> {
                 );
               },
             ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue.shade900,
-        onPressed: () => showBottomSheet(null),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ),
       drawer: Drawer(
         width: 220,
         child: Column(

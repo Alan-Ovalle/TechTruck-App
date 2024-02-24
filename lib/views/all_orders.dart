@@ -318,6 +318,7 @@ class _AllOrdersState extends State<AllOrders> {
                     maxLines: 4,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
+                      labelText: "Comentario del cliente",
                     ),
                   ),
                   addVerticalSpace(20),
@@ -382,7 +383,13 @@ class _AllOrdersState extends State<AllOrders> {
             onPressed: () {
               showFullOrder(null);
             },
-            child: const Text("Nueva orden"),
+            child: const Text(
+              "Nueva orden",
+              style: TextStyle(
+                // fontSize: 20,
+                color: Colors.black,
+              ),
+            ),
           ),
           addHorizontalSpace(15),
         ],
@@ -399,35 +406,179 @@ class _AllOrdersState extends State<AllOrders> {
                   margin:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: ListTile(
+                    // horizontalTitleGap: 25,
                     leading: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           _formatFolio("${orden["id"]}"),
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        addVerticalSpace(4),
+                        // addVerticalSpace(4),
                         Text(
                           "${orden["estatus"]}",
                           style: TextStyle(
                             color: colorEstatus(orden["estatus"]),
-                            fontSize: 10,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
-                    minLeadingWidth: 80,
                     hoverColor: const Color(0xFFE9EBF7),
                     mouseCursor: SystemMouseCursors.click,
-                    title: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Text(
-                          parseString(orden["clienteNombre"]),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        )),
-                    subtitle:
-                        Text("No. Eco: ${parseString(orden["unidadNumEco"])}"),
+                    title: Row(
+                      children: [
+                        SizedBox(
+                            width: 250,
+                            height: 24,
+                            child: RichText(
+                              text: TextSpan(
+                                text: "Cliente: ",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: parseString(
+                                      orden["clienteNombre"],
+                                    ),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black,
+                                      overflow: TextOverflow.fade,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        Flexible(
+                          child: Container(
+                              // width: 450,
+                              height: 24,
+                              child: RichText(
+                                text: TextSpan(
+                                  text: "Comentario: ",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: parseString(
+                                        orden["clienteComentario"],
+                                      ),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ),
+                      ],
+                    ),
+                    subtitle: Row(
+                      children: [
+                        SizedBox(
+                            width: 250,
+                            child: RichText(
+                              text: TextSpan(
+                                text: "Llegada: ",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: parseString(
+                                      orden["fechaLlegada"],
+                                    ),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        SizedBox(
+                            width: 250,
+                            child: RichText(
+                              text: TextSpan(
+                                text: "No.Eco: ",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: parseString(
+                                      orden["unidadNumEco"],
+                                    ),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        SizedBox(
+                            width: 250,
+                            child: RichText(
+                              text: TextSpan(
+                                text: "Marca: ",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: parseString(
+                                      orden["unidadMarca"],
+                                    ),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        SizedBox(
+                            width: 250,
+                            child: RichText(
+                              text: TextSpan(
+                                text: "Tipo: ",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: parseString(
+                                      orden["unidadTipo"],
+                                    ),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                      ],
+                    ),
                     onTap: () {
                       showFullOrder(orden["id"]);
                     },
@@ -560,12 +711,11 @@ class _AllOrdersState extends State<AllOrders> {
                             final result = await showDialog<bool>(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: const Text(
+                                title: Text(
+                                    "Orden ${_formatFolio("${orden["id"]}")}"),
+                                content: const Text(
                                     'Marcar esta orden como "Finalizada"?'),
-                                // content: const Text(
-                                //     'This action will permanently delete this data'),
                                 actionsAlignment: MainAxisAlignment.spaceEvenly,
-
                                 actions: [
                                   TextButton(
                                     onPressed: () =>
@@ -668,8 +818,12 @@ class _AllOrdersState extends State<AllOrders> {
               },
             ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue.shade900,
         onPressed: () => showBottomSheet(null),
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
       drawer: Drawer(
         width: 220,
@@ -767,6 +921,8 @@ class _AllOrdersState extends State<AllOrders> {
   String parseString(String? value) {
     if (value == null) {
       return "Valor Nulo";
+    } else if (value == "") {
+      return "_________";
     }
     return value.toString();
   }

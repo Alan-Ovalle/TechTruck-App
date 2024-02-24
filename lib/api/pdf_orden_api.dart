@@ -285,7 +285,7 @@ class PdfOrdenApi {
             buildCellCenter("Datos de la Unidad", true, context),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Expanded(
-                flex: 1,
+                flex: 3,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -299,7 +299,7 @@ class PdfOrdenApi {
                     ]),
               ),
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -315,7 +315,7 @@ class PdfOrdenApi {
             ]),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Expanded(
-                flex: 1,
+                flex: 3,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -329,7 +329,7 @@ class PdfOrdenApi {
                     ]),
               ),
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -345,7 +345,7 @@ class PdfOrdenApi {
             ]),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Expanded(
-                flex: 1,
+                flex: 3,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -359,7 +359,7 @@ class PdfOrdenApi {
                     ]),
               ),
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -375,7 +375,7 @@ class PdfOrdenApi {
             ]),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Expanded(
-                flex: 1,
+                flex: 3,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -389,7 +389,7 @@ class PdfOrdenApi {
                     ]),
               ),
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -405,7 +405,7 @@ class PdfOrdenApi {
             ]),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Expanded(
-                flex: 1,
+                flex: 3,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -419,7 +419,7 @@ class PdfOrdenApi {
                     ]),
               ),
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -437,7 +437,7 @@ class PdfOrdenApi {
               Expanded(
                   flex: 4, child: buildCellCenter("V.I.N.", true, context)),
               Expanded(
-                  flex: 14,
+                  flex: 11,
                   child: buildCellToTheLeft("${unidad.vin}", false, context))
             ]),
           ],

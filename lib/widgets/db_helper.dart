@@ -160,6 +160,39 @@ class SQLHelper {
     return result;
   }
 
+  static Future<int> updateEstatusField(int id, String? value) async {
+    final db = await SQLHelper.db();
+    final oldData = await getSingleData(id);
+    final data = {
+      'estatus': value,
+      'clienteNombre': oldData[0]['clienteNombre'],
+      'clienteContacto': oldData[0]['clienteContacto'],
+      'unidadNumEco': oldData[0]['unidadNumEco'],
+      'unidadKilometros': oldData[0]['unidadKilometros'],
+      'unidadMarca ': oldData[0]['unidadMarca'],
+      'unidadModelo': oldData[0]['unidadModelo'],
+      'unidadHorasMotor': oldData[0]['unidadHorasMotor'],
+      'unidadTipo': oldData[0]['unidadTipo'],
+      'unidadMotor': oldData[0]['unidadMotor'],
+      'unidadSerie': oldData[0]['unidadSerie'],
+      'unidadPlacas': oldData[0]['unidadPlacas'],
+      'unidadYear': oldData[0]['unidadYear'],
+      'unidadVin': oldData[0]['unidadVin'],
+      'fechaLlegada': oldData[0]['fechaLlegada'],
+      'fechaSalida': oldData[0]['fechaSalida'],
+      'tecnicoAsignado': oldData[0]['tecnicoAsignado'],
+      'numeroCaso': oldData[0]['numeroCaso'],
+      'clienteComentario': oldData[0]['clienteComentario'],
+      'diagnostico': oldData[0]['diagnostico'],
+      'trabajoRealizado': oldData[0]['trabajoRealizado'],
+      'costo': oldData[0]['costo'],
+      'createdAt': DateTime.now().toString()
+    };
+    final result =
+        await db.update('data', data, where: 'id = ?', whereArgs: [id]);
+    return result;
+  }
+
   static Future<void> deleteData(int id, BuildContext context) async {
     final db = await SQLHelper.db();
     try {

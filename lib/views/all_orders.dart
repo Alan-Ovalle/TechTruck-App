@@ -113,13 +113,7 @@ class _AllOrdersState extends State<AllOrders> {
         _trabajoRealizado.text.isNotEmpty ||
         _costosController.text.isNotEmpty;
     if (!areAllFieldsFilled) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text("Favor de llenar todos los campos"),
-        ),
-      );
+      _customSnackBar("Favor de llenar todos los campos", Colors.redAccent);
       return;
     } else {
       await SQLHelper.createData(
@@ -180,15 +174,28 @@ class _AllOrdersState extends State<AllOrders> {
     _refreshData();
   }
 
-  void _deleteData(int id) async {
-    await SQLHelper.deleteData(id, context);
+  void _customSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        backgroundColor: Colors.redAccent,
-        content: Text("Orden eliminada"),
+      SnackBar(
+        backgroundColor: color,
+        content: Text(message),
       ),
     );
+  }
+
+  void _deleteData(int id) async {
+    await SQLHelper.deleteData(id, context);
+    _customSnackBar("Orden eliminada correctamente.", Colors.redAccent);
+
+    _refreshData();
+  }
+
+  void _upadateEstatus(int id, String? estatus, Color color) async {
+    await SQLHelper.updateEstatusField(id, estatus);
+    _customSnackBar(
+        "La orden ${id.toString()} fue marcada como ${estatus!} correctamente.",
+        color);
 
     _refreshData();
   }
@@ -585,24 +592,50 @@ class _AllOrdersState extends State<AllOrders> {
                     trailing: PopupMenuButton(
                       tooltip: ("Opciones"),
                       itemBuilder: (context) => [
-                        // PopupMenuItem(
-                        //   child: ListTile(
-                        //     leading: const Icon(Icons.edit),
-                        //     title: const Text("Editar"),
-                        //     onTap: () {
-                        //       showFullOrder(orden["id"]);
-                        //     },
-                        //   ),
-                        // ),
-                        // PopupMenuItem(
-                        //   child: ListTile(
-                        //     leading: const Icon(Icons.remove_red_eye),
-                        //     title: const Text("Ver detalles"),
-                        //     onTap: () {
-                        //       tempShowFullOrder(orden["id"]);
-                        //     },
-                        //   ),
-                        // ),
+                        PopupMenuItem(
+                          child: const Row(
+                            children: [
+                              Icon(
+                                Icons.delete,
+                                color: Colors.redAccent,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 12.0),
+                                child: Text(
+                                  "Eliminar",
+                                ),
+                              ),
+                            ],
+                          ),
+                          onTap: () async {
+                            final result = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('¿Estas seguro?'),
+                                content: const Text(
+                                    'Esta accion eliminara permanentemente la orden.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, true),
+                                    child: const Text('Borrar'),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (result == null || !result) {
+                              return;
+                            }
+
+                            _deleteData(_allData[index]["id"]);
+                          },
+                        ),
                         PopupMenuItem(
                           child: const Row(
                             children: [
@@ -621,28 +654,17 @@ class _AllOrdersState extends State<AllOrders> {
                           onTap: () async {
                             final result = await showDialog<bool>(
                               context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text(
-                                    "Orden ${_formatFolio("${orden["id"]}")}"),
-                                content: const Text(
-                                    'Marcar esta orden como "Pendiente"?'),
-                                actionsAlignment: MainAxisAlignment.spaceEvenly,
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, false),
-                                    child: const Text('Cancelar'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      estatus = estadosOrden[0];
-                                      _updateData(orden["id"]);
-                                      Navigator.pop(context, true);
-                                    },
-                                    child: const Text('Aceptar'),
-                                  ),
-                                ],
-                              ),
+                              builder: (context) {
+                                estatus = estadosOrden[0];
+                                return customAlertDialog(
+                                    context,
+                                    _formatFolio("${orden["id"]}"),
+                                    estatus, () async {
+                                  _upadateEstatus(
+                                      orden["id"], estatus, Colors.orange);
+                                  Navigator.pop(context, true);
+                                }, Colors.orange);
+                              },
                             );
 
                             if (result == null || !result) {
@@ -666,28 +688,20 @@ class _AllOrdersState extends State<AllOrders> {
                           onTap: () async {
                             final result = await showDialog<bool>(
                               context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text(
-                                    "Orden ${_formatFolio("${orden["id"]}")}"),
-                                content: const Text(
-                                    'Marcar esta orden como "En proceso" ?'),
-                                actionsAlignment: MainAxisAlignment.spaceEvenly,
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, false),
-                                    child: const Text('Cancelar'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      estatus = estadosOrden[1];
-                                      _updateData(orden["id"]);
-                                      Navigator.pop(context, true);
-                                    },
-                                    child: const Text('Aceptar'),
-                                  ),
-                                ],
-                              ),
+                              builder: (context) {
+                                estatus = estadosOrden[1];
+                                return customAlertDialog(
+                                  context,
+                                  _formatFolio("${orden["id"]}"),
+                                  estatus,
+                                  () async {
+                                    _upadateEstatus(
+                                        orden["id"], estatus, Colors.indigo);
+                                    Navigator.pop(context, true);
+                                  },
+                                  Colors.indigo,
+                                );
+                              },
                             );
 
                             if (result == null || !result) {
@@ -710,28 +724,20 @@ class _AllOrdersState extends State<AllOrders> {
                           onTap: () async {
                             final result = await showDialog<bool>(
                               context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text(
-                                    "Orden ${_formatFolio("${orden["id"]}")}"),
-                                content: const Text(
-                                    'Marcar esta orden como "Finalizada"?'),
-                                actionsAlignment: MainAxisAlignment.spaceEvenly,
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, false),
-                                    child: const Text('Cancelar'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      estatus = estadosOrden[2];
-                                      _updateData(orden["id"]);
-                                      Navigator.pop(context, true);
-                                    },
-                                    child: const Text('Finalizar'),
-                                  ),
-                                ],
-                              ),
+                              builder: (context) {
+                                estatus = estadosOrden[2];
+                                return customAlertDialog(
+                                  context,
+                                  _formatFolio("${orden["id"]}"),
+                                  estatus,
+                                  () async {
+                                    _upadateEstatus(
+                                        orden["id"], estatus, Colors.green);
+                                    Navigator.pop(context, true);
+                                  },
+                                  Colors.green,
+                                );
+                              },
                             );
 
                             if (result == null || !result) {
@@ -754,30 +760,21 @@ class _AllOrdersState extends State<AllOrders> {
                           onTap: () async {
                             final result = await showDialog<bool>(
                               context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text(
-                                    "Orden ${_formatFolio("${orden["id"]}")}"),
-                                content:
-                                    const Text('Desea cancelar esta orden?'),
-                                actionsAlignment: MainAxisAlignment.spaceEvenly,
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, false),
-                                    child: const Text('Cancelar'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      estatus = estadosOrden[3];
-                                      _updateData(orden["id"]);
-                                      Navigator.pop(context, true);
-                                    },
-                                    child: const Text('Finalizar'),
-                                  ),
-                                ],
-                              ),
+                              builder: (context) {
+                                estatus = estadosOrden[3];
+                                return customAlertDialog(
+                                  context,
+                                  _formatFolio("${orden["id"]}"),
+                                  estatus,
+                                  () async {
+                                    _upadateEstatus(
+                                        orden["id"], estatus, Colors.red);
+                                    Navigator.pop(context, true);
+                                  },
+                                  Colors.red,
+                                );
+                              },
                             );
-
                             if (result == null || !result) {
                               return;
                             }

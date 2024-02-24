@@ -302,3 +302,85 @@ Widget tituloTile(String titulo) {
     ),
   );
 }
+
+Widget customAlertDialog(
+  BuildContext context,
+  String? id,
+  String? mensaje,
+  Function accion,
+  Color color,
+) {
+  return AlertDialog(
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        RichText(
+          text: TextSpan(
+            children: [
+              const TextSpan(
+                text: "Folio: ",
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              TextSpan(
+                text: id!,
+                style: const TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.indigo,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+    content: Text(
+      '¿Desea marcar esta orden como "$mensaje"?',
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
+    actionsAlignment: MainAxisAlignment.spaceEvenly,
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context, false),
+        style: TextButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.grey.shade600,
+          textStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          minimumSize: const Size(120, 40),
+        ),
+        child: const Text('Cancelar'),
+      ),
+      TextButton(
+        onPressed: () {
+          accion();
+        },
+        style: TextButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: color,
+          textStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          minimumSize: const Size(120, 40),
+        ),
+        child: const Text('Aceptar'),
+      ),
+    ],
+  );
+}

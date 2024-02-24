@@ -422,12 +422,28 @@ class _AllOrdersState extends State<AllOrders> {
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
                         // addVerticalSpace(4),
-                        Text(
-                          "${orden["estatus"]}",
-                          style: TextStyle(
+                        Container(
+                          decoration: BoxDecoration(
                             color: colorEstatus(orden["estatus"]),
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                              width: 1.5,
+                            ),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 5,
+                            // vertical: 2,
+                          ),
+                          width: 85,
+                          child: Center(
+                            child: Text(
+                              "${orden["estatus"]}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                       ],

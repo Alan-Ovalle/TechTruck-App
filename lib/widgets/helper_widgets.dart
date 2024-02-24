@@ -329,8 +329,8 @@ Widget customAlertDialog(
                 text: id!,
                 style: const TextStyle(
                   fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.indigo,
+                  // fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
             ],

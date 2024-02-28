@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:techtruck_v11/views/all_orders.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:techtruck_v11/widgets/myCustomScroller.dart';
 
 Future main() async {
   sqfliteFfiInit();
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Tahoma',
           visualDensity: VisualDensity.adaptivePlatformDensity),
       debugShowCheckedModeBanner: false,
+      scrollBehavior: MyCustomScrollerBehavior(),
       home: const AllOrders(),
     );
   }

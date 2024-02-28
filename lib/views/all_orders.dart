@@ -209,13 +209,12 @@ class _AllOrdersState extends State<AllOrders> {
     }
 
     Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => NewOrder(
-                singleData: existingData,
-                idOrder: id,
-              )),
-    ).then((res) => _refreshData());
+        context,
+        MaterialPageRoute(
+            builder: (context) => NewOrder(
+                  singleData: existingData,
+                  idOrder: id,
+                ))).then((res) => _refreshData());
   }
 
   void tempShowFullOrder(int? id) {
@@ -366,6 +365,8 @@ class _AllOrdersState extends State<AllOrders> {
     }
   }
 
+  final ScrollController scrollControllerOne = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     final filtroOrdenes = _allData.where((orden) {
@@ -376,6 +377,17 @@ class _AllOrdersState extends State<AllOrders> {
       appBar: AppBar(
         iconTheme: const IconThemeData(
           color: Colors.white,
+        ),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: 'Filtrar ordenes',
+            );
+          },
         ),
         title: const Text("Ordenes de servicio",
             style: TextStyle(
@@ -389,6 +401,9 @@ class _AllOrdersState extends State<AllOrders> {
           ElevatedButton(
             onPressed: () {
               showFullOrder(null);
+            },
+            onLongPress: () {
+              showBottomSheet(null);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
@@ -424,95 +439,131 @@ class _AllOrdersState extends State<AllOrders> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : ListView.builder(
-              itemCount: filtroOrdenes.length,
-              itemBuilder: (context, index) {
-                final orden = filtroOrdenes.elementAt(index);
-                return Card(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: ListTile(
-                    // horizontalTitleGap: 25,
-                    leading: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          _formatFolio("${orden["id"]}"),
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        // addVerticalSpace(4),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: colorEstatus(orden["estatus"]),
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(
-                              width: 1.5,
-                            ),
+          : Scrollbar(
+              controller: scrollControllerOne,
+              thumbVisibility: true,
+              trackVisibility: true,
+              thickness: 12,
+              radius: const Radius.circular(2),
+              child: ListView.builder(
+                controller: scrollControllerOne,
+                padding: const EdgeInsets.only(right: 15),
+                itemCount: filtroOrdenes.length,
+                itemBuilder: (context, index) {
+                  final orden = filtroOrdenes.elementAt(index);
+                  return Card(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: ListTile(
+                      // horizontalTitleGap: 25,
+                      leading: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _formatFolio("${orden["id"]}"),
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 5,
-                            // vertical: 2,
-                          ),
-                          width: 85,
-                          child: Center(
-                            child: Text(
-                              "${orden["estatus"]}",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+                          // addVerticalSpace(4),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: colorEstatus(orden["estatus"]),
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                width: 1.5,
                               ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    hoverColor: const Color(0xFFE9EBF7),
-                    mouseCursor: SystemMouseCursors.click,
-                    title: Row(
-                      children: [
-                        SizedBox(
-                            width: 250,
-                            height: 24,
-                            child: RichText(
-                              text: TextSpan(
-                                text: "Cliente: ",
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 5,
+                              // vertical: 2,
+                            ),
+                            width: 85,
+                            child: Center(
+                              child: Text(
+                                "${orden["estatus"]}",
                                 style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: 18,
                                 ),
-                                children: [
-                                  TextSpan(
-                                    text: parseString(
-                                      orden["clienteNombre"],
-                                    ),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                      overflow: TextOverflow.fade,
-                                    ),
-                                  ),
-                                ],
                               ),
-                            )),
-                        Flexible(
-                          child: Container(
-                              // width: 450,
+                            ),
+                          ),
+                        ],
+                      ),
+                      hoverColor: const Color(0xFFE9EBF7),
+                      mouseCursor: SystemMouseCursors.click,
+                      title: Row(
+                        children: [
+                          SizedBox(
+                              width: 250,
                               height: 24,
                               child: RichText(
                                 text: TextSpan(
-                                  text: "Comentario: ",
+                                  text: "Cliente: ",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                     fontSize: 18,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                   children: [
                                     TextSpan(
                                       text: parseString(
-                                        orden["clienteComentario"],
+                                        orden["clienteNombre"],
+                                      ),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                        overflow: TextOverflow.fade,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                          Flexible(
+                            child: SizedBox(
+                                // width: 450,
+                                height: 24,
+                                child: RichText(
+                                  text: TextSpan(
+                                    text: "Comentario: ",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: parseString(
+                                          orden["clienteComentario"],
+                                        ),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                          ),
+                        ],
+                      ),
+                      subtitle: Row(
+                        children: [
+                          SizedBox(
+                              width: 250,
+                              child: RichText(
+                                text: TextSpan(
+                                  text: "Llegada: ",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: parseString(
+                                        orden["fechaLlegada"],
                                       ),
                                       style: const TextStyle(
                                         fontWeight: FontWeight.normal,
@@ -522,332 +573,305 @@ class _AllOrdersState extends State<AllOrders> {
                                   ],
                                 ),
                               )),
-                        ),
-                      ],
-                    ),
-                    subtitle: Row(
-                      children: [
-                        SizedBox(
-                            width: 250,
-                            child: RichText(
-                              text: TextSpan(
-                                text: "Llegada: ",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: 14,
+                          SizedBox(
+                              width: 250,
+                              child: RichText(
+                                text: TextSpan(
+                                  text: "No.Eco: ",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: parseString(
+                                        orden["unidadNumEco"],
+                                      ),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                children: [
-                                  TextSpan(
-                                    text: parseString(
-                                      orden["fechaLlegada"],
-                                    ),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
+                              )),
+                          SizedBox(
+                              width: 250,
+                              child: RichText(
+                                text: TextSpan(
+                                  text: "Marca: ",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontSize: 14,
                                   ),
-                                ],
-                              ),
-                            )),
-                        SizedBox(
-                            width: 250,
-                            child: RichText(
-                              text: TextSpan(
-                                text: "No.Eco: ",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: 14,
+                                  children: [
+                                    TextSpan(
+                                      text: parseString(
+                                        orden["unidadMarca"],
+                                      ),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                children: [
-                                  TextSpan(
-                                    text: parseString(
-                                      orden["unidadNumEco"],
-                                    ),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
+                              )),
+                          SizedBox(
+                              width: 250,
+                              child: RichText(
+                                text: TextSpan(
+                                  text: "Tipo: ",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontSize: 14,
                                   ),
-                                ],
-                              ),
-                            )),
-                        SizedBox(
-                            width: 250,
-                            child: RichText(
-                              text: TextSpan(
-                                text: "Marca: ",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: 14,
+                                  children: [
+                                    TextSpan(
+                                      text: parseString(
+                                        orden["unidadTipo"],
+                                      ),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                children: [
-                                  TextSpan(
-                                    text: parseString(
-                                      orden["unidadMarca"],
-                                    ),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
-                        SizedBox(
-                            width: 250,
-                            child: RichText(
-                              text: TextSpan(
-                                text: "Tipo: ",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontSize: 14,
+                              )),
+                        ],
+                      ),
+                      onTap: () {
+                        showFullOrder(orden["id"]);
+                      },
+                      trailing: PopupMenuButton(
+                        tooltip: ("Opciones"),
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            child: const Row(
+                              children: [
+                                Icon(
+                                  Icons.delete,
+                                  color: Colors.redAccent,
                                 ),
-                                children: [
-                                  TextSpan(
-                                    text: parseString(
-                                      orden["unidadTipo"],
-                                    ),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 12.0),
+                                  child: Text(
+                                    "Eliminar",
                                   ),
-                                ],
-                              ),
-                            )),
-                      ],
-                    ),
-                    onTap: () {
-                      showFullOrder(orden["id"]);
-                    },
-                    trailing: PopupMenuButton(
-                      tooltip: ("Opciones"),
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          child: const Row(
-                            children: [
-                              Icon(
-                                Icons.delete,
-                                color: Colors.redAccent,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 12.0),
-                                child: Text(
-                                  "Eliminar",
                                 ),
-                              ),
-                            ],
-                          ),
-                          onTap: () async {
-                            final result = await showDialog<bool>(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('¿Estas seguro?'),
-                                content: const Text(
-                                    'Esta accion eliminara permanentemente la orden.'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, false),
-                                    child: const Text('Cancel'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, true),
-                                    child: const Text('Borrar'),
-                                  ),
-                                ],
-                              ),
-                            );
+                              ],
+                            ),
+                            onTap: () async {
+                              final result = await showDialog<bool>(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('¿Estas seguro?'),
+                                  content: const Text(
+                                      'Esta accion eliminara permanentemente la orden.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text('Borrar'),
+                                    ),
+                                  ],
+                                ),
+                              );
 
-                            if (result == null || !result) {
-                              return;
-                            }
+                              if (result == null || !result) {
+                                return;
+                              }
 
-                            _deleteData(_allData[index]["id"]);
-                          },
-                        ),
-                        PopupMenuItem(
-                          child: const Row(
-                            children: [
-                              Icon(
-                                Icons.check_box,
-                                color: Colors.orange,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 12.0),
-                                child: Text(
-                                  "Pendiente",
-                                ),
-                              ),
-                            ],
+                              _deleteData(_allData[index]["id"]);
+                            },
                           ),
-                          onTap: () async {
-                            final result = await showDialog<bool>(
-                              context: context,
-                              builder: (context) {
-                                estatus = estadosOrden[0];
-                                return customAlertDialog(
+                          PopupMenuItem(
+                            child: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_box,
+                                  color: Colors.orange,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 12.0),
+                                  child: Text(
+                                    "Pendiente",
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onTap: () async {
+                              final result = await showDialog<bool>(
+                                context: context,
+                                builder: (context) {
+                                  estatus = estadosOrden[0];
+                                  return customAlertDialog(
+                                      context,
+                                      _formatFolio("${orden["id"]}"),
+                                      estatus, () async {
+                                    _upadateEstatus(
+                                        orden["id"], estatus, Colors.orange);
+                                    Navigator.pop(context, true);
+                                  }, Colors.orange);
+                                },
+                              );
+
+                              if (result == null || !result) {
+                                return;
+                              }
+                            },
+                          ),
+                          // ),
+                          PopupMenuItem(
+                            child: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_box,
+                                  color: Colors.indigo,
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.only(left: 12.0),
+                                    child: Text("En proceso")),
+                              ],
+                            ),
+                            onTap: () async {
+                              final result = await showDialog<bool>(
+                                context: context,
+                                builder: (context) {
+                                  estatus = estadosOrden[1];
+                                  return customAlertDialog(
                                     context,
                                     _formatFolio("${orden["id"]}"),
-                                    estatus, () async {
-                                  _upadateEstatus(
-                                      orden["id"], estatus, Colors.orange);
-                                  Navigator.pop(context, true);
-                                }, Colors.orange);
-                              },
-                            );
+                                    estatus,
+                                    () async {
+                                      _upadateEstatus(
+                                          orden["id"], estatus, Colors.indigo);
+                                      Navigator.pop(context, true);
+                                    },
+                                    Colors.indigo,
+                                  );
+                                },
+                              );
 
-                            if (result == null || !result) {
-                              return;
-                            }
-                          },
-                        ),
-                        // ),
-                        PopupMenuItem(
-                          child: const Row(
-                            children: [
-                              Icon(
-                                Icons.check_box,
-                                color: Colors.indigo,
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(left: 12.0),
-                                  child: Text("En proceso")),
-                            ],
+                              if (result == null || !result) {
+                                return;
+                              }
+                            },
                           ),
-                          onTap: () async {
-                            final result = await showDialog<bool>(
-                              context: context,
-                              builder: (context) {
-                                estatus = estadosOrden[1];
-                                return customAlertDialog(
-                                  context,
-                                  _formatFolio("${orden["id"]}"),
-                                  estatus,
-                                  () async {
-                                    _upadateEstatus(
-                                        orden["id"], estatus, Colors.indigo);
-                                    Navigator.pop(context, true);
-                                  },
-                                  Colors.indigo,
-                                );
-                              },
-                            );
-
-                            if (result == null || !result) {
-                              return;
-                            }
-                          },
-                        ),
-                        PopupMenuItem(
-                          child: const Row(
-                            children: [
-                              Icon(
-                                Icons.check_box,
-                                color: Colors.green,
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(left: 12.0),
-                                  child: Text("Finalizado")),
-                            ],
-                          ),
-                          onTap: () async {
-                            final result = await showDialog<bool>(
-                              context: context,
-                              builder: (context) {
-                                estatus = estadosOrden[2];
-                                return customAlertDialog(
-                                  context,
-                                  _formatFolio("${orden["id"]}"),
-                                  estatus,
-                                  () async {
-                                    _upadateEstatus(
-                                        orden["id"], estatus, Colors.green);
-                                    Navigator.pop(context, true);
-                                  },
-                                  Colors.green,
-                                );
-                              },
-                            );
-
-                            if (result == null || !result) {
-                              return;
-                            }
-                          },
-                        ),
-                        PopupMenuItem(
-                          child: const Row(
-                            children: [
-                              Icon(
-                                Icons.check_box,
-                                color: Colors.red,
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(left: 12.0),
-                                  child: Text("Cancelar orden")),
-                            ],
-                          ),
-                          onTap: () async {
-                            final result = await showDialog<bool>(
-                              context: context,
-                              builder: (context) {
-                                estatus = estadosOrden[3];
-                                return customAlertDialog(
-                                  context,
-                                  _formatFolio("${orden["id"]}"),
-                                  estatus,
-                                  () async {
-                                    _upadateEstatus(
-                                        orden["id"], estatus, Colors.red);
-                                    Navigator.pop(context, true);
-                                  },
-                                  Colors.red,
-                                );
-                              },
-                            );
-                            if (result == null || !result) {
-                              return;
-                            }
-                          },
-                        ),
-
-                        PopupMenuItem(
-                          child: const Row(
-                            children: [
-                              // const Icon(
-                              //   Icons.picture_as_pdf,
-                              //   color: Colors.blueGrey,
-                              // ),
-                              Icon(
-                                Icons.print,
-                                color: Colors.blueGrey,
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(left: 12.0),
-                                  child: Text("Generar PDF")),
-                            ],
-                          ),
-                          onTap: () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PdfOrder(
-                                  orderToPrint: orden,
+                          PopupMenuItem(
+                            child: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_box,
+                                  color: Colors.green,
                                 ),
-                              ),
-                            ).then((res) => _refreshData());
-                          },
-                        ),
-                      ],
+                                Padding(
+                                    padding: EdgeInsets.only(left: 12.0),
+                                    child: Text("Finalizado")),
+                              ],
+                            ),
+                            onTap: () async {
+                              final result = await showDialog<bool>(
+                                context: context,
+                                builder: (context) {
+                                  estatus = estadosOrden[2];
+                                  return customAlertDialog(
+                                    context,
+                                    _formatFolio("${orden["id"]}"),
+                                    estatus,
+                                    () async {
+                                      _upadateEstatus(
+                                          orden["id"], estatus, Colors.green);
+                                      Navigator.pop(context, true);
+                                    },
+                                    Colors.green,
+                                  );
+                                },
+                              );
+
+                              if (result == null || !result) {
+                                return;
+                              }
+                            },
+                          ),
+                          PopupMenuItem(
+                            child: const Row(
+                              children: [
+                                Icon(
+                                  Icons.check_box,
+                                  color: Colors.red,
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.only(left: 12.0),
+                                    child: Text("Cancelar orden")),
+                              ],
+                            ),
+                            onTap: () async {
+                              final result = await showDialog<bool>(
+                                context: context,
+                                builder: (context) {
+                                  estatus = estadosOrden[3];
+                                  return customAlertDialog(
+                                    context,
+                                    _formatFolio("${orden["id"]}"),
+                                    estatus,
+                                    () async {
+                                      _upadateEstatus(
+                                          orden["id"], estatus, Colors.red);
+                                      Navigator.pop(context, true);
+                                    },
+                                    Colors.red,
+                                  );
+                                },
+                              );
+                              if (result == null || !result) {
+                                return;
+                              }
+                            },
+                          ),
+
+                          PopupMenuItem(
+                            child: const Row(
+                              children: [
+                                // const Icon(
+                                //   Icons.picture_as_pdf,
+                                //   color: Colors.blueGrey,
+                                // ),
+                                Icon(
+                                  Icons.print,
+                                  color: Colors.blueGrey,
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.only(left: 12.0),
+                                    child: Text("Generar PDF")),
+                              ],
+                            ),
+                            onTap: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PdfOrder(
+                                    orderToPrint: orden,
+                                  ),
+                                ),
+                              ).then((res) => _refreshData());
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
       drawer: Drawer(
         width: 220,

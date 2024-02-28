@@ -307,283 +307,297 @@ class TemporalFomularioState extends State<TemporalFomulario> {
     Navigator.pop(context);
   }
 
+  final ScrollController scrollControllerTwo = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: ListView(
-        children: [
-          Form(
-            key: _formularioKey,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: StaggeredGrid.count(
-                crossAxisCount: 12,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 8,
-                children: [
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 6,
-                    mainAxisCellCount: .5,
-                    child: tituloTile("Datos del cliente"),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 6,
-                    mainAxisCellCount: .5,
-                    child: tituloTile("Datos de la unidad"),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 6,
-                    mainAxisCellCount: 1,
-                    child: expandMultiLineFieldTile(
-                      3,
-                      3,
-                      34,
-                      34,
-                      {
-                        clienteNombreController: {"Nombre del cliente": 3},
-                      },
+      child: Scrollbar(
+        controller: scrollControllerTwo,
+        thumbVisibility: true,
+        trackVisibility: true,
+        thickness: 12,
+        radius: const Radius.circular(2),
+        child: ListView(
+          controller: scrollControllerTwo,
+          padding: const EdgeInsets.only(right: 15),
+          children: [
+            Form(
+              key: _formularioKey,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: StaggeredGrid.count(
+                  crossAxisCount: 12,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 8,
+                  children: [
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 6,
+                      mainAxisCellCount: .5,
+                      child: tituloTile("Datos del cliente"),
                     ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 3,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        unidadNumEco: {"No. Economico": 1},
-                      },
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 6,
+                      mainAxisCellCount: .5,
+                      child: tituloTile("Datos de la unidad"),
                     ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 3,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        unidadKilometros: {"Kilometros": 1},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 3,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        unidadMarca: {"Marca": 1},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 3,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        unidadHorasMotor: {"Horas del motor": 1},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 6,
-                    mainAxisCellCount: 1,
-                    child: expandMultiLineFieldTile(
-                      3,
-                      3,
-                      34,
-                      34,
-                      {
-                        clienteContactoController: {"Contacto del cliente": 3},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 3,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        unidadModelo: {"Modelo": 1},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 3,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        unidadTipo: {"Tipo": 1},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 3,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        unidadMotor: {"Motor": 1},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 3,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        unidadSerie: {"Serie del motor": 1},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 2,
-                    mainAxisCellCount: .5,
-                    child: dateFieldTile({
-                      fechaLlegada: {"Fecha llegada": 1},
-                    }, context),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 4,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        tecnicoAsignado: {"Tecnico asignado": 1},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 3,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        unidadPlacas: {"Placas": 1},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 3,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        unidadYear: {"Año": 1},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 2,
-                    mainAxisCellCount: .5,
-                    child: dateFieldTile(
-                      {
-                        fechaSalida: {"Fecha salida": 1},
-                      },
-                      context,
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 4,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        numeroCaso: {"No. Caso": 1},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 6,
-                    mainAxisCellCount: .5,
-                    child: expandFieldTile(
-                      {
-                        unidadVin: {"V.I.N.": 1},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 6,
-                    mainAxisCellCount: .5,
-                    child: tituloTile("Comentarios del Cliente"),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 6,
-                    mainAxisCellCount: .5,
-                    child: tituloTile("Diagnostico"),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 6,
-                    mainAxisCellCount: 1,
-                    child: expandMultiLineFieldTile(
-                      3,
-                      3,
-                      34,
-                      34,
-                      {
-                        clienteComentario: {"Comentarios del Cliente": 3},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 6,
-                    mainAxisCellCount: 1,
-                    child: expandMultiLineFieldTile(
-                      3,
-                      3,
-                      34,
-                      34,
-                      {
-                        diagnosticoController: {"Diagnostico": 3},
-                      },
-                    ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 9,
-                    mainAxisCellCount: .5,
-                    child: tituloTile("Trabajos realizados / Refacciones"),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 3,
-                    mainAxisCellCount: .5,
-                    child: tituloTile("Costos"),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 9,
-                    mainAxisCellCount: 1.49,
-                    child: expandMultiLineFieldTile(
-                      5,
-                      16,
-                      35,
-                      30,
-                      {
-                        trabajoRealizado: {
-                          "Trabajos realizados / Refacciones": 3
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 6,
+                      mainAxisCellCount: 1,
+                      child: expandMultiLineFieldTile(
+                        3,
+                        3,
+                        34,
+                        34,
+                        {
+                          clienteNombreController: {"Nombre del cliente": 3},
                         },
-                      },
+                      ),
                     ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 3,
-                    mainAxisCellCount: 1.49,
-                    child: expandMultiLineFieldTile(
-                      5,
-                      16,
-                      35,
-                      30,
-                      {
-                        costosController: {"Costos": 3},
-                      },
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 3,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          unidadNumEco: {"No. Economico": 1},
+                        },
+                      ),
                     ),
-                  ),
-                  StaggeredGridTile.count(
-                    crossAxisCellCount: 12,
-                    mainAxisCellCount: .5,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (widget.id == null) {
-                          await _addData();
-                        } else if (widget.id != null) {
-                          await _updateData(widget.id!);
-                        }
-                      },
-                      child: Text(widget.id == null ? "Agregar" : "Actualizar"),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 3,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          unidadKilometros: {"Kilometros": 1},
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 3,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          unidadMarca: {"Marca": 1},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 3,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          unidadHorasMotor: {"Horas del motor": 1},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 6,
+                      mainAxisCellCount: 1,
+                      child: expandMultiLineFieldTile(
+                        3,
+                        3,
+                        34,
+                        34,
+                        {
+                          clienteContactoController: {
+                            "Contacto del cliente": 3
+                          },
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 3,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          unidadModelo: {"Modelo": 1},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 3,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          unidadTipo: {"Tipo": 1},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 3,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          unidadMotor: {"Motor": 1},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 3,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          unidadSerie: {"Serie del motor": 1},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 2,
+                      mainAxisCellCount: .5,
+                      child: dateFieldTile({
+                        fechaLlegada: {"Fecha llegada": 1},
+                      }, context),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 4,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          tecnicoAsignado: {"Tecnico asignado": 1},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 3,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          unidadPlacas: {"Placas": 1},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 3,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          unidadYear: {"Año": 1},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 2,
+                      mainAxisCellCount: .5,
+                      child: dateFieldTile(
+                        {
+                          fechaSalida: {"Fecha salida": 1},
+                        },
+                        context,
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 4,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          numeroCaso: {"No. Caso": 1},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 6,
+                      mainAxisCellCount: .5,
+                      child: expandFieldTile(
+                        {
+                          unidadVin: {"V.I.N.": 1},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 6,
+                      mainAxisCellCount: .5,
+                      child: tituloTile("Comentarios del Cliente"),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 6,
+                      mainAxisCellCount: .5,
+                      child: tituloTile("Diagnostico"),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 6,
+                      mainAxisCellCount: 1,
+                      child: expandMultiLineFieldTile(
+                        3,
+                        3,
+                        34,
+                        34,
+                        {
+                          clienteComentario: {"Comentarios del Cliente": 3},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 6,
+                      mainAxisCellCount: 1,
+                      child: expandMultiLineFieldTile(
+                        3,
+                        3,
+                        34,
+                        34,
+                        {
+                          diagnosticoController: {"Diagnostico": 3},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 9,
+                      mainAxisCellCount: .5,
+                      child: tituloTile("Trabajos realizados / Refacciones"),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 3,
+                      mainAxisCellCount: .5,
+                      child: tituloTile("Costos"),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 9,
+                      mainAxisCellCount: 1.49,
+                      child: expandMultiLineFieldTile(
+                        5,
+                        16,
+                        35,
+                        30,
+                        {
+                          trabajoRealizado: {
+                            "Trabajos realizados / Refacciones": 3
+                          },
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 3,
+                      mainAxisCellCount: 1.49,
+                      child: expandMultiLineFieldTile(
+                        5,
+                        16,
+                        35,
+                        30,
+                        {
+                          costosController: {"Costos": 3},
+                        },
+                      ),
+                    ),
+                    StaggeredGridTile.count(
+                      crossAxisCellCount: 12,
+                      mainAxisCellCount: .5,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (widget.id == null) {
+                            await _addData();
+                          } else if (widget.id != null) {
+                            await _updateData(widget.id!);
+                          }
+                        },
+                        child:
+                            Text(widget.id == null ? "Agregar" : "Actualizar"),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

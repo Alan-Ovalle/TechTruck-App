@@ -90,7 +90,11 @@ class _AllOrdersState extends State<AllOrders> {
     _costosController.clear();
   }
 
-  Future<void> _addData() async {
+  Future<void> _addData(bool? nuevaOrden) async {
+    if (nuevaOrden == true) {
+      estatus = estadosOrden[0];
+    }
+
     await SQLHelper.createData(
       estatus,
       _clienteNombreController.text,
@@ -253,6 +257,7 @@ class _AllOrdersState extends State<AllOrders> {
       _trabajoRealizado.text = existingData["trabajoRealizado"];
       _costosController.text = existingData["costo"];
     } else {
+      estatus = estadosOrden[0];
       cleanControllers();
     }
 
@@ -308,7 +313,7 @@ class _AllOrdersState extends State<AllOrders> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (id == null) {
-                          await _addData();
+                          await _addData(null);
                         }
                         if (id != null) {
                           await _updateData(id);
@@ -402,8 +407,6 @@ class _AllOrdersState extends State<AllOrders> {
                 () async {
                   _upadateEstatus(orden["id"], estatus, Colors.indigo);
                   Navigator.pop(context, true);
-
-                  estatus = estadosOrden[0];
                 },
                 Colors.indigo,
               );
@@ -439,8 +442,6 @@ class _AllOrdersState extends State<AllOrders> {
                 () async {
                   _upadateEstatus(orden["id"], estatus, Colors.green);
                   Navigator.pop(context, true);
-
-                  estatus = estadosOrden[0];
                 },
                 Colors.green,
               );
@@ -476,8 +477,6 @@ class _AllOrdersState extends State<AllOrders> {
                 () async {
                   _upadateEstatus(orden["id"], estatus, Colors.red);
                   Navigator.pop(context, true);
-
-                  estatus = estadosOrden[0];
                 },
                 Colors.red,
               );
@@ -614,7 +613,7 @@ class _AllOrdersState extends State<AllOrders> {
               showFullOrder(null);
             },
             onLongPress: () {
-              _addData();
+              _addData(true);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
@@ -632,7 +631,7 @@ class _AllOrdersState extends State<AllOrders> {
               ),
             ),
           ),
-          addHorizontalSpace(10),
+          addHorizontalSpace(15),
           IconButton(
             onPressed: () => showBottomSheet(null),
             icon: const Icon(Icons.post_add_rounded),

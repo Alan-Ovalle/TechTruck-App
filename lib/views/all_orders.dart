@@ -91,56 +91,30 @@ class _AllOrdersState extends State<AllOrders> {
   }
 
   Future<void> _addData() async {
-    bool areAllFieldsFilled = _clienteNombreController.text.isNotEmpty ||
-        _clienteContactoController.text.isNotEmpty ||
-        _unidadNumEco.text.isNotEmpty ||
-        _unidadKilometros.text.isNotEmpty ||
-        _unidadMarca.text.isNotEmpty ||
-        _unidadModelo.text.isNotEmpty ||
-        _unidadHorasMotor.text.isNotEmpty ||
-        _unidadTipo.text.isNotEmpty ||
-        _unidadMotor.text.isNotEmpty ||
-        _unidadSerie.text.isNotEmpty ||
-        _unidadPlacas.text.isNotEmpty ||
-        _unidadYear.text.isNotEmpty ||
-        _unidadVin.text.isNotEmpty ||
-        _fechaLlegada.text.isNotEmpty ||
-        _fechaSalida.text.isNotEmpty ||
-        _tecnicoAsignado.text.isNotEmpty ||
-        _numeroCaso.text.isNotEmpty ||
-        _clienteComentario.text.isNotEmpty ||
-        _diagnosticoController.text.isNotEmpty ||
-        _trabajoRealizado.text.isNotEmpty ||
-        _costosController.text.isNotEmpty;
-    if (!areAllFieldsFilled) {
-      _customSnackBar("Favor de llenar todos los campos", Colors.redAccent);
-      return;
-    } else {
-      await SQLHelper.createData(
-        estatus,
-        _clienteNombreController.text,
-        _clienteContactoController.text,
-        _unidadNumEco.text,
-        _unidadKilometros.text,
-        _unidadMarca.text,
-        _unidadModelo.text,
-        _unidadHorasMotor.text,
-        _unidadTipo.text,
-        _unidadMotor.text,
-        _unidadSerie.text,
-        _unidadPlacas.text,
-        _unidadYear.text,
-        _unidadVin.text,
-        _fechaLlegada.text,
-        _fechaSalida.text,
-        _tecnicoAsignado.text,
-        _numeroCaso.text,
-        _clienteComentario.text,
-        _diagnosticoController.text,
-        _trabajoRealizado.text,
-        _costosController.text,
-      );
-    }
+    await SQLHelper.createData(
+      estatus,
+      _clienteNombreController.text,
+      _clienteContactoController.text,
+      _unidadNumEco.text,
+      _unidadKilometros.text,
+      _unidadMarca.text,
+      _unidadModelo.text,
+      _unidadHorasMotor.text,
+      _unidadTipo.text,
+      _unidadMotor.text,
+      _unidadSerie.text,
+      _unidadPlacas.text,
+      _unidadYear.text,
+      _unidadVin.text,
+      _fechaLlegada.text,
+      _fechaSalida.text,
+      _tecnicoAsignado.text,
+      _numeroCaso.text,
+      _clienteComentario.text,
+      _diagnosticoController.text,
+      _trabajoRealizado.text,
+      _costosController.text,
+    );
 
     _refreshData();
   }
@@ -173,6 +147,8 @@ class _AllOrdersState extends State<AllOrders> {
     );
     _refreshData();
   }
+
+  bool ordenAscendete = false;
 
   void _customSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -367,6 +343,241 @@ class _AllOrdersState extends State<AllOrders> {
 
   final ScrollController scrollControllerOne = ScrollController();
 
+  List<PopupMenuItem> listaPopItem(Map<String, dynamic> orden) {
+    List<PopupMenuItem> lista = [
+      PopupMenuItem(
+        child: const Row(
+          children: [
+            Icon(
+              Icons.check_box,
+              color: Colors.orange,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 12.0),
+              child: Text(
+                "Pendiente",
+              ),
+            ),
+          ],
+        ),
+        onTap: () async {
+          final result = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              estatus = estadosOrden[0];
+              return customAlertDialog(
+                  context, _formatFolio("${orden["id"]}"), estatus, () async {
+                _upadateEstatus(orden["id"], estatus, Colors.orange);
+                Navigator.pop(context, true);
+              }, Colors.orange);
+            },
+          );
+
+          if (result == null || !result) {
+            return;
+          }
+        },
+      ),
+      PopupMenuItem(
+        child: const Row(
+          children: [
+            Icon(
+              Icons.check_box,
+              color: Colors.indigo,
+            ),
+            Padding(
+                padding: EdgeInsets.only(left: 12.0),
+                child: Text("En proceso")),
+          ],
+        ),
+        onTap: () async {
+          final result = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              estatus = estadosOrden[1];
+              return customAlertDialog(
+                context,
+                _formatFolio("${orden["id"]}"),
+                estatus,
+                () async {
+                  _upadateEstatus(orden["id"], estatus, Colors.indigo);
+                  Navigator.pop(context, true);
+
+                  estatus = estadosOrden[0];
+                },
+                Colors.indigo,
+              );
+            },
+          );
+
+          if (result == null || !result) {
+            return;
+          }
+        },
+      ),
+      PopupMenuItem(
+        child: const Row(
+          children: [
+            Icon(
+              Icons.check_box,
+              color: Colors.green,
+            ),
+            Padding(
+                padding: EdgeInsets.only(left: 12.0),
+                child: Text("Finalizado")),
+          ],
+        ),
+        onTap: () async {
+          final result = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              estatus = estadosOrden[2];
+              return customAlertDialog(
+                context,
+                _formatFolio("${orden["id"]}"),
+                estatus,
+                () async {
+                  _upadateEstatus(orden["id"], estatus, Colors.green);
+                  Navigator.pop(context, true);
+
+                  estatus = estadosOrden[0];
+                },
+                Colors.green,
+              );
+            },
+          );
+
+          if (result == null || !result) {
+            return;
+          }
+        },
+      ),
+      PopupMenuItem(
+        child: const Row(
+          children: [
+            Icon(
+              Icons.check_box,
+              color: Colors.red,
+            ),
+            Padding(
+                padding: EdgeInsets.only(left: 12.0),
+                child: Text("Cancelar orden")),
+          ],
+        ),
+        onTap: () async {
+          final result = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              estatus = estadosOrden[3];
+              return customAlertDialog(
+                context,
+                _formatFolio("${orden["id"]}"),
+                estatus,
+                () async {
+                  _upadateEstatus(orden["id"], estatus, Colors.red);
+                  Navigator.pop(context, true);
+
+                  estatus = estadosOrden[0];
+                },
+                Colors.red,
+              );
+            },
+          );
+          if (result == null || !result) {
+            return;
+          }
+        },
+      ),
+      PopupMenuItem(
+        child: const Row(
+          children: [
+            Icon(
+              Icons.print,
+              color: Colors.blueGrey,
+            ),
+            Padding(
+                padding: EdgeInsets.only(left: 12.0),
+                child: Text("Generar PDF")),
+          ],
+        ),
+        onTap: () async {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PdfOrder(
+                orderToPrint: orden,
+              ),
+            ),
+          ).then((res) => _refreshData());
+        },
+      ),
+    ];
+
+    switch (orden["estatus"]) {
+      case "Pendiente":
+        lista.remove(lista[0]);
+        break;
+      case "En proceso":
+        lista.remove(lista[1]);
+        break;
+      case "Finalizado":
+        lista.remove(lista[2]);
+        break;
+      case "Cancelado":
+        lista.remove(lista[3]);
+
+        break;
+      default:
+    }
+    if (orden["estatus"] == "Cancelado") {
+      lista.add(
+        PopupMenuItem(
+          child: const Row(
+            children: [
+              Icon(
+                Icons.delete,
+                color: Colors.redAccent,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 12.0),
+                child: Text(
+                  "Eliminar",
+                ),
+              ),
+            ],
+          ),
+          onTap: () async {
+            final result = await showDialog<bool>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('¿Estas seguro?'),
+                content: const Text(
+                    'Esta accion eliminara permanentemente la orden.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: const Text('Borrar'),
+                  ),
+                ],
+              ),
+            );
+
+            if (result == null || !result) {
+              return;
+            }
+            _deleteData(orden["id"]);
+          },
+        ),
+      );
+    }
+
+    return lista;
+  }
+
   @override
   Widget build(BuildContext context) {
     final filtroOrdenes = _allData.where((orden) {
@@ -403,7 +614,7 @@ class _AllOrdersState extends State<AllOrders> {
               showFullOrder(null);
             },
             onLongPress: () {
-              showBottomSheet(null);
+              _addData();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
@@ -423,15 +634,33 @@ class _AllOrdersState extends State<AllOrders> {
           ),
           addHorizontalSpace(10),
           IconButton(
-              onPressed: () => showBottomSheet(null),
-              icon: const Icon(Icons.post_add_rounded),
-              iconSize: 25,
-              hoverColor: Colors.blue.shade800,
-              tooltip: "Crear orden express",
-              visualDensity: const VisualDensity(
-                horizontal: 1,
-                vertical: 1,
-              )),
+            onPressed: () => showBottomSheet(null),
+            icon: const Icon(Icons.post_add_rounded),
+            iconSize: 25,
+            hoverColor: Colors.blue.shade800,
+            tooltip: "Crear orden express",
+            visualDensity: const VisualDensity(
+              horizontal: 1,
+              vertical: 1,
+            ),
+          ),
+          addHorizontalSpace(10),
+          IconButton(
+            onPressed: () {
+              ordenAscendete = !ordenAscendete;
+              _refreshData();
+            },
+            icon: ordenAscendete == true
+                ? const Icon(Icons.arrow_circle_up_rounded)
+                : const Icon(Icons.arrow_circle_down_rounded),
+            iconSize: 25,
+            hoverColor: Colors.blue.shade800,
+            tooltip: "Invertir orden de la lista",
+            visualDensity: const VisualDensity(
+              horizontal: 1,
+              vertical: 1,
+            ),
+          ),
           addHorizontalSpace(15),
         ],
       ),
@@ -446,6 +675,7 @@ class _AllOrdersState extends State<AllOrders> {
               thickness: 12,
               radius: const Radius.circular(2),
               child: ListView.builder(
+                reverse: ordenAscendete,
                 controller: scrollControllerOne,
                 padding: const EdgeInsets.only(right: 15),
                 itemCount: filtroOrdenes.length,
@@ -649,224 +879,7 @@ class _AllOrdersState extends State<AllOrders> {
                       },
                       trailing: PopupMenuButton(
                         tooltip: ("Opciones"),
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            child: const Row(
-                              children: [
-                                Icon(
-                                  Icons.delete,
-                                  color: Colors.redAccent,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 12.0),
-                                  child: Text(
-                                    "Eliminar",
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onTap: () async {
-                              final result = await showDialog<bool>(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('¿Estas seguro?'),
-                                  content: const Text(
-                                      'Esta accion eliminara permanentemente la orden.'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, false),
-                                      child: const Text('Cancel'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context, true),
-                                      child: const Text('Borrar'),
-                                    ),
-                                  ],
-                                ),
-                              );
-
-                              if (result == null || !result) {
-                                return;
-                              }
-
-                              _deleteData(_allData[index]["id"]);
-                            },
-                          ),
-                          PopupMenuItem(
-                            child: const Row(
-                              children: [
-                                Icon(
-                                  Icons.check_box,
-                                  color: Colors.orange,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 12.0),
-                                  child: Text(
-                                    "Pendiente",
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onTap: () async {
-                              final result = await showDialog<bool>(
-                                context: context,
-                                builder: (context) {
-                                  estatus = estadosOrden[0];
-                                  return customAlertDialog(
-                                      context,
-                                      _formatFolio("${orden["id"]}"),
-                                      estatus, () async {
-                                    _upadateEstatus(
-                                        orden["id"], estatus, Colors.orange);
-                                    Navigator.pop(context, true);
-                                  }, Colors.orange);
-                                },
-                              );
-
-                              if (result == null || !result) {
-                                return;
-                              }
-                            },
-                          ),
-                          // ),
-                          PopupMenuItem(
-                            child: const Row(
-                              children: [
-                                Icon(
-                                  Icons.check_box,
-                                  color: Colors.indigo,
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only(left: 12.0),
-                                    child: Text("En proceso")),
-                              ],
-                            ),
-                            onTap: () async {
-                              final result = await showDialog<bool>(
-                                context: context,
-                                builder: (context) {
-                                  estatus = estadosOrden[1];
-                                  return customAlertDialog(
-                                    context,
-                                    _formatFolio("${orden["id"]}"),
-                                    estatus,
-                                    () async {
-                                      _upadateEstatus(
-                                          orden["id"], estatus, Colors.indigo);
-                                      Navigator.pop(context, true);
-                                    },
-                                    Colors.indigo,
-                                  );
-                                },
-                              );
-
-                              if (result == null || !result) {
-                                return;
-                              }
-                            },
-                          ),
-                          PopupMenuItem(
-                            child: const Row(
-                              children: [
-                                Icon(
-                                  Icons.check_box,
-                                  color: Colors.green,
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only(left: 12.0),
-                                    child: Text("Finalizado")),
-                              ],
-                            ),
-                            onTap: () async {
-                              final result = await showDialog<bool>(
-                                context: context,
-                                builder: (context) {
-                                  estatus = estadosOrden[2];
-                                  return customAlertDialog(
-                                    context,
-                                    _formatFolio("${orden["id"]}"),
-                                    estatus,
-                                    () async {
-                                      _upadateEstatus(
-                                          orden["id"], estatus, Colors.green);
-                                      Navigator.pop(context, true);
-                                    },
-                                    Colors.green,
-                                  );
-                                },
-                              );
-
-                              if (result == null || !result) {
-                                return;
-                              }
-                            },
-                          ),
-                          PopupMenuItem(
-                            child: const Row(
-                              children: [
-                                Icon(
-                                  Icons.check_box,
-                                  color: Colors.red,
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only(left: 12.0),
-                                    child: Text("Cancelar orden")),
-                              ],
-                            ),
-                            onTap: () async {
-                              final result = await showDialog<bool>(
-                                context: context,
-                                builder: (context) {
-                                  estatus = estadosOrden[3];
-                                  return customAlertDialog(
-                                    context,
-                                    _formatFolio("${orden["id"]}"),
-                                    estatus,
-                                    () async {
-                                      _upadateEstatus(
-                                          orden["id"], estatus, Colors.red);
-                                      Navigator.pop(context, true);
-                                    },
-                                    Colors.red,
-                                  );
-                                },
-                              );
-                              if (result == null || !result) {
-                                return;
-                              }
-                            },
-                          ),
-
-                          PopupMenuItem(
-                            child: const Row(
-                              children: [
-                                // const Icon(
-                                //   Icons.picture_as_pdf,
-                                //   color: Colors.blueGrey,
-                                // ),
-                                Icon(
-                                  Icons.print,
-                                  color: Colors.blueGrey,
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only(left: 12.0),
-                                    child: Text("Generar PDF")),
-                              ],
-                            ),
-                            onTap: () async {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PdfOrder(
-                                    orderToPrint: orden,
-                                  ),
-                                ),
-                              ).then((res) => _refreshData());
-                            },
-                          ),
-                        ],
+                        itemBuilder: (context) => listaPopItem(orden),
                       ),
                     ),
                   );
@@ -876,49 +889,50 @@ class _AllOrdersState extends State<AllOrders> {
       drawer: Drawer(
         width: 220,
         child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                  child: const Text(
-                    "Filtro de ordenes",
+          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                child: const Text(
+                  "Filtro de ordenes",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )),
+            const Divider(
+              thickness: 2,
+            ),
+            addVerticalSpace(10),
+            Column(
+              children: buildChipFilter(context),
+            ),
+            const Divider(
+              thickness: 2,
+            ),
+            Visibility(
+              visible: estadosOrdenFiltro.isNotEmpty,
+              child: FilterChip(
+                label: const Text("Limpiar filtros",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
-                    ),
-                  )),
-              const Divider(
-                thickness: 2,
+                    )),
+                selected: estadosOrdenFiltro.isEmpty,
+                onSelected: (bool selected) {
+                  setState(
+                    () {
+                      if (selected) {
+                        estadosOrdenFiltro.clear();
+                        Navigator.pop(context);
+                      }
+                    },
+                  );
+                },
               ),
-              addVerticalSpace(10),
-              Column(
-                children: buildChipFilter(context),
-              ),
-              const Divider(
-                thickness: 2,
-              ),
-              Visibility(
-                visible: estadosOrdenFiltro.isNotEmpty,
-                child: FilterChip(
-                  label: const Text("Limpiar filtros",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      )),
-                  selected: estadosOrdenFiltro.isEmpty,
-                  onSelected: (bool selected) {
-                    setState(
-                      () {
-                        if (selected) {
-                          estadosOrdenFiltro.clear();
-                          Navigator.pop(context);
-                        }
-                      },
-                    );
-                  },
-                ),
-              )
-            ]),
+            ),
+          ],
+        ),
       ),
     );
   }

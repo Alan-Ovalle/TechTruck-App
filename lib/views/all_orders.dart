@@ -682,10 +682,6 @@ class _AllOrdersState extends State<AllOrders> {
             )
           : Scrollbar(
               controller: scrollControllerOne,
-              thumbVisibility: true,
-              trackVisibility: true,
-              thickness: 12,
-              radius: const Radius.circular(2),
               child: ListView.builder(
                 reverse: ordenAscendete,
                 controller: scrollControllerOne,

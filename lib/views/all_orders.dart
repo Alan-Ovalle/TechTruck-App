@@ -647,6 +647,19 @@ class _AllOrdersState extends State<AllOrders> {
           IconButton(
             onPressed: () {
               ordenAscendete = !ordenAscendete;
+              if (ordenAscendete) {
+                scrollControllerOne.animateTo(
+                  scrollControllerOne.position.maxScrollExtent,
+                  duration: const Duration(seconds: 2),
+                  curve: Curves.fastOutSlowIn,
+                );
+              } else {
+                scrollControllerOne.animateTo(
+                  scrollControllerOne.position.minScrollExtent,
+                  duration: const Duration(seconds: 2),
+                  curve: Curves.fastOutSlowIn,
+                );
+              }
               _refreshData();
             },
             icon: ordenAscendete == true

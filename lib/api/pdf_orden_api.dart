@@ -13,9 +13,9 @@ class PdfOrdenApi {
     final pdf = Document();
     // final fondo = await imageFromAssetBundle('assets/images/ordenOpacidad.png');
     final logoHeader =
-        await imageFromAssetBundle('assets/images/logoHeader.png');
+        await imageFromAssetBundle('assets/images/LogoTechTruck2024.png');
     final inventario =
-        await imageFromAssetBundle('assets/images/inventario.png');
+        await imageFromAssetBundle('assets/images/Inventario2024.png');
 
     pdf.addPage(MultiPage(
       pageTheme: const PageTheme(
@@ -67,7 +67,7 @@ class PdfOrdenApi {
                 SizedBox(height: 3 * PdfPageFormat.point),
                 Image(
                   image,
-                  fit: BoxFit.fitWidth,
+                  fit: BoxFit.contain,
                 ),
               ],
             ),

@@ -47,7 +47,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             const TextSpan(
               text: "Folio: ",
               style: TextStyle(
-                fontSize: 22,
+                // fontSize: 22,
                 // fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
@@ -55,7 +55,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             TextSpan(
               text: formatFolio(widget.singleData["id"].toString()),
               style: TextStyle(
-                fontSize: 22,
+                // fontSize: 22,
                 // fontWeight: FontWeight.bold,
                 color: Colors.red,
               ),
@@ -73,7 +73,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     return Scaffold(
       appBar: AppBar(
         title: checkDataExist(widget.singleData["id"]),
-        backgroundColor: Colors.grey[800],
+        // backgroundColor: Colors.grey[800],
         actions: [
           checkFolioExist(),
           addHorizontalSpace(16),

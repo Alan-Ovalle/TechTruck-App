@@ -266,9 +266,9 @@ class _FormularioOrdenState extends State<FormularioOrden> {
                       border: OutlineInputBorder(),
                     ),
                     style: TextStyle(
-                      fontSize: 18,
-                      // fontWeight: FontWeight.bold,
-                    ),
+                        // fontSize: 18,
+                        // fontWeight: FontWeight.bold,
+                        ),
                     // cursorHeight: 22,
                     maxLines: 3,
 

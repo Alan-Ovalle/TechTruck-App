@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techtruck_v11/views/new_order.dart';
 import 'package:techtruck_v11/views/order_details.dart';
 import 'package:techtruck_v11/views/pdf_order.dart';
@@ -24,6 +25,8 @@ class _AllOrdersState extends State<AllOrders> {
     "Finalizado",
     "Cancelado"
   ];
+
+  SharedPreferences? _prefs;
 
   List<String> estadosOrdenFiltro = [];
   late String estatus = estadosOrden[0];
@@ -54,7 +57,12 @@ class _AllOrdersState extends State<AllOrders> {
   @override
   void initState() {
     super.initState();
+    checkPreferences();
     _refreshData();
+  }
+
+  checkPreferences() async {
+    _prefs = await SharedPreferences.getInstance();
   }
 
   void _refreshData() async {
@@ -355,10 +363,10 @@ class _AllOrdersState extends State<AllOrders> {
       PopupMenuItem(
         child: const Row(
           children: [
-            // Icon(
-            //   Icons.check_box,
-            //   color: Colors.orange,
-            // ),
+            Icon(
+              Icons.check_box,
+              color: Colors.orange,
+            ),
             Padding(
               padding: EdgeInsets.only(left: 12.0),
               child: Text(
@@ -388,10 +396,10 @@ class _AllOrdersState extends State<AllOrders> {
       PopupMenuItem(
         child: const Row(
           children: [
-            // Icon(
-            //   Icons.check_box,
-            //   color: Colors.indigo,
-            // ),
+            Icon(
+              Icons.check_box,
+              color: Colors.indigo,
+            ),
             Padding(
                 padding: EdgeInsets.only(left: 12.0),
                 child: Text("En proceso")),
@@ -423,10 +431,10 @@ class _AllOrdersState extends State<AllOrders> {
       PopupMenuItem(
         child: const Row(
           children: [
-            // Icon(
-            //   Icons.check_box,
-            //   color: Colors.green,
-            // ),
+            Icon(
+              Icons.check_box,
+              color: Colors.green,
+            ),
             Padding(
                 padding: EdgeInsets.only(left: 12.0),
                 child: Text("Finalizado")),
@@ -458,10 +466,10 @@ class _AllOrdersState extends State<AllOrders> {
       PopupMenuItem(
         child: const Row(
           children: [
-            // Icon(
-            //   Icons.check_box,
-            //   color: Colors.red,
-            // ),
+            Icon(
+              Icons.check_box,
+              color: Colors.red,
+            ),
             Padding(
                 padding: EdgeInsets.only(left: 12.0),
                 child: Text("Cancelar orden")),
@@ -492,10 +500,10 @@ class _AllOrdersState extends State<AllOrders> {
       PopupMenuItem(
         child: const Row(
           children: [
-            // Icon(
-            //   Icons.print,
-            //   color: Colors.blueGrey,
-            // ),
+            Icon(
+              Icons.print,
+              color: Colors.blueGrey,
+            ),
             Padding(
                 padding: EdgeInsets.only(left: 12.0),
                 child: Text("Generar PDF")),
@@ -535,10 +543,10 @@ class _AllOrdersState extends State<AllOrders> {
         PopupMenuItem(
           child: const Row(
             children: [
-              // Icon(
-              //   Icons.delete,
-              //   color: Colors.redAccent,
-              // ),
+              Icon(
+                Icons.delete,
+                color: Colors.redAccent,
+              ),
               Padding(
                 padding: EdgeInsets.only(left: 12.0),
                 child: Text(
@@ -550,27 +558,22 @@ class _AllOrdersState extends State<AllOrders> {
           onTap: () async {
             final result = await showDialog<bool>(
               context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('¿Estas seguro?'),
-                content: const Text(
-                    'Esta accion eliminara permanentemente la orden.'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, true),
-                    child: const Text('Borrar'),
-                  ),
-                ],
-              ),
+              builder: (context) {
+                return customAlertDialog(
+                  context,
+                  _formatFolio("${orden["id"]}"),
+                  "Eliminar",
+                  () async {
+                    _deleteData(orden["id"]);
+                    Navigator.pop(context, true);
+                  },
+                  Colors.red,
+                );
+              },
             );
-
             if (result == null || !result) {
               return;
             }
-            _deleteData(orden["id"]);
           },
         ),
       );
@@ -581,15 +584,16 @@ class _AllOrdersState extends State<AllOrders> {
 
   @override
   Widget build(BuildContext context) {
+    estadosOrdenFiltro = _prefs?.getStringList("estadosOrdenFiltro") ?? [];
     final filtroOrdenes = _allData.where((orden) {
       return estadosOrdenFiltro.isEmpty ||
           estadosOrdenFiltro.contains(orden["estatus"]);
     });
     return Scaffold(
       appBar: AppBar(
-        // iconTheme: const IconThemeData(
-        // color: Colors.white,
-        // ),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -603,11 +607,11 @@ class _AllOrdersState extends State<AllOrders> {
         ),
         title: const Text(
           "Ordenes de servicio",
-          // style: TextStyle(
-          //   fontWeight: FontWeight.bold,
-          //   fontSize: 30,
-          //   color: Colors.white,
-          // ),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 30,
+            color: Colors.white,
+          ),
         ),
         backgroundColor: Colors.black54,
         centerTitle: true,
@@ -620,7 +624,7 @@ class _AllOrdersState extends State<AllOrders> {
               _addData(true);
             },
             style: ElevatedButton.styleFrom(
-              // backgroundColor: Colors.white,
+              backgroundColor: Colors.white,
               foregroundColor: Colors.blue.shade800,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
@@ -640,7 +644,7 @@ class _AllOrdersState extends State<AllOrders> {
             onPressed: () => showBottomSheet(null),
             icon: const Icon(Icons.post_add_rounded),
             iconSize: 25,
-            // hoverColor: Colors.blue.shade800,
+            hoverColor: Colors.blue.shade800,
             tooltip: "Crear orden express",
             visualDensity: const VisualDensity(
               horizontal: 1,
@@ -670,7 +674,7 @@ class _AllOrdersState extends State<AllOrders> {
                 ? const Icon(Icons.arrow_circle_up_rounded)
                 : const Icon(Icons.arrow_circle_down_rounded),
             iconSize: 25,
-            // hoverColor: Colors.blue.shade800,
+            hoverColor: Colors.blue.shade800,
             tooltip: "Invertir orden de la lista",
             visualDensity: const VisualDensity(
               horizontal: 1,
@@ -697,36 +701,40 @@ class _AllOrdersState extends State<AllOrders> {
                     margin:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     child: ListTile(
-                      // horizontalTitleGap: 25,
+                      horizontalTitleGap: 25,
                       leading: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text(
-                            _formatFolio("${orden["id"]}"),
-                            // style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          // addVerticalSpace(4),
-                          Container(
-                            // decoration: BoxDecoration(
-                            //   color: colorEstatus(orden["estatus"]),
-                            //   borderRadius: BorderRadius.circular(5),
-                            //   border: Border.all(
-                            //     width: 1.5,
-                            //   ),
-                            // ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 5,
-                              // vertical: 2,
+                          Expanded(
+                            child: Text(
+                              _formatFolio("${orden["id"]}"),
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                // fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            width: 85,
-                            child: Center(
-                              child: Text(
-                                "${orden["estatus"]}",
-                                // style: const TextStyle(
-                                //   color: Colors.white,
-                                //   fontSize: 12,
-                                //   fontWeight: FontWeight.bold,
-                                // ),
+                          ),
+                          addVerticalSpace(2),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: colorEstatus(orden["estatus"]),
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                  width: 1.5,
+                                ),
+                              ),
+                              width: 85,
+                              child: Center(
+                                child: Text(
+                                  "${orden["estatus"]}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -743,9 +751,9 @@ class _AllOrdersState extends State<AllOrders> {
                                 text: TextSpan(
                                   text: "Cliente: ",
                                   style: const TextStyle(
-                                    // fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
-                                    // fontSize: 18,
+                                    fontSize: 18,
                                   ),
                                   children: [
                                     TextSpan(
@@ -753,9 +761,9 @@ class _AllOrdersState extends State<AllOrders> {
                                         orden["clienteNombre"],
                                       ),
                                       style: const TextStyle(
-                                        // fontWeight: FontWeight.normal,
+                                        fontWeight: FontWeight.normal,
                                         color: Colors.black,
-                                        // overflow: TextOverflow.fade,
+                                        overflow: TextOverflow.fade,
                                       ),
                                     ),
                                   ],
@@ -763,16 +771,16 @@ class _AllOrdersState extends State<AllOrders> {
                               )),
                           Flexible(
                             child: SizedBox(
-                                // width: 450,
+                                width: 450,
                                 height: 24,
                                 child: RichText(
                                   text: TextSpan(
                                     text: "Comentario: ",
                                     style: const TextStyle(
-                                      // fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.bold,
                                       color: Colors.black,
-                                      // fontSize: 18,
-                                      // overflow: TextOverflow.ellipsis,
+                                      fontSize: 18,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                     children: [
                                       TextSpan(
@@ -780,7 +788,7 @@ class _AllOrdersState extends State<AllOrders> {
                                           orden["clienteComentario"],
                                         ),
                                         style: const TextStyle(
-                                          // fontWeight: FontWeight.normal,
+                                          fontWeight: FontWeight.normal,
                                           color: Colors.black,
                                         ),
                                       ),
@@ -798,9 +806,9 @@ class _AllOrdersState extends State<AllOrders> {
                                 text: TextSpan(
                                   text: "Llegada: ",
                                   style: const TextStyle(
-                                    // fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
-                                    // fontSize: 14,
+                                    fontSize: 14,
                                   ),
                                   children: [
                                     TextSpan(
@@ -808,7 +816,7 @@ class _AllOrdersState extends State<AllOrders> {
                                         orden["fechaLlegada"],
                                       ),
                                       style: const TextStyle(
-                                        // fontWeight: FontWeight.normal,
+                                        fontWeight: FontWeight.normal,
                                         color: Colors.black,
                                       ),
                                     ),
@@ -819,11 +827,11 @@ class _AllOrdersState extends State<AllOrders> {
                               width: 250,
                               child: RichText(
                                 text: TextSpan(
-                                  text: "No.Eco: ",
+                                  text: "No. Eco: ",
                                   style: const TextStyle(
-                                    // fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
-                                    // fontSize: 14,
+                                    fontSize: 14,
                                   ),
                                   children: [
                                     TextSpan(
@@ -831,7 +839,7 @@ class _AllOrdersState extends State<AllOrders> {
                                         orden["unidadNumEco"],
                                       ),
                                       style: const TextStyle(
-                                        // fontWeight: FontWeight.normal,
+                                        fontWeight: FontWeight.normal,
                                         color: Colors.black,
                                       ),
                                     ),
@@ -844,9 +852,9 @@ class _AllOrdersState extends State<AllOrders> {
                                 text: TextSpan(
                                   text: "Marca: ",
                                   style: const TextStyle(
-                                    // fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
-                                    // fontSize: 14,
+                                    fontSize: 14,
                                   ),
                                   children: [
                                     TextSpan(
@@ -854,7 +862,7 @@ class _AllOrdersState extends State<AllOrders> {
                                         orden["unidadMarca"],
                                       ),
                                       style: const TextStyle(
-                                        // fontWeight: FontWeight.normal,
+                                        fontWeight: FontWeight.normal,
                                         color: Colors.black,
                                       ),
                                     ),
@@ -867,9 +875,9 @@ class _AllOrdersState extends State<AllOrders> {
                                 text: TextSpan(
                                   text: "Tipo: ",
                                   style: const TextStyle(
-                                    // fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
-                                    // fontSize: 14,
+                                    fontSize: 14,
                                   ),
                                   children: [
                                     TextSpan(
@@ -877,7 +885,7 @@ class _AllOrdersState extends State<AllOrders> {
                                         orden["unidadTipo"],
                                       ),
                                       style: const TextStyle(
-                                        // fontWeight: FontWeight.normal,
+                                        fontWeight: FontWeight.normal,
                                         color: Colors.black,
                                       ),
                                     ),
@@ -981,6 +989,10 @@ class _AllOrdersState extends State<AllOrders> {
                     } else {
                       estadosOrdenFiltro.remove(estado);
                     }
+                    _prefs?.setStringList(
+                      "estadosOrdenFiltro",
+                      estadosOrdenFiltro,
+                    );
                   },
                 );
               },

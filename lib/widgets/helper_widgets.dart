@@ -272,9 +272,28 @@ TextField dateFieldTile(
     onTap: () async {
       DateTime? fechaSeleccion = await showDatePicker(
           context: context,
+          locale: const Locale('es', 'MX'),
           initialDate: DateTime.now(),
-          firstDate: DateTime(200),
-          lastDate: DateTime(2100));
+          firstDate: DateTime(1900),
+          lastDate: DateTime(2100),
+          cancelText: "Cancelar",
+          confirmText: "Aceptar",
+          errorFormatText: "Formato de fecha incorrecto",
+          barrierDismissible: true,
+          builder: (BuildContext context, Widget? child) {
+            return Theme(
+              data: ThemeData.light().copyWith(
+                colorScheme: ColorScheme.light(
+                  primary: Colors.blue.shade100,
+                  onPrimary: Colors.white,
+                  surface: Colors.blue.shade700,
+                  onSurface: Colors.black,
+                ),
+                dialogBackgroundColor: Colors.white,
+              ),
+              child: child!,
+            );
+          });
 
       if (fechaSeleccion != null) {
         controllerList.keys.first.text =
@@ -340,13 +359,33 @@ Widget customAlertDialog(
         ),
       ],
     ),
-    content: Text(
-      '¿Desea marcar esta orden como "$mensaje"?',
-      style: const TextStyle(
-          // fontSize: 18,
-          // fontWeight: FontWeight.w500,
+    content: mensaje != "Eliminar"
+        ? Text(
+            '¿Desea marcar esta orden como "$mensaje"?',
+            style: const TextStyle(
+                // fontSize: 18,
+                // fontWeight: FontWeight.w500,
+                ),
+          )
+        : const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '¿Desea eliminar permanentemente esta orden?',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                'Esta accion no se puede deshacer.',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
-    ),
     actionsAlignment: MainAxisAlignment.spaceEvenly,
     actions: [
       TextButton(
@@ -363,7 +402,7 @@ Widget customAlertDialog(
           ),
           minimumSize: const Size(120, 40),
         ),
-        child: const Text('Cancelar'),
+        child: const Text('Regresar'),
       ),
       TextButton(
         onPressed: () {
@@ -373,9 +412,9 @@ Widget customAlertDialog(
           foregroundColor: Colors.white,
           backgroundColor: color,
           textStyle: const TextStyle(
-              // fontSize: 18,
-              // fontWeight: FontWeight.w600,
-              ),
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),

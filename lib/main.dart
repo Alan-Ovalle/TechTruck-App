@@ -17,25 +17,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // title: 'TechTruck App',
-      // locale: const Locale('es', 'MX'),
+      title: 'TechTruck App',
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        // Locale('en', 'US'),
+        Locale('es', 'MX'),
       ],
       theme: ThemeData(
-          // primarySwatch: Colors.blue,
-          // fontFamily: 'Tahoma',
-          // visualDensity: VisualDensity.adaptivePlatformDensity,
-          // scrollbarTheme: const ScrollbarThemeData().copyWith(
-          //   thumbColor: MaterialStateProperty.all(
-          //       const Color.fromARGB(255, 126, 126, 126)),
-          //   thumbVisibility: MaterialStateProperty.all<bool>(true),
-          //   trackVisibility: MaterialStateProperty.all<bool>(true),
-          //   thickness: MaterialStateProperty.all<double>(12),
-          //   radius: const Radius.circular(3),
-          // ),
-          ),
+        primarySwatch: Colors.blue,
+        fontFamily: 'Tahoma',
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        scrollbarTheme: const ScrollbarThemeData().copyWith(
+          thumbColor:
+              WidgetStateProperty.all(const Color.fromARGB(255, 126, 126, 126)),
+          thumbVisibility: WidgetStateProperty.all<bool>(true),
+          trackVisibility: WidgetStateProperty.all<bool>(true),
+          thickness: WidgetStateProperty.all<double>(12),
+          radius: const Radius.circular(3),
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       scrollBehavior: MyCustomScrollerBehavior(),
       home: const AllOrders(),

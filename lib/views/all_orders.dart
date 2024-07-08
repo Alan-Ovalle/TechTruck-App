@@ -944,6 +944,10 @@ class _AllOrdersState extends State<AllOrders> {
                     () {
                       if (selected) {
                         estadosOrdenFiltro.clear();
+                        _prefs?.setStringList(
+                          "estadosOrdenFiltro",
+                          estadosOrdenFiltro,
+                        );
                         Navigator.pop(context);
                       }
                     },

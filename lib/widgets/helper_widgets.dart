@@ -169,12 +169,12 @@ TextField expandFieldTile(
     keyboardType: TextInputType.text,
     textInputAction: TextInputAction.next,
     style: const TextStyle(
-        // fontSize: 20,
-        // fontWeight: FontWeight.bold,
-        ),
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
     decoration: InputDecoration(
       isDense: true,
-      // contentPadding: const EdgeInsets.all(20),
+      contentPadding: const EdgeInsets.all(20),
       border: const OutlineInputBorder(),
       labelText: controllerList.values.first.keys.first,
     ),
@@ -209,9 +209,9 @@ Widget expandMultiLineFieldTile(
       ],
       textAlign: TextAlign.justify,
       style: const TextStyle(
-          // fontSize: 20,
-          // fontWeight: FontWeight.bold,
-          ),
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
       decoration: InputDecoration(
         isDense: true,
         contentPadding: const EdgeInsets.all(10),
@@ -258,9 +258,9 @@ TextField dateFieldTile(
     expands: false,
     keyboardType: TextInputType.multiline,
     style: const TextStyle(
-        // fontSize: 20,
-        // fontWeight: FontWeight.bold,
-        ),
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
     decoration: InputDecoration(
       prefixIcon: const Icon(Icons.calendar_today),
       iconColor: Colors.grey.shade400,
@@ -308,8 +308,8 @@ Widget tituloTile(String titulo) {
     width: double.infinity,
     decoration: BoxDecoration(
       // color: Palette.dark,
-      // color: Colors.blue.shade500,
-      color: Colors.black54,
+      color: Colors.blue.shade500,
+      // color: Colors.black54,
 
       borderRadius: BorderRadius.circular(5),
     ),
@@ -317,8 +317,8 @@ Widget tituloTile(String titulo) {
       child: Text(titulo,
           style: const TextStyle(
             color: Colors.white,
-            // fontSize: 25,
-            // fontWeight: FontWeight.bold,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
           )),
     ),
   );
@@ -341,16 +341,16 @@ Widget customAlertDialog(
               const TextSpan(
                 text: "Folio: ",
                 style: TextStyle(
-                  // fontSize: 26,
-                  // fontWeight: FontWeight.bold,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
               TextSpan(
                 text: id!,
                 style: const TextStyle(
-                  // fontSize: 26,
-                  // fontWeight: FontWeight.bold,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
@@ -363,9 +363,9 @@ Widget customAlertDialog(
         ? Text(
             '¿Desea marcar esta orden como "$mensaje"?',
             style: const TextStyle(
-                // fontSize: 18,
-                // fontWeight: FontWeight.w500,
-                ),
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
           )
         : const Column(
             mainAxisSize: MainAxisSize.min,

@@ -50,7 +50,7 @@ class _NewOrderState extends State<NewOrder> {
               text: "Folio: ",
               style: TextStyle(
                 fontSize: 22,
-                // fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
@@ -58,7 +58,7 @@ class _NewOrderState extends State<NewOrder> {
               text: formatFolio(widget.singleData["id"].toString()),
               style: const TextStyle(
                 fontSize: 22,
-                // fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.bold,
                 color: Colors.red,
               ),
             ),
@@ -321,6 +321,8 @@ class TemporalFomularioState extends State<TemporalFomulario> {
         child: ListView(
           controller: scrollControllerTwo,
           padding: const EdgeInsets.only(right: 15),
+          // shrinkWrap: true,
+          // physics: const ClampingScrollPhysics(),
           children: [
             Form(
               key: _formularioKey,
@@ -588,8 +590,19 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                             await _updateData(widget.id!);
                           }
                         },
-                        child:
-                            Text(widget.id == null ? "Agregar" : "Actualizar"),
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                            Colors.blue,
+                          ),
+                        ),
+                        child: Text(
+                          widget.id == null ? "Agregar orden" : "Actualizar",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
                   ],

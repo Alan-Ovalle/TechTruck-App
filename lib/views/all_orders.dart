@@ -614,7 +614,9 @@ class _AllOrdersState extends State<AllOrders> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.black54,
+        // backgroundColor: Colors.black54,
+        backgroundColor: Colors.blue.shade900,
+
         centerTitle: true,
         actions: [
           ElevatedButton(

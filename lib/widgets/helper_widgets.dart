@@ -282,14 +282,15 @@ TextField dateFieldTile(
           barrierDismissible: true,
           builder: (BuildContext context, Widget? child) {
             return Theme(
-              data: ThemeData.light().copyWith(
-                colorScheme: ColorScheme.light(
-                  primary: Colors.blue.shade100,
-                  onPrimary: Colors.white,
-                  surface: Colors.blue.shade700,
-                  onSurface: Colors.black,
+              data: ThemeData.fallback().copyWith(
+                colorScheme: ColorScheme.fromSwatch(
+                  primarySwatch: Colors.blue,
+                  accentColor: Colors.blueAccent,
+                  // backgroundColor: Colors.red,
+                  cardColor: const Color.fromARGB(255, 228, 234, 239),
+                  errorColor: Colors.red,
+                  brightness: Brightness.light,
                 ),
-                dialogBackgroundColor: Colors.white,
               ),
               child: child!,
             );

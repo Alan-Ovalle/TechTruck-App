@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techtruck_v11/views/new_order.dart';
@@ -205,22 +206,22 @@ class _AllOrdersState extends State<AllOrders> {
                 ))).then((res) => _refreshData());
   }
 
-  void tempShowFullOrder(int? id) {
-    Map<String, dynamic> existingData = {};
-    if (id != null) {
-      existingData = _allData.firstWhere((element) => element["id"] == id);
-    } else {
-      cleanControllers();
-    }
+  // void tempShowFullOrder(int? id) {
+  //   Map<String, dynamic> existingData = {};
+  //   if (id != null) {
+  //     existingData = _allData.firstWhere((element) => element["id"] == id);
+  //   } else {
+  //     cleanControllers();
+  //   }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => OrderDetails(
-                singleData: existingData,
-              )),
-    ).then((res) => _refreshData());
-  }
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //         builder: (context) => OrderDetails(
+  //               singleData: existingData,
+  //             )),
+  //   ).then((res) => _refreshData());
+  // }
 
   void convertOrderPdf(int? id) {
     Map<String, dynamic> existingData = {};

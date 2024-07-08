@@ -43,26 +43,33 @@ class _NewOrderState extends State<NewOrder> {
 
   Widget checkFolioExist() {
     if (thisOrderExist) {
-      return RichText(
-        text: TextSpan(
-          children: [
-            const TextSpan(
-              text: "Folio: ",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+      return Container(
+        padding: const EdgeInsets.only(left: 8, right: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: Colors.white,
+        ),
+        child: RichText(
+          text: TextSpan(
+            children: [
+              const TextSpan(
+                text: "Folio: ",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
-            ),
-            TextSpan(
-              text: formatFolio(widget.singleData["id"].toString()),
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
+              TextSpan(
+                text: formatFolio(widget.singleData["id"].toString()),
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     } else {
@@ -75,6 +82,10 @@ class _NewOrderState extends State<NewOrder> {
     return Scaffold(
       appBar: AppBar(
         title: checkDataExist(widget.idOrder),
+        backgroundColor: Colors.blue.shade900,
+        foregroundColor: Colors.white,
+        shadowColor: Colors.black,
+        elevation: 2,
         actions: [
           checkFolioExist(),
           addHorizontalSpace(16),

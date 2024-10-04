@@ -195,6 +195,7 @@ class _AllOrdersState extends State<AllOrders> {
       existingData = _allData.firstWhere((element) => element["id"] == id);
     } else {
       cleanControllers();
+      existingData["estatus"] = "Pendiente";
     }
 
     Navigator.push(
@@ -203,6 +204,8 @@ class _AllOrdersState extends State<AllOrders> {
             builder: (context) => NewOrder(
                   singleData: existingData,
                   idOrder: id,
+                  isReadOnly:
+                      existingData["estatus"] == "Pendiente" ? false : true,
                 ))).then((res) => _refreshData());
   }
 
@@ -275,49 +278,49 @@ class _AllOrdersState extends State<AllOrders> {
         isScrollControlled: true,
         context: context,
         builder: (_) => Container(
-              // padding: EdgeInsets.only(
-              //   top: 30,
-              //   left: 15,
-              //   right: 15,
-              //   bottom: MediaQuery.of(context).viewInsets.bottom + 50,
-              // ),
+              padding: EdgeInsets.only(
+                top: 30,
+                left: 15,
+                right: 15,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 50,
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   TextField(
                     controller: _clienteNombreController,
-                    // decoration: const InputDecoration(
-                    //   border: OutlineInputBorder(),
-                    //   labelText: "Nombre del cliente",
-                    // ),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Nombre del cliente",
+                    ),
                   ),
-                  // addVerticalSpace(10),
+                  addVerticalSpace(10),
                   TextField(
                     controller: _unidadNumEco,
-                    // decoration: const InputDecoration(
-                    //   border: OutlineInputBorder(),
-                    //   labelText: "No. Economico",
-                    // ),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "No. Economico",
+                    ),
                   ),
-                  // addVerticalSpace(10),
+                  addVerticalSpace(10),
                   TextField(
                     controller: _clienteContactoController,
-                    // decoration: const InputDecoration(
-                    //   border: OutlineInputBorder(),
-                    //   labelText: "Nombre del conductor",
-                    // ),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Nombre del conductor",
+                    ),
                   ),
-                  // addVerticalSpace(10),
+                  addVerticalSpace(10),
                   TextField(
                     controller: _clienteComentario,
                     maxLines: 4,
-                    // decoration: const InputDecoration(
-                    //   border: OutlineInputBorder(),
-                    //   labelText: "Comentario del cliente",
-                    // ),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Comentario del cliente",
+                    ),
                   ),
-                  // addVerticalSpace(20),
+                  addVerticalSpace(20),
                   Center(
                     child: ElevatedButton(
                       onPressed: () async {
@@ -329,17 +332,17 @@ class _AllOrdersState extends State<AllOrders> {
                         }
                         Navigator.pop(context);
                       },
-                      // style: TextButton.styleFrom(
-                      //   backgroundColor: Colors.blue,
-                      // ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(18),
                         child: Text(
                           id == null ? "Agregar" : "Actualizar",
-                          // style: const TextStyle(
-                          //   fontSize: 20,
-                          //   color: Colors.white,
-                          // ),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -1024,7 +1027,7 @@ class _AllOrdersState extends State<AllOrders> {
 colorEstatus(orden) {
   switch (orden) {
     case "Pendiente":
-      return Colors.black54;
+      return Colors.orange;
     case "En proceso":
       return Colors.indigoAccent;
     case "Finalizado":

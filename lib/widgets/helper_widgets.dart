@@ -157,8 +157,11 @@ Widget addHorizontalSpace(double width) {
 }
 
 TextField expandFieldTile(
-    Map<TextEditingController, Map<String, int>> controllerList) {
+  Map<TextEditingController, Map<String, int>> controllerList,
+  bool? isReadOnly,
+) {
   return TextField(
+    readOnly: isReadOnly!,
     controller: controllerList.keys.first,
     // maxLines: 6,
     // minLines: controllerList.values.last.values.first,
@@ -182,6 +185,7 @@ TextField expandFieldTile(
 }
 
 Widget expandMultiLineFieldTile(
+    bool? isReadOnly,
     int? renglonBox,
     int renglonString,
     int primeraLinea,
@@ -193,6 +197,7 @@ Widget expandMultiLineFieldTile(
       spanLinea: spanLinea,
     ),
     child: TextField(
+      readOnly: isReadOnly!,
       controller: controllerList.keys.first,
       textAlignVertical: TextAlignVertical.top,
       maxLines: renglonBox,
@@ -249,9 +254,12 @@ class PagePainter extends CustomPainter {
 }
 
 TextField dateFieldTile(
-    Map<TextEditingController, Map<String, int>> controllerList,
-    BuildContext context) {
+  Map<TextEditingController, Map<String, int>> controllerList,
+  BuildContext context,
+  bool? isReadOnly,
+) {
   return TextField(
+    readOnly: isReadOnly!,
     controller: controllerList.keys.first,
     maxLines: 1,
     minLines: null,

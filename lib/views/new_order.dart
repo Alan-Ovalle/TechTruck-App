@@ -10,11 +10,13 @@ import 'package:techtruck_v11/widgets/helper_widgets.dart';
 class NewOrder extends StatefulWidget {
   final Map<String, dynamic> singleData;
   final int? idOrder;
+  final bool? isReadOnly;
 
   const NewOrder({
     super.key,
     required this.singleData,
     required this.idOrder,
+    required this.isReadOnly,
   });
 
   @override
@@ -94,6 +96,7 @@ class _NewOrderState extends State<NewOrder> {
       body: TemporalFomulario(
         dataLocal: widget.singleData,
         id: widget.idOrder,
+        isReadOnly: widget.isReadOnly,
       ),
     );
   }
@@ -102,10 +105,12 @@ class _NewOrderState extends State<NewOrder> {
 class TemporalFomulario extends StatefulWidget {
   final Map<String, dynamic> dataLocal;
   final int? id;
+  final bool? isReadOnly;
   const TemporalFomulario({
     super.key,
     required this.dataLocal,
     required this.id,
+    required this.isReadOnly,
   });
   @override
   TemporalFomularioState createState() {
@@ -358,6 +363,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                       crossAxisCellCount: 6,
                       mainAxisCellCount: 1,
                       child: expandMultiLineFieldTile(
+                        widget.isReadOnly,
                         3,
                         3,
                         34,
@@ -374,6 +380,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           unidadNumEco: {"No. Economico": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
@@ -383,6 +390,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           unidadKilometros: {"Kilometros": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
@@ -392,6 +400,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           unidadMarca: {"Marca": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
@@ -401,12 +410,14 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           unidadHorasMotor: {"Horas del motor": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
                       crossAxisCellCount: 6,
                       mainAxisCellCount: 1,
                       child: expandMultiLineFieldTile(
+                        widget.isReadOnly,
                         3,
                         3,
                         34,
@@ -425,6 +436,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           unidadModelo: {"Modelo": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
@@ -434,6 +446,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           unidadTipo: {"Tipo": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
@@ -443,6 +456,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           unidadMotor: {"Motor": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
@@ -452,14 +466,19 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           unidadSerie: {"Serie del motor": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
                       crossAxisCellCount: 2,
                       mainAxisCellCount: .5,
-                      child: dateFieldTile({
-                        fechaLlegada: {"Fecha llegada": 1},
-                      }, context),
+                      child: dateFieldTile(
+                        {
+                          fechaLlegada: {"Fecha llegada": 1},
+                        },
+                        context,
+                        widget.isReadOnly,
+                      ),
                     ),
                     StaggeredGridTile.count(
                       crossAxisCellCount: 4,
@@ -468,6 +487,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           tecnicoAsignado: {"Tecnico asignado": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
@@ -477,6 +497,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           unidadPlacas: {"Placas": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
@@ -486,6 +507,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           unidadYear: {"Año": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
@@ -496,6 +518,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                           fechaSalida: {"Fecha salida": 1},
                         },
                         context,
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
@@ -505,6 +528,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           numeroCaso: {"No. Caso": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
@@ -514,6 +538,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                         {
                           unidadVin: {"V.I.N.": 1},
                         },
+                        widget.isReadOnly,
                       ),
                     ),
                     StaggeredGridTile.count(
@@ -530,6 +555,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                       crossAxisCellCount: 6,
                       mainAxisCellCount: 1,
                       child: expandMultiLineFieldTile(
+                        widget.isReadOnly,
                         3,
                         3,
                         34,
@@ -543,6 +569,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                       crossAxisCellCount: 6,
                       mainAxisCellCount: 1,
                       child: expandMultiLineFieldTile(
+                        widget.isReadOnly,
                         3,
                         3,
                         34,
@@ -566,6 +593,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                       crossAxisCellCount: 9,
                       mainAxisCellCount: 1.49,
                       child: expandMultiLineFieldTile(
+                        widget.isReadOnly,
                         5,
                         16,
                         35,
@@ -581,6 +609,7 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                       crossAxisCellCount: 3,
                       mainAxisCellCount: 1.49,
                       child: expandMultiLineFieldTile(
+                        widget.isReadOnly,
                         5,
                         16,
                         35,
@@ -595,10 +624,14 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                       mainAxisCellCount: .5,
                       child: ElevatedButton(
                         onPressed: () async {
-                          if (widget.id == null) {
-                            await _addData();
-                          } else if (widget.id != null) {
-                            await _updateData(widget.id!);
+                          if (widget.isReadOnly == true) {
+                            Navigator.pop(context);
+                          } else {
+                            if (widget.id == null) {
+                              await _addData();
+                            } else if (widget.id != null) {
+                              await _updateData(widget.id!);
+                            }
                           }
                         },
                         style: ButtonStyle(
@@ -607,7 +640,11 @@ class TemporalFomularioState extends State<TemporalFomulario> {
                           ),
                         ),
                         child: Text(
-                          widget.id == null ? "Agregar orden" : "Actualizar",
+                          widget.isReadOnly == true
+                              ? "Regresar"
+                              : widget.id == null
+                                  ? "Agregar orden"
+                                  : "Actualizar",
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 25,

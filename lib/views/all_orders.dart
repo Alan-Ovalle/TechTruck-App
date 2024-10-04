@@ -1,5 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+import 'dart:ffi';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -363,7 +366,9 @@ class _AllOrdersState extends State<AllOrders> {
   final ScrollController scrollControllerOne = ScrollController();
 
   List<PopupMenuItem> listaPopItem(Map<String, dynamic> orden) {
-    List<PopupMenuItem> lista = [
+    List<PopupMenuItem> lista;
+
+    lista = [
       PopupMenuItem(
         child: const Row(
           children: [
@@ -528,20 +533,38 @@ class _AllOrdersState extends State<AllOrders> {
 
     switch (orden["estatus"]) {
       case "Pendiente":
-        lista.remove(lista[0]);
+        lista.removeWhere((item) =>
+            (((item.child as Row?)!.children[1] as Padding?)!.child as Text?)!
+                .data ==
+            "Pendiente");
+        lista.removeWhere((item) =>
+            (((item.child as Row?)!.children[1] as Padding?)!.child as Text?)!
+                .data ==
+            "Finalizado");
+
         break;
       case "En proceso":
-        lista.remove(lista[1]);
+        lista.removeWhere((item) =>
+            (((item.child as Row?)!.children[1] as Padding?)!.child as Text?)!
+                .data ==
+            "En proceso");
+        lista.removeWhere((item) =>
+            (((item.child as Row?)!.children[1] as Padding?)!.child as Text?)!
+                .data ==
+            "Cancelar orden");
+
         break;
       case "Finalizado":
-        lista.remove(lista[2]);
+        lista.removeRange(0, 3);
+        lista.removeAt(0);
         break;
       case "Cancelado":
-        lista.remove(lista[3]);
+        lista.removeRange(1, 4);
 
         break;
       default:
     }
+
     if (orden["estatus"] == "Cancelado") {
       lista.add(
         PopupMenuItem(

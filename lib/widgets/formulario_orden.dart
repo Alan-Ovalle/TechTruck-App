@@ -1,8 +1,6 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, use_build_context_synchronously
 
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:techtruck_v11/widgets/db_helper.dart';
@@ -190,9 +188,9 @@ class _FormularioOrdenState extends State<FormularioOrden> {
         trabajoRealizado.text,
         costosController.text,
       );
+      cleanControllers();
+      Navigator.pop(context);
     }
-    cleanControllers();
-    Navigator.pop(context);
   }
 
   Future<void> _updateData(int id) async {

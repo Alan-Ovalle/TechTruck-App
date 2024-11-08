@@ -208,23 +208,6 @@ class _AllOrdersState extends State<AllOrders> {
                 ))).then((res) => _refreshData());
   }
 
-  // void tempShowFullOrder(int? id) {
-  //   Map<String, dynamic> existingData = {};
-  //   if (id != null) {
-  //     existingData = _allData.firstWhere((element) => element["id"] == id);
-  //   } else {
-  //     cleanControllers();
-  //   }
-
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //         builder: (context) => OrderDetails(
-  //               singleData: existingData,
-  //             )),
-  //   ).then((res) => _refreshData());
-  // }
-
   void convertOrderPdf(int? id) {
     Map<String, dynamic> existingData = {};
     if (id != null) {

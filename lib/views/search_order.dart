@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:techtruck_v11/views/all_orders.dart';
 import 'package:techtruck_v11/views/pdf_order.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
 
@@ -440,8 +439,7 @@ class _BuscarOrdenState extends State<BuscarOrden> {
               ),
               onChanged: (text) {
                 _filtrarListaSegunTexto(text);
-                print(
-                    'First text field: ${_busquedaController.text} (${_busquedaController.text.characters.length})');
+                // print('First text field: ${_busquedaController.text} (${_busquedaController.text.characters.length})');
               },
               onSubmitted: (value) => _filtrarListaSegunTexto(value),
             ),

@@ -1,14 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
-import 'dart:ffi';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:techtruck_v11/views/new_order.dart';
-import 'package:techtruck_v11/views/order_details.dart';
 import 'package:techtruck_v11/views/pdf_order.dart';
+import 'package:techtruck_v11/views/search_order.dart';
 import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
 
@@ -612,10 +608,9 @@ class _AllOrdersState extends State<AllOrders> {
   @override
   Widget build(BuildContext context) {
     estadosOrdenFiltro = _prefs?.getStringList("estadosOrdenFiltro") ?? [];
-    final filtroOrdenes = _allData.where((orden) {
-      return estadosOrdenFiltro.isEmpty ||
-          estadosOrdenFiltro.contains(orden["estatus"]);
-    });
+    final filtroOrdenes = _allData.where((orden) =>
+        estadosOrdenFiltro.isEmpty ||
+        estadosOrdenFiltro.contains(orden["estatus"]));
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -642,7 +637,6 @@ class _AllOrdersState extends State<AllOrders> {
         ),
         // backgroundColor: Colors.black54,
         backgroundColor: Colors.blue.shade900,
-
         centerTitle: true,
         actions: [
           ElevatedButton(
@@ -705,6 +699,26 @@ class _AllOrdersState extends State<AllOrders> {
             iconSize: 25,
             hoverColor: Colors.blue.shade800,
             tooltip: "Invertir orden de la lista",
+            visualDensity: const VisualDensity(
+              horizontal: 1,
+              vertical: 1,
+            ),
+          ),
+          addHorizontalSpace(10),
+          IconButton(
+            onPressed: () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BuscarOrden(
+                          allData: _allData,
+                        )),
+              ).then((res) => _refreshData());
+            },
+            icon: const Icon(Icons.search),
+            iconSize: 25,
+            hoverColor: Colors.blue.shade800,
+            tooltip: "Busqueda",
             visualDensity: const VisualDensity(
               horizontal: 1,
               vertical: 1,

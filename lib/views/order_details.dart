@@ -9,18 +9,14 @@ class OrderDetails extends StatelessWidget {
       body: CustomScrollView(
         slivers: <Widget>[
           // SliverAppBar
-          SliverAppBar(
+          const SliverAppBar(
             expandedHeight: 100.0,
             floating: false,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: const Text(
+              title: Text(
                 'CustomScrollView', // Title text for the SliverAppBar
                 style: TextStyle(color: Colors.black, fontSize: 15),
-              ),
-              background: Image.network(
-                'https://static.startuptalky.com/2021/06/GeeksforGeeks-StartupTalky.jpg', // Replace with your image URL
-                fit: BoxFit.cover, // Ensure the image covers the entire space
               ),
             ),
           ),

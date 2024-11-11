@@ -7,6 +7,7 @@ import 'package:techtruck_v11/views/pdf_order.dart';
 import 'package:techtruck_v11/views/search_order.dart';
 import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
+import 'dart:developer' as developer;
 
 class AllOrders extends StatefulWidget {
   const AllOrders({super.key});
@@ -158,6 +159,19 @@ class _AllOrdersState extends State<AllOrders> {
       _costosController.text,
     );
     _refreshData();
+  }
+
+  Future<void> _addDemoOrders() async {
+    showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return customAgregarOrdenDemoDialog(context, () {
+          _addData(true);
+        }, () {
+          _refreshData();
+        });
+      },
+    );
   }
 
   bool ordenAscendete = false;
@@ -368,7 +382,7 @@ class _AllOrdersState extends State<AllOrders> {
             context: context,
             builder: (context) {
               estatus = estadosOrden[0];
-              return customAlertDialog(
+              return customCambiarEstadoDialog(
                   context, _formatFolio("${orden["id"]}"), estatus, () async {
                 _upadateEstatus(orden["id"], estatus, Colors.orange);
                 Navigator.pop(context, true);
@@ -398,7 +412,7 @@ class _AllOrdersState extends State<AllOrders> {
             context: context,
             builder: (context) {
               estatus = estadosOrden[1];
-              return customAlertDialog(
+              return customCambiarEstadoDialog(
                 context,
                 _formatFolio("${orden["id"]}"),
                 estatus,
@@ -433,7 +447,7 @@ class _AllOrdersState extends State<AllOrders> {
             context: context,
             builder: (context) {
               estatus = estadosOrden[2];
-              return customAlertDialog(
+              return customCambiarEstadoDialog(
                 context,
                 _formatFolio("${orden["id"]}"),
                 estatus,
@@ -468,7 +482,7 @@ class _AllOrdersState extends State<AllOrders> {
             context: context,
             builder: (context) {
               estatus = estadosOrden[3];
-              return customAlertDialog(
+              return customCambiarEstadoDialog(
                 context,
                 _formatFolio("${orden["id"]}"),
                 estatus,
@@ -565,7 +579,7 @@ class _AllOrdersState extends State<AllOrders> {
             final result = await showDialog<bool>(
               context: context,
               builder: (context) {
-                return customAlertDialog(
+                return customCambiarEstadoDialog(
                   context,
                   _formatFolio("${orden["id"]}"),
                   "Eliminar",
@@ -627,7 +641,9 @@ class _AllOrdersState extends State<AllOrders> {
               showFullOrder(null);
             },
             onLongPress: () {
-              _addData(true);
+              // _addData(true);
+
+              _addDemoOrders();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
@@ -935,7 +951,7 @@ class _AllOrdersState extends State<AllOrders> {
       drawer: Drawer(
         width: 220,
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
@@ -958,29 +974,66 @@ class _AllOrdersState extends State<AllOrders> {
             ),
             Visibility(
               visible: estadosOrdenFiltro.isNotEmpty,
-              child: FilterChip(
-                label: const Text("Limpiar filtros",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    )),
-                selected: estadosOrdenFiltro.isEmpty,
-                onSelected: (bool selected) {
-                  setState(
-                    () {
-                      if (selected) {
-                        estadosOrdenFiltro.clear();
-                        _prefs?.setStringList(
-                          "estadosOrdenFiltro",
-                          estadosOrdenFiltro,
-                        );
-                        Navigator.pop(context);
-                      }
+              child: Column(
+                children: [
+                  FilterChip(
+                    label: const Text("Limpiar filtros",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    selected: estadosOrdenFiltro.isEmpty,
+                    onSelected: (bool selected) {
+                      setState(
+                        () {
+                          if (selected) {
+                            estadosOrdenFiltro.clear();
+                            _prefs?.setStringList(
+                              "estadosOrdenFiltro",
+                              estadosOrdenFiltro,
+                            );
+                            Navigator.pop(context);
+                          }
+                        },
+                      );
                     },
-                  );
-                },
+                  ),
+                  const Divider(
+                    thickness: 2,
+                  ),
+                ],
               ),
             ),
+            // Flexible(
+            //   flex: 1,
+            //   fit: FlexFit.tight,
+            //   child: addVerticalSpace(1),
+            // ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     showFullOrder(null);
+            //   },
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: Colors.blue.shade800,
+            //     foregroundColor: Colors.blue.shade800,
+            //     fixedSize: Size(160, 40),
+            //     shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(10),
+            //         side: BorderSide(
+            //           width: 2,
+            //           color: Colors.blue.shade900,
+            //         )),
+            //   ),
+            //   child: const Text(
+            //     "Nueva orden",
+            //     style: TextStyle(
+            //       fontSize: 16,
+            //       fontWeight: FontWeight.w700,
+            //       color: Colors.white,
+            //     ),
+            //   ),
+            // ),
+            // addVerticalSpace(30),
           ],
         ),
       ),

@@ -53,7 +53,7 @@ List<OrdenServicio> listOrderEjemplo = [
       placas: "123-ASD-12",
       kilometros: "75896",
       horasMotor: "36412",
-      tipo: "Tratco",
+      tipo: "Tracto",
       serieMotor: "789456123",
       year: "2013",
       vin: "QQWERTYUIOP123456789",

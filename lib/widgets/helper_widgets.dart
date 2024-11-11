@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:techtruck_v11/widgets/demo_orden.dart';
+import 'dart:developer' as developer;
 
 const _defaultColor = Color(0xFF34568B);
 
@@ -333,7 +335,7 @@ Widget tituloTile(String titulo) {
   );
 }
 
-Widget customAlertDialog(
+Widget customCambiarEstadoDialog(
   BuildContext context,
   String? id,
   String? mensaje,
@@ -430,6 +432,114 @@ Widget customAlertDialog(
           minimumSize: const Size(120, 40),
         ),
         child: const Text('Aceptar'),
+      ),
+    ],
+  );
+}
+
+Widget customAgregarOrdenDemoDialog(
+  BuildContext context,
+  Function accion,
+  VoidCallback funcion,
+) {
+  TextEditingController controlador = TextEditingController();
+  return AlertDialog(
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [Text("Agregar ordenes de demostración:")],
+    ),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'Elija una opción.',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        addVerticalSpace(15),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              // height: 35,
+              width: 100,
+              child: TextField(
+                controller: controlador,
+                onChanged: (context) {},
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            addHorizontalSpace(25),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, false);
+                if (controlador.text.isNotEmpty) {
+                  int numOrdenes = int.parse(controlador.text);
+                  //Enviar a funcion de creacion de ordenes de demostracion
+                  demoOrders(numOrdenes, funcion);
+                }
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blueAccent,
+                textStyle: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                minimumSize: const Size(120, 40),
+              ),
+              child: const Text('Agregar cantidad'),
+            ),
+          ],
+        )
+      ],
+    ),
+    actionsAlignment: MainAxisAlignment.spaceEvenly,
+    actions: [
+      TextButton(
+        onPressed: () {
+          Navigator.pop(context, false);
+        },
+        style: TextButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.grey.shade600,
+          textStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          minimumSize: const Size(120, 40),
+        ),
+        child: const Text('Regresar'),
+      ),
+      TextButton(
+        onPressed: () {
+          accion();
+        },
+        style: TextButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.blueAccent,
+          textStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          minimumSize: const Size(120, 40),
+        ),
+        child: const Text('Orden vacia'),
       ),
     ],
   );

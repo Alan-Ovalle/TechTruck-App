@@ -477,7 +477,15 @@ class _BuscarOrdenState extends State<BuscarOrden> {
             // height: 50,
             child: TextField(
               controller: _busquedaController,
+              maxLines: 1,
+              minLines: 1,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
               decoration: InputDecoration(
+                isDense: true,
+                contentPadding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                 prefixIcon: Icon(
                   Icons.search_rounded,
                   color: Theme.of(context).primaryColorDark,

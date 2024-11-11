@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:techtruck_v11/views/new_order.dart';
 import 'package:techtruck_v11/views/pdf_order.dart';
+import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
 
 class BuscarOrden extends StatefulWidget {
@@ -44,6 +46,62 @@ class _BuscarOrdenState extends State<BuscarOrden> {
     }
   }
 
+  List<String> estadosOrden = [
+    "Pendiente",
+    "En proceso",
+    "Finalizado",
+    "Cancelado"
+  ];
+
+  void _customSnackBar(String message, Color color) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: color,
+        content: Text(message),
+      ),
+    );
+  }
+
+  void _upadateEstatus(int id, String? estatus, Color color) async {
+    await SQLHelper.updateEstatusField(id, estatus);
+    _customSnackBar(
+        "La orden ${id.toString()} fue marcada como ${estatus!} correctamente.",
+        color);
+
+    _refreshData();
+  }
+
+  void _refreshData() async {
+    final data = await SQLHelper.getAllData();
+    setState(() {
+      _allOrdersData = data;
+      _filtrarListaSegunTexto(_busquedaController.text);
+    });
+    // cleanControllers();
+  }
+
+  void showFullOrder(int? id) {
+    Map<String, dynamic> existingData = {};
+    if (id != null) {
+      existingData =
+          _allOrdersData.firstWhere((element) => element["id"] == id);
+    } else {
+      // cleanControllers();
+      existingData["estatus"] = "Pendiente";
+    }
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => NewOrder(
+                  singleData: existingData,
+                  idOrder: id,
+                  isReadOnly:
+                      existingData["estatus"] == "Pendiente" ? false : true,
+                ))).then((res) => _refreshData());
+  }
+
   List<PopupMenuItem> listaPopItem(Map<String, dynamic> orden) {
     List<PopupMenuItem> lista;
 
@@ -67,10 +125,10 @@ class _BuscarOrdenState extends State<BuscarOrden> {
           final result = await showDialog<bool>(
             context: context,
             builder: (context) {
-              // estatus = estadosOrden[0];
-              return customAlertDialog(
+              estatus = estadosOrden[0];
+              return customCambiarEstadoDialog(
                   context, _formatFolio("${orden["id"]}"), estatus, () async {
-                // _upadateEstatus(orden["id"], estatus, Colors.orange);
+                _upadateEstatus(orden["id"], estatus, Colors.orange);
                 Navigator.pop(context, true);
               }, Colors.orange);
             },
@@ -97,13 +155,13 @@ class _BuscarOrdenState extends State<BuscarOrden> {
           final result = await showDialog<bool>(
             context: context,
             builder: (context) {
-              // estatus = estadosOrden[1];
-              return customAlertDialog(
+              estatus = estadosOrden[1];
+              return customCambiarEstadoDialog(
                 context,
                 _formatFolio("${orden["id"]}"),
                 estatus,
                 () async {
-                  // _upadateEstatus(orden["id"], estatus, Colors.indigo);
+                  _upadateEstatus(orden["id"], estatus, Colors.indigo);
                   Navigator.pop(context, true);
                 },
                 Colors.indigo,
@@ -132,13 +190,13 @@ class _BuscarOrdenState extends State<BuscarOrden> {
           final result = await showDialog<bool>(
             context: context,
             builder: (context) {
-              // estatus = estadosOrden[2];
-              return customAlertDialog(
+              estatus = estadosOrden[2];
+              return customCambiarEstadoDialog(
                 context,
                 _formatFolio("${orden["id"]}"),
                 estatus,
                 () async {
-                  // _upadateEstatus(orden["id"], estatus, Colors.green);
+                  _upadateEstatus(orden["id"], estatus, Colors.green);
                   Navigator.pop(context, true);
                 },
                 Colors.green,
@@ -167,13 +225,13 @@ class _BuscarOrdenState extends State<BuscarOrden> {
           final result = await showDialog<bool>(
             context: context,
             builder: (context) {
-              // estatus = estadosOrden[3];
-              return customAlertDialog(
+              estatus = estadosOrden[3];
+              return customCambiarEstadoDialog(
                 context,
                 _formatFolio("${orden["id"]}"),
                 estatus,
                 () async {
-                  // _upadateEstatus(orden["id"], estatus, Colors.red);
+                  _upadateEstatus(orden["id"], estatus, Colors.red);
                   Navigator.pop(context, true);
                 },
                 Colors.red,
@@ -266,7 +324,7 @@ class _BuscarOrdenState extends State<BuscarOrden> {
             final result = await showDialog<bool>(
               context: context,
               builder: (context) {
-                return customAlertDialog(
+                return customCambiarEstadoDialog(
                   context,
                   // _formatFolio
                   ("${orden["id"]}"),
@@ -467,8 +525,7 @@ class _BuscarOrdenState extends State<BuscarOrden> {
                       children: [
                         Expanded(
                           child: Text(
-                            // _formatFolio
-                            ("${orden["id"]}"),
+                            _formatFolio("${orden["id"]}"),
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 20,
@@ -656,7 +713,7 @@ class _BuscarOrdenState extends State<BuscarOrden> {
                       ],
                     ),
                     onTap: () {
-                      // showFullOrder(orden["id"]);
+                      showFullOrder(orden["id"]);
                     },
                     trailing: PopupMenuButton(
                       tooltip: ("Opciones"),

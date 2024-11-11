@@ -7,7 +7,6 @@ import 'package:techtruck_v11/views/pdf_order.dart';
 import 'package:techtruck_v11/views/search_order.dart';
 import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/helper_widgets.dart';
-import 'dart:developer' as developer;
 
 class AllOrders extends StatefulWidget {
   const AllOrders({super.key});
@@ -272,79 +271,195 @@ class _AllOrdersState extends State<AllOrders> {
     showModalBottomSheet(
         // elevation: 5,
         isScrollControlled: true,
+        backgroundColor: const Color.fromARGB(255, 233, 236, 238),
         context: context,
-        builder: (_) => Container(
-              padding: EdgeInsets.only(
-                top: 30,
-                left: 15,
-                right: 15,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 50,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  TextField(
-                    controller: _clienteNombreController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Nombre del cliente",
-                    ),
-                  ),
-                  addVerticalSpace(10),
-                  TextField(
-                    controller: _unidadNumEco,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "No. Economico",
-                    ),
-                  ),
-                  addVerticalSpace(10),
-                  TextField(
-                    controller: _clienteContactoController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Nombre del conductor",
-                    ),
-                  ),
-                  addVerticalSpace(10),
-                  TextField(
-                    controller: _clienteComentario,
-                    maxLines: 4,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Comentario del cliente",
-                    ),
-                  ),
-                  addVerticalSpace(20),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (id == null) {
-                          await _addData(null);
-                        }
-                        if (id != null) {
-                          await _updateData(id);
-                        }
-                        Navigator.pop(context);
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.blue,
+        builder: (_) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 70,
+                  decoration: BoxDecoration(
+                      color: Colors.blue.shade900,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15))),
+                  child: Center(
+                    child: Text(
+                      "Orden Express",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        color: Colors.white,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(18),
-                        child: Text(
-                          id == null ? "Agregar" : "Actualizar",
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 20,
+                    left: 15,
+                    right: 15,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 50,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      TextField(
+                        controller: _clienteNombreController,
+                        cursorColor: Colors.blue.shade900,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          border: const OutlineInputBorder(),
+                          filled: true,
+                          floatingLabelStyle: TextStyle(
+                              color: Colors.blue.shade900,
+                              fontWeight: FontWeight.bold),
+                          enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                            color: Color.fromRGBO(13, 71, 161, 1),
+                          )),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                            width: 2,
+                            color: (Colors.blue[900])!,
+                          )),
+                          labelText: "Nombre del cliente",
                         ),
                       ),
-                    ),
-                  )
-                ],
-              ),
+                      addVerticalSpace(10),
+                      Row(
+                        // mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: TextField(
+                              controller: _unidadNumEco,
+                              cursorColor: Colors.blue.shade900,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                border: const OutlineInputBorder(),
+                                filled: true,
+                                floatingLabelStyle: TextStyle(
+                                    color: Colors.blue.shade900,
+                                    fontWeight: FontWeight.bold),
+                                enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Color.fromRGBO(13, 71, 161, 1),
+                                )),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  width: 2,
+                                  color: (Colors.blue[900])!,
+                                )),
+                                labelText: "No. Economico",
+                              ),
+                            ),
+                          ),
+                          addHorizontalSpace(10),
+                          Flexible(
+                            flex: 1,
+                            child: TextField(
+                              controller: _clienteContactoController,
+                              cursorColor: Colors.blue.shade900,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                border: const OutlineInputBorder(),
+                                filled: true,
+                                floatingLabelStyle: TextStyle(
+                                    color: Colors.blue.shade900,
+                                    fontWeight: FontWeight.bold),
+                                enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Color.fromRGBO(13, 71, 161, 1),
+                                )),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  width: 2,
+                                  color: (Colors.blue[900])!,
+                                )),
+                                labelText: "Nombre del conductor",
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      addVerticalSpace(10),
+                      TextField(
+                        controller: _clienteComentario,
+                        maxLines: 4,
+                        cursorColor: Colors.blue.shade900,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          border: const OutlineInputBorder(),
+                          filled: true,
+                          floatingLabelStyle: TextStyle(
+                              color: Colors.blue.shade900,
+                              fontWeight: FontWeight.bold),
+                          enabledBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                            color: Color.fromRGBO(13, 71, 161, 1),
+                          )),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                            width: 2,
+                            color: (Colors.blue[900])!,
+                          )),
+                          labelText: "Comentario del cliente",
+                        ),
+                      ),
+                      addVerticalSpace(20),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (id == null) {
+                              await _addData(null);
+                            }
+                            if (id != null) {
+                              await _updateData(id);
+                            }
+                            Navigator.pop(context);
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.blue.shade900,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(18),
+                            child: Text(
+                              id == null ? "Agregar" : "Actualizar",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ));
   }
 

@@ -207,4 +207,59 @@ class SQLHelper {
       );
     }
   }
+
+  static Future<void> deleteAllData(BuildContext context) async {
+    final db = await SQLHelper.db();
+    try {
+      await db.delete('data', where: null);
+    } catch (e) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text(e.toString()),
+        ),
+      );
+    }
+  }
+
+  static Future<void> deleteTableData(BuildContext context) async {
+    final db = await SQLHelper.db();
+    try {
+      await db.execute("""DROP TABLE IF EXISTS data""");
+      await db.execute("""CREATE TABLE data(
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+        estatus TEXT,
+        clienteNombre TEXT,
+        clienteContacto TEXT, 
+        unidadNumEco TEXT,
+        unidadKilometros TEXT,
+        unidadMarca TEXT, 
+        unidadModelo TEXT,
+        unidadHorasMotor TEXT,
+        unidadTipo TEXT,
+        unidadMotor TEXT,
+        unidadSerie TEXT,
+        unidadPlacas TEXT,
+        unidadYear TEXT,
+        unidadVin TEXT,
+        fechaLlegada TEXT,
+        fechaSalida TEXT,
+        tecnicoAsignado TEXT,
+        numeroCaso TEXT,
+        clienteComentario TEXT,
+        diagnostico TEXT,
+        trabajoRealizado TEXT,
+        costo TEXT,
+        createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)""");
+    } catch (e) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text(e.toString()),
+        ),
+      );
+    }
+  }
 }

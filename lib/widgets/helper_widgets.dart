@@ -3,10 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/demo_orden.dart';
 import 'dart:developer' as developer;
 
 const _defaultColor = Color(0xFF34568B);
+
+const String _passwordDev = "0413";
 
 // class AppScaffold extends StatelessWidget {
 //   final String title;
@@ -382,7 +385,7 @@ Widget customCambiarEstadoDialog(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '¿Desea eliminar permanentemente esta orden?',
+                '¿Desea eliminar permanentemente todas las ordenes?',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -437,109 +440,307 @@ Widget customCambiarEstadoDialog(
   );
 }
 
+Widget dialogDev() {
+  return AlertDialog(
+    title: Text("No no no no"),
+    content: Text("Wrong."),
+  );
+}
+
 Widget customAgregarOrdenDemoDialog(
   BuildContext context,
   Function accion,
   VoidCallback funcion,
+  bool demoTest,
+  VoidCallback deleteFuncion,
 ) {
   TextEditingController controlador = TextEditingController();
+  TextEditingController controladorDev = TextEditingController();
+
   return AlertDialog(
-    title: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [Text("Agregar ordenes de demostración:")],
+    title: Center(
+      child: Text(
+        "Agregar ordenes de demostración:",
+        style: const TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+        ),
+      ),
     ),
+    backgroundColor: Colors.blue.shade900,
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          'Elija una opción.',
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
+        SizedBox(
+          // height: 35,
+          width: 330,
+          child: TextField(
+            controller: controladorDev,
+            onChanged: (context) {
+              // debugPrint(controladorDev.text.toString());
+              // debugPrint("Contraseña es: $_passwordDev");
+              // debugPrint(
+              //     "Son iguales? : ${controladorDev.text.toString() == _passwordDev}");
+            },
+            keyboardType: TextInputType.number,
+            obscureText: true,
+            decoration: InputDecoration(
+                fillColor: Colors.white,
+                border: const OutlineInputBorder(),
+                filled: true,
+                // floatingLabelStyle: TextStyle(
+                //     color: Colors.blue.shade900, fontWeight: FontWeight.bold),
+                enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                  color: Color.fromRGBO(13, 71, 161, 1),
+                )),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    width: 2,
+                    color: (Colors.blue[900])!,
+                  ),
+                ),
+                hintText: "Contraseña",
+                hintStyle: TextStyle(
+                  fontWeight: FontWeight.w700,
+                )),
           ),
         ),
         addVerticalSpace(15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              // height: 35,
-              width: 100,
-              child: TextField(
-                controller: controlador,
-                onChanged: (context) {},
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
-            addHorizontalSpace(25),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context, false);
-                if (controlador.text.isNotEmpty) {
-                  int numOrdenes = int.parse(controlador.text);
-                  //Enviar a funcion de creacion de ordenes de demostracion
-                  demoOrders(numOrdenes, funcion);
-                }
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blueAccent,
-                textStyle: const TextStyle(
+        Container(
+          padding: EdgeInsets.fromLTRB(15, 5, 15, 10),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(7)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Elija una opción:',
+                style: const TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                minimumSize: const Size(120, 40),
               ),
-              child: const Text('Agregar cantidad'),
-            ),
-          ],
-        )
+
+              addVerticalSpace(20),
+              SizedBox(
+                width: 300,
+                child: TextButton(
+                  onPressed: () async {
+                    if (controladorDev.text.toString() == _passwordDev) {
+                      Navigator.pop(context, false);
+                      demoOrders(150, funcion, true);
+                    } else {
+                      final result = await showDialog<bool>(
+                        context: context,
+                        builder: (context) {
+                          return dialogDev();
+                        },
+                      );
+                      if (result == null || !result) {
+                        return;
+                      }
+                    }
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.blue.shade900,
+                    textStyle: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    minimumSize: const Size(150, 40),
+                  ),
+                  child: const Text('Agregar ordenes para pruebas'),
+                ),
+              ),
+              addVerticalSpace(20),
+              SizedBox(
+                width: 300,
+                child: TextButton(
+                  onPressed: () async {
+                    if (controladorDev.text.toString() == _passwordDev) {
+                      Navigator.pop(context, false);
+                      accion();
+                    } else {
+                      final result = await showDialog<bool>(
+                        context: context,
+                        builder: (context) {
+                          return dialogDev();
+                        },
+                      );
+                      if (result == null || !result) {
+                        return;
+                      }
+                    }
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.blueAccent,
+                    textStyle: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    minimumSize: const Size(120, 40),
+                  ),
+                  child: const Text('Agregar orden vacia'),
+                ),
+              ),
+              addVerticalSpace(20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    // height: 35,
+                    width: 100,
+                    child: TextField(
+                      controller: controlador,
+                      onChanged: (context) {},
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                          color: Color.fromRGBO(13, 71, 161, 1),
+                        )),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 2,
+                            color: (Colors.blue[900])!,
+                          ),
+                        ),
+                        // hintText: "5",
+                      ),
+                    ),
+                  ),
+                  addHorizontalSpace(25),
+                  TextButton(
+                    onPressed: () async {
+                      if (controladorDev.text.toString() == _passwordDev) {
+                        Navigator.pop(context, false);
+                        if (controlador.text.isNotEmpty) {
+                          int numOrdenes = int.parse(controlador.text);
+                          //Enviar a funcion de creacion de ordenes de demostracion
+                          demoOrders(numOrdenes, funcion, false);
+                        }
+                      } else {
+                        final result = await showDialog<bool>(
+                          context: context,
+                          builder: (context) {
+                            return dialogDev();
+                          },
+                        );
+                        if (result == null || !result) {
+                          return;
+                        }
+                      }
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.green,
+                      textStyle: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      minimumSize: const Size(120, 40),
+                    ),
+                    child: const Text('Agregar cantidad'),
+                  ),
+                ],
+              ),
+              addVerticalSpace(20),
+              SizedBox(
+                width: 300,
+                child: TextButton(
+                  onPressed: () async {
+                    if (controladorDev.text.toString() == _passwordDev) {
+                      final result = await showDialog<bool>(
+                        context: context,
+                        builder: (context) {
+                          return customCambiarEstadoDialog(
+                            context,
+                            "TODOS",
+                            "Eliminar",
+                            () async {
+                              SQLHelper.deleteTableData(context);
+                              Navigator.pop(context, true);
+                              Navigator.pop(context, true);
+                              deleteFuncion();
+                            },
+                            Colors.red,
+                          );
+                        },
+                      );
+                      if (result == null || !result) {
+                        return;
+                      }
+                    } else {
+                      final result = await showDialog<bool>(
+                        context: context,
+                        builder: (context) {
+                          return dialogDev();
+                        },
+                        barrierDismissible: false,
+                      );
+                      if (result == null || !result) {
+                        return;
+                      }
+                    }
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.redAccent,
+                    textStyle: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    minimumSize: const Size(150, 40),
+                  ),
+                  child: const Text('Eliminar todas las ordenes'),
+                ),
+              ),
+              // addVerticalSpace(20),
+            ],
+          ),
+        ),
       ],
     ),
     actionsAlignment: MainAxisAlignment.spaceEvenly,
     actions: [
-      TextButton(
-        onPressed: () {
-          Navigator.pop(context, false);
-        },
-        style: TextButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.grey.shade600,
-          textStyle: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
+      SizedBox(
+        width: 320,
+        child: TextButton(
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.lightBlue.shade700,
+            textStyle: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            minimumSize: const Size(120, 40),
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          minimumSize: const Size(120, 40),
+          child: const Text('Regresar'),
         ),
-        child: const Text('Regresar'),
-      ),
-      TextButton(
-        onPressed: () {
-          accion();
-        },
-        style: TextButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.blueAccent,
-          textStyle: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          minimumSize: const Size(120, 40),
-        ),
-        child: const Text('Orden vacia'),
       ),
     ],
   );

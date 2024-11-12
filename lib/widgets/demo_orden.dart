@@ -10,43 +10,110 @@ import 'package:techtruck_v11/widgets/db_helper.dart';
 Future<void> demoOrders(
   int numOrders,
   VoidCallback funcion,
+  bool demoTest,
 ) async {
   List<OrdenServicio> ordenesDemo = [];
 
-  var i = 0;
-  while (i < numOrders) {
-    // ordenesDemo.add(crearOrdenFalsa());
-    await SQLHelper.createData(
-      "Pendiente",
-      _addDemoNombre(),
-      _addDemoTelefono(),
-      _addDemoNumEco(),
-      _addKilometros(),
-      _addMarca(),
-      _addModelo(),
-      _addHorasMotor(),
-      _addTipo(),
-      _addMotor(),
-      _addSerieMotor(),
-      _addPlacas(),
-      _addYear(),
-      _addVIN(),
-      _addFechaLlegada(),
-      // "",
-      "",
-      _addTecnico(),
-      "",
-      _addComentario(),
-      "",
-      "",
-      "",
-    );
-
-    funcion();
-
-    i++;
+  if (demoTest == true) {
+    var i = 0;
+    while (i < numOrders) {
+      if (i == 4) {
+        addDemoOrder(
+            "En proceso",
+            "Alan Ovalle",
+            "(656)-644-8782",
+            "L-05",
+            "87693",
+            "Volvo",
+            " ",
+            "96781",
+            "Tracto",
+            "DD13",
+            "",
+            "AJ-8963-G",
+            "2011",
+            "",
+            "",
+            "Flaco",
+            "Ajuste de parametros");
+      } else if (i == 23) {
+        addDemoOrder(
+            "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+      } else {
+        addDemoOrder(
+            "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+      }
+      funcion();
+      i++;
+    }
+  } else {
+    var i = 0;
+    while (i < numOrders) {
+      addDemoOrder(
+          "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+      funcion();
+      i++;
+    }
   }
 }
+
+void addDemoOrder(
+  String? estatus,
+  String? nombre,
+  String? telefono,
+  String? numEco,
+  String? kilometros,
+  String? marca,
+  String? modelo,
+  String? horasMotor,
+  String? tipo,
+  String? motor,
+  String? serieMotor,
+  String? placas,
+  String? year,
+  String? vin,
+  String? fechaLlegada,
+  String? tecnico,
+  String? comentario,
+) async {
+  await SQLHelper.createData(
+      estatus!.isNotEmpty ? estatus : _addStatus(),
+      nombre!.isNotEmpty ? nombre : _addDemoNombre(),
+      telefono!.isNotEmpty ? telefono : _addDemoTelefono(),
+      numEco!.isNotEmpty ? numEco : _addDemoNumEco(),
+      kilometros!.isNotEmpty ? kilometros : _addKilometros(),
+      marca!.isNotEmpty ? marca : _addMarca(),
+      modelo!.isNotEmpty ? modelo : _addModelo(),
+      horasMotor!.isNotEmpty ? horasMotor : _addHorasMotor(),
+      tipo!.isNotEmpty ? tipo : _addTipo(),
+      motor!.isNotEmpty ? motor : _addMotor(),
+      serieMotor!.isNotEmpty ? serieMotor : _addSerieMotor(),
+      placas!.isNotEmpty ? placas : _addPlacas(),
+      year!.isNotEmpty ? year : _addYear(),
+      vin!.isNotEmpty ? vin : _addVIN(),
+      fechaLlegada!.isNotEmpty ? fechaLlegada : _addFechaLlegada(),
+      // "",
+      "",
+      tecnico!.isNotEmpty ? tecnico : _addTecnico(),
+      "",
+      comentario!.isNotEmpty ? comentario : _addComentario(),
+      "",
+      "",
+      "");
+}
+
+String checkDemoTest(Function f) {
+  String x = "";
+  x = f();
+
+  return x;
+}
+
+List<String> testData = [
+  "",
+  "",
+  "",
+];
 
 OrdenServicio crearOrdenFalsa() {
   OrdenServicio tempOrden = OrdenServicio(
@@ -69,7 +136,7 @@ OrdenServicio crearOrdenFalsa() {
       vin: _addVIN(),
     ),
     detallesOrden: OrdenServicioInfo(
-      folio: "999999",
+      folio: _addStatus(),
       fechaLlegada: _addFechaLlegada(),
       fechaSalida: "",
       tecnicoAsignado: _addTecnico(),
@@ -84,6 +151,18 @@ OrdenServicio crearOrdenFalsa() {
     ],
   );
   return tempOrden;
+}
+
+List<String> listStatus = [
+  "Pendiente",
+  "En proceso",
+  "Finalizado",
+  "Cancelado"
+];
+
+String _addStatus() {
+  var demoStatus = listStatus[Random().nextInt(listStatus.length)];
+  return demoStatus;
 }
 
 List<String> listNombres = [

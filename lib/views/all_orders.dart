@@ -164,11 +164,25 @@ class _AllOrdersState extends State<AllOrders> {
     showDialog<bool>(
       context: context,
       builder: (context) {
-        return customAgregarOrdenDemoDialog(context, () {
-          _addData(true);
-        }, () {
-          _refreshData();
-        });
+        return customAgregarOrdenDemoDialog(
+          context,
+          () {
+            _addData(true);
+          },
+          () {
+            _refreshData();
+          },
+          false,
+          () {
+            _customSnackBar(
+              "Todas las ordenes han sido eliminadas correctamente.",
+              Colors.redAccent,
+            );
+            Future.delayed(const Duration(milliseconds: 500), () {
+              _refreshData();
+            });
+          },
+        );
       },
     );
   }
@@ -498,10 +512,15 @@ class _AllOrdersState extends State<AllOrders> {
             builder: (context) {
               estatus = estadosOrden[0];
               return customCambiarEstadoDialog(
-                  context, _formatFolio("${orden["id"]}"), estatus, () async {
-                _upadateEstatus(orden["id"], estatus, Colors.orange);
-                Navigator.pop(context, true);
-              }, Colors.orange);
+                context,
+                _formatFolio("${orden["id"]}"),
+                estatus,
+                () async {
+                  _upadateEstatus(orden["id"], estatus, Colors.orange);
+                  Navigator.pop(context, true);
+                },
+                Colors.orange,
+              );
             },
           );
 

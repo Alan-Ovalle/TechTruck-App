@@ -25,6 +25,7 @@ class NewOrder extends StatefulWidget {
 
 class _NewOrderState extends State<NewOrder> {
   bool thisOrderExist = false;
+
   Widget checkDataExist(int? id) {
     if (id == null) {
       thisOrderExist = false;
@@ -45,34 +46,62 @@ class _NewOrderState extends State<NewOrder> {
 
   Widget checkFolioExist() {
     if (thisOrderExist) {
-      return Container(
-        padding: const EdgeInsets.only(left: 8, right: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: Colors.white,
-        ),
-        child: RichText(
-          text: TextSpan(
-            children: [
-              const TextSpan(
-                text: "Folio: ",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+      return Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(left: 8, right: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+            ),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(
+                    text: "Folio: ",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  TextSpan(
+                    text: formatFolio(widget.singleData["id"].toString()),
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
               ),
-              TextSpan(
-                text: formatFolio(widget.singleData["id"].toString()),
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          addHorizontalSpace(15),
+          Container(
+            constraints: BoxConstraints(
+              minWidth: 170,
+            ),
+            padding: const EdgeInsets.only(left: 8, right: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(
+                width: 2,
+                color: Colors.white,
+              ),
+              color: colorEstatus(widget.singleData["estatus"]),
+            ),
+            child: Text(
+              widget.singleData["estatus"],
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       );
     } else {
       return Container();
@@ -327,7 +356,8 @@ class TemporalFomularioState extends State<TemporalFomulario> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("ESTAMOS EN NEW ORDER ############################################################");
+    debugPrint(
+        "ESTAMOS EN NEW ORDER ############################################################");
     return Expanded(
       child: Scrollbar(
         controller: scrollControllerTwo,
@@ -662,5 +692,20 @@ class TemporalFomularioState extends State<TemporalFomulario> {
         ),
       ),
     );
+  }
+}
+
+colorEstatus(orden) {
+  switch (orden) {
+    case "Pendiente":
+      return Colors.orange;
+    case "En proceso":
+      return Colors.indigoAccent;
+    case "Finalizado":
+      return Colors.green;
+    case "Cancelado":
+      return Colors.redAccent;
+    default:
+      return Colors.black;
   }
 }

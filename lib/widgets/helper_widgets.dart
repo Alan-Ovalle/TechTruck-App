@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:techtruck_v11/widgets/db_helper.dart';
 import 'package:techtruck_v11/widgets/demo_orden.dart';
-import 'dart:developer' as developer;
 
 const _defaultColor = Color(0xFF34568B);
 
@@ -744,4 +743,428 @@ Widget customAgregarOrdenDemoDialog(
       ),
     ],
   );
+}
+
+Widget colorSizedBox(double? h, double? w, Color? c, Widget d) {
+  return SizedBox(
+    height: h,
+    width: w,
+    child: Container(
+      color: c,
+      child: d,
+    ),
+  );
+}
+
+Widget newOrderCard(
+  String folio,
+  Color colorEstatus,
+  String textoEstatus,
+  String textoCliente,
+  String textoComentario,
+  String textoFecha,
+  String textoNumEco,
+  String textoMarca,
+  String textoTipo,
+  Function onTapFuncion,
+  Widget popupButton,
+) {
+  return Card(
+    color: Colors.grey.shade800,
+    elevation: 4,
+    clipBehavior: Clip.hardEdge,
+    margin: const EdgeInsets.fromLTRB(10, 5, 25, 5),
+    shape: RoundedRectangleBorder(
+        side: BorderSide(
+          width: 3,
+          color: Colors.grey.shade800,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(10))),
+    child: Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(
+          width: 160,
+          height: 90,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.only(top: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.blueGrey.shade700,
+                    ),
+                    child: Text(
+                      folio,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    )),
+              ),
+              Divider(
+                height: 2,
+                thickness: 2,
+                color: Colors.grey.shade800,
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  width: double.infinity,
+
+                  // margin: EdgeInsets.only(top: 5),
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey.shade200,
+                  ),
+                  child: Center(
+                    child: Text(
+                      textoFecha,
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ),
+              Divider(
+                height: 2,
+                thickness: 2,
+                color: Colors.grey.shade800,
+              ),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.only(bottom: 2, top: 2),
+                  decoration: BoxDecoration(
+                    color: colorEstatus,
+                  ),
+                  child: Text(
+                    textoEstatus,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        VerticalDivider(
+          width: 4,
+        ),
+        Expanded(
+          child: Container(
+            color: Colors.blue.shade700,
+            width: 120,
+            height: 90,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.only(top: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            color: Colors.grey.shade800,
+                            width: 130,
+                            height: double.infinity,
+                            child: Text(
+                              "Cliente: ",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Text(
+                            "  $textoCliente",
+
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            // textAlign: TextAlign.center,
+                          ),
+                        ],
+                      )),
+                ),
+                Divider(
+                  height: 2,
+                  thickness: 2,
+                  color: Colors.grey.shade800,
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    width: double.infinity,
+
+                    // margin: EdgeInsets.only(top: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.blueGrey.shade200,
+                    ),
+                    child: Text(
+                      textoFecha,
+                      // textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                Divider(
+                  height: 2,
+                  thickness: 2,
+                  color: Colors.grey.shade800,
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.only(bottom: 2, top: 5),
+                    decoration: BoxDecoration(
+                      color: colorEstatus,
+                    ),
+                    child: Text(
+                      textoEstatus,
+                      // textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Container(color: Colors.cyanAccent, child: popupButton),
+      ],
+    ),
+  );
+}
+
+Widget oldOrderCard(
+  String folio,
+  Color colorEstatus,
+  String textoEstatus,
+  String textoCliente,
+  String textoComentario,
+  String textoFecha,
+  String textoNumEco,
+  String textoMarca,
+  String textoTipo,
+  Function onTapFuncion,
+  Widget popupButton,
+) {
+  return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: ListTile(
+        horizontalTitleGap: 25,
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: Text(
+                folio,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  // fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            addVerticalSpace(2),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: colorEstatus,
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(
+                    width: 1.5,
+                  ),
+                ),
+                width: 85,
+                child: Center(
+                  child: Text(
+                    textoEstatus,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        hoverColor: const Color(0xFFE9EBF7),
+        mouseCursor: SystemMouseCursors.click,
+        title: Row(
+          children: [
+            SizedBox(
+                width: 250,
+                height: 24,
+                child: RichText(
+                  text: TextSpan(
+                    text: "Cliente: ",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: textoCliente,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                          overflow: TextOverflow.fade,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+            Flexible(
+              child: SizedBox(
+                  width: 450,
+                  height: 24,
+                  child: RichText(
+                    text: TextSpan(
+                      text: "Comentario: ",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 18,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: textoComentario,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+            ),
+          ],
+        ),
+        subtitle: Row(
+          children: [
+            SizedBox(
+                width: 250,
+                child: RichText(
+                  text: TextSpan(
+                    text: "Llegada: ",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: textoFecha,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+            SizedBox(
+                width: 250,
+                child: RichText(
+                  text: TextSpan(
+                    text: "No. Eco: ",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: textoNumEco,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+            SizedBox(
+                width: 250,
+                child: RichText(
+                  text: TextSpan(
+                    text: "Marca: ",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: textoMarca,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+            SizedBox(
+                width: 250,
+                child: RichText(
+                  text: TextSpan(
+                    text: "Tipo: ",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: textoTipo,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+          ],
+        ),
+        onTap: () {
+          onTapFuncion();
+        },
+        trailing: popupButton,
+      ));
 }
